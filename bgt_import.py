@@ -232,7 +232,7 @@ class BGTImport:
                 geom_name = node.localName
                 in_geometry = True
             if 'gml:' in node.nodeName and in_geometry:
-                QgsMessageLog.logMessage('found: %s' % node.nodeName, 'gml_parsing') 
+                #QgsMessageLog.logMessage('found: %s' % node.nodeName, 'gml_parsing') 
                 node_name = str(node.nodeName).lower()
                 in_geometry = False
                 if ((not 'Polygon' in geom_types) and 'Polygon' in requested_geometry_types) and ('polygon' in node_name or 'surface' in node_name):
