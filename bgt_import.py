@@ -225,7 +225,7 @@ class BGTImport:
                 ogr_el_path = []
             elif event.title() == 'Start_Element':
                 ogr_el_path.append(node.localName)
-            elif event.title() == 'End_Element':
+            elif event.title() == 'End_Element'  and len(ogr_el_path) > 0:
                 ogr_el_path.pop()
             if 'imgeo:geometrie' in node.nodeName or 'imgeo:positie' in node.nodeName:
                 #QgsMessageLog.logMessage('found geometryName: %s' % node.nodeName, 'gml_parsing')
