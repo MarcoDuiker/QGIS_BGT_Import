@@ -294,11 +294,15 @@ class BGTImport:
                         gml_name = file_name[:-4] + '_P.gml'
 
                     QApplication.setOverrideCursor(Qt.WaitCursor)
-                    if _can_symlink:
-                        os.remove(gml_name)
-                        os.symlink(os.path.basename(file_name), gml_name)
-                    else:
-                        shutil.copy(file_name,gml_name)
+                    try:
+                        if os.path.exists(gml_name):
+                            os.remove(gml_name)
+                        if _can_symlink:
+                            os.symlink(os.path.basename(file_name), gml_name)
+                        else:
+                            shutil.copy(file_name,gml_name)
+                    except Exception as v:
+                        self.iface.messageBar().pushMessage('Error', self.tr(u"Error in creating gml copies for import: ") + v)  
 
                     gfs_name = gml_name[:-4] + '.gfs'
                     driver = ogr.GetDriverByName('gml')
