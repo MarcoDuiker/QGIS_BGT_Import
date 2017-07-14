@@ -209,39 +209,50 @@ class BGTImport:
         # remove the toolbar
         del self.toolbar
 
-    def getGeometryTypes(self, gml_file, geometry_types):
+    def getGeometryTypes(self, gml_file, requested_geometry_types):
         '''determines geometry types and names in bgt-file'''
 
-        num_requested_geom_types = len(geometry_types)
+        num_requested_geom_types = len(requested_geometry_types)
         geom_types = []
         geom_names = {}
+        geom_paths = {}
 
         doc = parse(gml_file)
         in_geometry = False
+        ogr_el_path = []
         for event,node in doc:
-            if 'imgeo:geometrie' in node.nodeName:
+            if node.nodeName == 'imgeo:identificatie':
+                ogr_el_path = []
+            elif event.title() == 'Start_Element':
+                ogr_el_path.append(node.localName)
+            elif event.title() == 'End_Element':
+                ogr_el_path.pop()
+            if 'imgeo:geometrie' in node.nodeName or 'imgeo:positie' in node.nodeName:
                 #QgsMessageLog.logMessage('found geometryName: %s' % node.nodeName, 'gml_parsing')
                 geom_name = node.localName
                 in_geometry = True
             if 'gml:' in node.nodeName and in_geometry:
-                #QgsMessageLog.logMessage('found: %s' % node.nodeName, 'gml_parsing') 
+                QgsMessageLog.logMessage('found: %s' % node.nodeName, 'gml_parsing') 
                 node_name = str(node.nodeName).lower()
                 in_geometry = False
-                if (not 'Polygon' in geom_types) and ('polygon' in node_name or 'surface' in node_name):
+                if ((not 'Polygon' in geom_types) and 'Polygon' in requested_geometry_types) and ('polygon' in node_name or 'surface' in node_name):
                     geom_types.append('Polygon')
                     geom_names['Polygon'] = geom_name 
+                    geom_paths['Polygon'] = ogr_el_path[:-1]
                     #QgsMessageLog.logMessage('added: %s as %s' % (geom_name,'Polygon'), 'gml_parsing')
-                elif (not 'LineString' in geom_types) and 'linestring' in node_name:
+                elif ((not 'LineString' in geom_types) and 'LineString' in requested_geometry_types) and 'linestring' in node_name:
                     geom_types.append('LineString')
                     geom_names['LineString'] = geom_name
+                    geom_paths['LineString'] = ogr_el_path[:-1]
                     #QgsMessageLog.logMessage('added: %s as %s' % (geom_name,'LineString'), 'gml_parsing')
-                elif (not 'Point' in geom_types) and 'point' in node_name:
+                elif ((not 'Point' in geom_types) and 'Point' in requested_geometry_types) and 'point' in node_name:
                     geom_types.append('Point')
                     geom_names['Point'] = geom_name
+                    geom_paths['Point'] = ogr_el_path[:-1]
                     #QgsMessageLog.logMessage('added: %s as %s' % (geom_name,'Point'), 'gml_parsing')
             if len(geom_types) == num_requested_geom_types:
-                return geom_names
-        return geom_names
+                return geom_names, geom_paths
+        return geom_names, geom_paths
 
     def chooseFile(self):
         """Reacts on browse button and opens the right file selector dialog"""
@@ -261,6 +272,8 @@ class BGTImport:
         self.dlg.show()
         result = self.dlg.exec_()
         if result:
+            QApplication.setOverrideCursor(Qt.WaitCursor)
+
             file_names_list = self.fileNames.split(';')
             number_of_files = len(file_names_list)
             count = 0
@@ -278,11 +291,10 @@ class BGTImport:
                     geometry_types.append('Point')
 
                 self.iface.messageBar().pushMessage('Info', self.tr(u"Analyzing file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + file_name)   
-                QApplication.setOverrideCursor(Qt.WaitCursor)
-                geom_names = self.getGeometryTypes(file_name, geometry_types)
-                QApplication.restoreOverrideCursor()
+                geom_names, geom_paths = self.getGeometryTypes(file_name, geometry_types)
 
-                for geom_type, geom_name in geom_names.items():
+                for geom_type, geom_path in geom_paths.items():
+                    geom_name = geom_path[0]
                     self.iface.messageBar().pushMessage('Info', self.tr(u"Importing file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(file_name))   
                     
                     #copy or symlink gml so we can add an appropriate gfs
@@ -293,7 +305,6 @@ class BGTImport:
                     elif 'Point' in geom_type: 
                         gml_name = file_name[:-4] + '_P.gml'
 
-                    QApplication.setOverrideCursor(Qt.WaitCursor)
                     try:
                         if os.path.exists(gml_name):
                             os.remove(gml_name)
@@ -318,7 +329,7 @@ class BGTImport:
                     except Exception as v:
                         self.iface.messageBar().pushMessage('Error', self.tr(u"Error in reading import definitions: ") + v)  
 
-                    gfs_fragment = "<GeomPropertyDefn><Name>%s</Name><ElementPath>%s</ElementPath><Type>%s</Type></GeomPropertyDefn>" % (geom_name,geom_name,geom_type)
+                    gfs_fragment = "<GeomPropertyDefn><Name>%s</Name><ElementPath>%s</ElementPath><Type>%s</Type></GeomPropertyDefn>" % (geom_name,'|'.join(geom_path),geom_type)
                     gfs = gfs.replace('<GMLFeatureClass>','<GMLFeatureClass>' + gfs_fragment)
 
                     try:
@@ -330,5 +341,5 @@ class BGTImport:
                     if self.dlg.add_cbx.isChecked():
                         self.iface.messageBar().pushMessage('Info', self.tr(u"Adding file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(gml_name))
                         self.iface.addVectorLayer(gml_name,os.path.basename(file_name)[:-4],'ogr')
-                    
-                    QApplication.restoreOverrideCursor()
+
+            QApplication.restoreOverrideCursor()
