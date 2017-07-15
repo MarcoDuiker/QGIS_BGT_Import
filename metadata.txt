@@ -10,7 +10,7 @@
 name=BGT Import
 qgisMinimumVersion=2.0
 description=Import Basisregistratie Grootschalige Topografie (BGT)
-version=0.3
+version=0.4
 author=Marco Duiker - MD-kwadraat
 email=md@md-kwadraat.nl
 
@@ -23,7 +23,7 @@ repository=https://github.com/MarcoDuiker/QGIS_BGT_Import/
 # Recommended items:
 
 # Uncomment the following line and add your changelog:
-changelog=Fixed error on importing non-existing geometry types
+changelog=Added dutch translation
 
 # Tags are comma separated with spaces allowed
 tags=BGT, import, gml
