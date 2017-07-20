@@ -9,7 +9,7 @@ The plug-in provides a way to directly import Dutch Basisregistratie Grootschali
 This plug-in avoids the problems with the multiple feature types present in BGT gml files. 
 
 How does the plug-in work?
-=========================
+==========================
 The BGT gml files can contain objects which have multiple geometries, of different types. Eg. the bgt_kunstwerkdeel.gml can contain polygons, lines and points for the same type of objects (class).
 
 The plug-in scans the file to see which geometry types are used and will generate ogr import definition file (.gfs) for each type of geometry. 
@@ -26,6 +26,8 @@ First download a zip with some BGT gml files from the `BGT download site <https:
 Unzip the package so you get a folder with .gml files and use the import tool to select one or more BGT gml files.
 
 Choose the geometry types to import and click the OK button. If you choose only one geometry type, the import process will go quicker as the importer only scans the file until it has found the first geometry of the chosen type.
+
+When importing large and/ or a lot of BGT gml files it is recommended to use the option to inspect a most a limited number of objects to find the requested geometry types. This wil speed up the import process a lot!
 
 The plug-in will generate the described (above) copies and import definition files (.gfs). If you've checked the "add to project" check box the plug-in will add the files as layers to your project.
 

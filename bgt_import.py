@@ -209,9 +209,10 @@ class BGTImport:
         # remove the toolbar
         del self.toolbar
 
-    def getGeometryTypes(self, gml_file, requested_geometry_types):
+    def getGeometryTypes(self, gml_file, requested_geometry_types, max_num_objects = False):
         '''determines geometry types and names in bgt-file'''
 
+        num_objects = 0
         num_requested_geom_types = len(requested_geometry_types)
         geom_types = []
         geom_names = {}
@@ -223,6 +224,9 @@ class BGTImport:
         for event,node in doc:
             if node.nodeName == 'imgeo:identificatie':
                 ogr_el_path = []
+                num_objects = num_objects + 1
+                if max_num_objects and num_objects > max_num_objects:
+                    break
             elif event.title() == 'Start_Element':
                 ogr_el_path.append(node.localName)
             elif event.title() == 'End_Element'  and len(ogr_el_path) > 0:
@@ -274,11 +278,22 @@ class BGTImport:
         if result:
             QApplication.setOverrideCursor(Qt.WaitCursor)
 
+            progressMessageBar = self.iface.messageBar().createMessage(self.tr('Importing BGT gml files ...'))
+            bar = QProgressBar()
+            bar.setRange(0,0)
+            bar.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(bar)
+            self.iface.messageBar().pushWidget(progressMessageBar, iface.messageBar().INFO)
+
             file_names_list = self.fileNames.split(';')
             number_of_files = len(file_names_list)
             count = 0
     
             _can_symlink = can_symlink(os.path.abspath(os.path.dirname(file_names_list[0])))
+
+            max_num_objects = False
+            if self.dlg.max_num_object_cbx.isChecked():
+                max_num_objects = self.dlg.max_num_object_sbx.value()
 
             for file_name in file_names_list:
                 count = count + 1
@@ -290,13 +305,12 @@ class BGTImport:
                 if self.dlg.point_cbx.isChecked():
                     geometry_types.append('Point')
 
-                self.iface.messageBar().pushMessage('Info', self.tr(u"Analyzing file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + file_name)   
-                geom_names, geom_paths = self.getGeometryTypes(file_name, geometry_types)
+                progressMessageBar.setText(self.tr(u"Analyzing file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(file_name))   
+                geom_names, geom_paths = self.getGeometryTypes(file_name, geometry_types, max_num_objects)
 
                 for geom_type, geom_path in geom_paths.items():
                     geom_name = geom_path[0]
-                    self.iface.messageBar().pushMessage('Info', self.tr(u"Importing file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(file_name))   
-                    
+                    progressMessageBar.setText(self.tr(u"Importing file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(file_name))
                     #copy or symlink gml so we can add an appropriate gfs
                     if 'Polygon' in geom_type: 
                         gml_name = file_name[:-4] + '_V.gml'
@@ -339,7 +353,11 @@ class BGTImport:
                         self.iface.messageBar().pushMessage('Error', self.tr(u"Error in writing import definitions: ") + v)  
 
                     if self.dlg.add_cbx.isChecked():
-                        self.iface.messageBar().pushMessage('Info', self.tr(u"Adding file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(gml_name))
+                        progressMessageBar.setText(self.tr(u"Adding file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(gml_name))
                         self.iface.addVectorLayer(gml_name,os.path.basename(file_name)[:-4],'ogr')
 
             QApplication.restoreOverrideCursor()
+            progressMessageBar.setText(self.tr(u"Importing BGT gml files done!"))
+            bar.setRange(0,100)
+            bar.setValue(100)
+            
