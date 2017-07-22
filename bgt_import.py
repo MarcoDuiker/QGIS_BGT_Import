@@ -282,6 +282,23 @@ class BGTImport:
         self.dlg.show()
         result = self.dlg.exec_()
         if result:
+            # get all stuff from the dialog
+            geometry_types = []
+            if self.dlg.polygon_cbx.isChecked():
+                geometry_types.append('Polygon')
+            if self.dlg.line_cbx.isChecked():
+                geometry_types.append('LineString')
+            if self.dlg.point_cbx.isChecked():
+                geometry_types.append('Point')
+
+            max_num_objects = False
+            if self.dlg.max_num_object_cbx.isChecked():
+                max_num_objects = self.dlg.max_num_object_sbx.value()
+
+            file_names_list = self.fileNames.split(';')
+            number_of_files = len(file_names_list)
+
+            # set up some user communication
             QApplication.setOverrideCursor(Qt.WaitCursor)
 
             self.iface.messageBar().pushMessage('INFO', self.tr(u'Start') + ' ' + self.tr(u'Importing BGT gml files ...'))
@@ -291,30 +308,16 @@ class BGTImport:
             bar.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(bar)
             self.iface.messageBar().pushWidget(progressMessageBar, iface.messageBar().INFO)
-            #time.sleep(0.5)
 
-            file_names_list = self.fileNames.split(';')
-            number_of_files = len(file_names_list)
-            count = 0
-    
+            # test symlinking
             _can_symlink = can_symlink(os.path.abspath(os.path.dirname(file_names_list[0])))
 
-            max_num_objects = False
-            if self.dlg.max_num_object_cbx.isChecked():
-                max_num_objects = self.dlg.max_num_object_sbx.value()
-
+            # import the files
+            count = 0
             for file_name in file_names_list:
                 count = count + 1
-                geometry_types = []
-                if self.dlg.polygon_cbx.isChecked():
-                    geometry_types.append('Polygon')
-                if self.dlg.line_cbx.isChecked():
-                    geometry_types.append('LineString')
-                if self.dlg.point_cbx.isChecked():
-                    geometry_types.append('Point')
-
                 progressMessageBar.setText(self.tr(u"Analyzing file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(file_name))
-                #time.sleep(0.1)
+                # find the ogr paths to the requested geometries
                 geom_names, geom_paths = self.getGeometryTypes(file_name, geometry_types, max_num_objects)
 
                 if len(geom_paths) == 0:
@@ -323,7 +326,7 @@ class BGTImport:
                     for geom_type, geom_path in geom_paths.items():
                         geom_name = geom_path[0]
                         progressMessageBar.setText(self.tr(u"Importing file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(file_name))
-                        #time.sleep(0.1)
+
                         #copy or symlink gml so we can add an appropriate gfs
                         if 'Polygon' in geom_type: 
                             gml_name = file_name[:-4] + '_V.gml'
@@ -342,35 +345,35 @@ class BGTImport:
                         except Exception as v:
                             self.iface.messageBar().pushMessage('Error', self.tr(u"Error in creating gml copies for import: ") + str(v), level=QgsMessageBar.WARNING)  
                             QgsMessageLog.logMessage(u'Error in creating gml copies for import: ' + str(v), 'BGTImport')
+                        else:
+                            gfs_name = gml_name[:-4] + '.gfs'
+                            driver = ogr.GetDriverByName('gml')
+                            try:
+                                if os.path.exists(gml_name):
+                                    if os.path.exists(gfs_name):
+                                        os.remove(gfs_name)
+                                    # create fresh gfs:
+                                    gml = driver.Open(gml_name)
+                                    # and add our own geometry definition to it:
+                                    with open(gfs_name,'r') as f:
+                                        gfs = f.read()
+                            except Exception as v:
+                                self.iface.messageBar().pushMessage('Error', self.tr(u"Error in reading import definitions: ") + str(v), level=QgsMessageBar.WARNING)  
+                                QgsMessageLog.logMessage(u'Error in reading import definitions: ' + str(v), 'BGTImport')
+                            else:
+                                gfs_fragment = "<GeomPropertyDefn><Name>%s</Name><ElementPath>%s</ElementPath><Type>%s</Type></GeomPropertyDefn>" % (geom_name,'|'.join(geom_path),geom_type)
+                                gfs = gfs.replace('<GMLFeatureClass>','<GMLFeatureClass>' + gfs_fragment)
 
-                        gfs_name = gml_name[:-4] + '.gfs'
-                        driver = ogr.GetDriverByName('gml')
-                        try:
-                            if os.path.exists(gml_name):
-                                if os.path.exists(gfs_name):
-                                    os.remove(gfs_name)
-                                # create fresh gfs:
-                                gml = driver.Open(gml_name)
-                                # and add our own geometry definition to it:
-                            with open(gfs_name,'r') as f:
-                                gfs = f.read()
-                        except Exception as v:
-                            self.iface.messageBar().pushMessage('Error', self.tr(u"Error in reading import definitions: ") + str(v), level=QgsMessageBar.WARNING)  
-                            QgsMessageLog.logMessage(u'Error in reading import definitions: ' + str(v), 'BGTImport')
-
-                        gfs_fragment = "<GeomPropertyDefn><Name>%s</Name><ElementPath>%s</ElementPath><Type>%s</Type></GeomPropertyDefn>" % (geom_name,'|'.join(geom_path),geom_type)
-                        gfs = gfs.replace('<GMLFeatureClass>','<GMLFeatureClass>' + gfs_fragment)
-
-                        try:
-                            with open(gfs_name,'w') as f:
-                                f.write(gfs)
-                        except Exception as v:
-                            self.iface.messageBar().pushMessage('Error', self.tr(u"Error in writing import definitions: ") + str(v), level=QgsMessageBar.WARNING)  
-                            QgsMessageLog.logMessage(u'Error in writing import definitions: ' + str(v), 'BGTImport')
-
-                        if self.dlg.add_cbx.isChecked():
-                            progressMessageBar.setText(self.tr(u"Adding file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(gml_name))
-                            self.iface.addVectorLayer(gml_name,os.path.basename(file_name)[:-4],'ogr')
+                                try:
+                                    with open(gfs_name,'w') as f:
+                                        f.write(gfs)
+                                except Exception as v:
+                                    self.iface.messageBar().pushMessage('Error', self.tr(u"Error in writing import definitions: ") + str(v), level=QgsMessageBar.WARNING)  
+                                    QgsMessageLog.logMessage(u'Error in writing import definitions: ' + str(v), 'BGTImport')
+                                else:
+                                    if self.dlg.add_cbx.isChecked():
+                                        progressMessageBar.setText(self.tr(u"Adding file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(gml_name))
+                                        self.iface.addVectorLayer(gml_name,os.path.basename(file_name)[:-4],'ogr')
 
             QApplication.restoreOverrideCursor()
 
