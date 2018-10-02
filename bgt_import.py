@@ -86,7 +86,6 @@ class BGTImport:
             if qVersion() > '4.3.3':
                 QCoreApplication.installTranslator(self.translator)
 
-
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&BGT Import')
@@ -108,7 +107,6 @@ class BGTImport:
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('BGTImport', message)
-
 
     def add_action(
         self,
@@ -198,7 +196,6 @@ class BGTImport:
             text=self.tr(u'BGT Import'),
             callback=self.run,
             parent=self.iface.mainWindow())
-
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
