@@ -5,9 +5,9 @@
                                  A QGIS plugin
  Import Basisregistratie Grootschalige Topografie (BGT)
                               -------------------
-        begin                : 2017-06-28
+        begin                : 2018-10-01
         git sha              : $Format:%H$
-        copyright            : (C) 2017 by Marco Duiker - MD-kwadraat
+        copyright            : (C) 2018 by Marco Duiker - MD-kwadraat
         email                : md@md-kwadraat.nl
  ***************************************************************************/
 
@@ -20,18 +20,22 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt4.QtCore import *
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
-from PyQt4.QtGui import *
-from PyQt4.QtGui import QAction, QIcon
+from __future__ import absolute_import
+from builtins import str
+from builtins import object
+from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QUrl
+from qgis.PyQt.QtWidgets import QAction, QFileDialog, QProgressBar
+from qgis.PyQt.QtGui import QIcon, QDesktopServices
+from qgis.PyQt.Qt import Qt
 from qgis.core import *
+from qgis.core import Qgis
 from qgis.gui import *
 from qgis.utils import *
 
 # Initialize Qt resources from file resources.py
-import resources
+from . import resources
 # Import the code for the dialog
-from bgt_import_dialog import BGTImportDialog
+from .bgt_import_dialog import BGTImportDialog
 
 from xml.dom.pulldom import parse
 import ogr
@@ -57,7 +61,7 @@ def can_symlink(folder):
     return can
 
 
-class BGTImport:
+class BGTImport(object):
     """QGIS Plugin Implementation."""
 
     def __init__(self, iface):
@@ -93,7 +97,6 @@ class BGTImport:
         self.toolbar = self.iface.addToolBar(u'BGTImport')
         self.toolbar.setObjectName(u'BGTImport')
 
-    # noinspection PyMethodMayBeStatic
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
 
@@ -105,7 +108,7 @@ class BGTImport:
         :returns: Translated version of message.
         :rtype: QString
         """
-        # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
+
         return QCoreApplication.translate('BGTImport', message)
 
     def add_action(
@@ -161,8 +164,8 @@ class BGTImport:
         # Create the dialog (after translation) and keep reference
         self.dlg = BGTImportDialog()
 
-        QObject.connect(self.dlg.fileBrowseButton_2, SIGNAL("clicked()"), self.chooseFile)
-        QObject.connect(self.dlg.help_btn, SIGNAL("clicked()"), self.showHelp)
+        self.dlg.fileBrowseButton_2.clicked.connect(self.chooseFile)
+        self.dlg.help_btn.clicked.connect(self.showHelp)
 
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
@@ -242,15 +245,18 @@ class BGTImport:
                 if 'gml:' in node.nodeName and in_geometry:
                     node_name = str(node.nodeName).lower()
                     in_geometry = False
-                    if ((not 'Polygon' in geom_types) and 'Polygon' in requested_geometry_types) and ('polygon' in node_name or 'surface' in node_name):
+                    if ((not 'Polygon' in geom_types) and 'Polygon' in requested_geometry_types) \
+                    and ('polygon' in node_name or 'surface' in node_name):
                         geom_types.append('Polygon')
                         geom_names['Polygon'] = geom_name 
                         geom_paths['Polygon'] = ogr_el_path[:-1]
-                    elif ((not 'LineString' in geom_types) and 'LineString' in requested_geometry_types) and 'linestring' in node_name:
+                    elif ((not 'LineString' in geom_types) and 'LineString' in requested_geometry_types) \
+                    and 'linestring' in node_name:
                         geom_types.append('LineString')
                         geom_names['LineString'] = geom_name
                         geom_paths['LineString'] = ogr_el_path[:-1]
-                    elif ((not 'Point' in geom_types) and 'Point' in requested_geometry_types) and 'point' in node_name:
+                    elif ((not 'Point' in geom_types) and 'Point' in requested_geometry_types) \
+                    and 'point' in node_name:
                         geom_types.append('Point')
                         geom_names['Point'] = geom_name
                         geom_paths['Point'] = ogr_el_path[:-1]
@@ -264,14 +270,20 @@ class BGTImport:
     def chooseFile(self):
         """Reacts on browse button and opens the right file selector dialog"""
 
-        self.fileNames = ';'.join(QFileDialog.getOpenFileNames(caption = self.tr(u"Select BGT gml file(s)"), directory = '', filter = '*.gml'))
+        fileNames = QFileDialog.getOpenFileNames(caption = self.tr(u"Select BGT gml file(s)"), 
+                                                 directory = '', 
+                                                 filter = '*.gml')
+        self.fileNames = ';'.join(fileNames[0])
         self.dlg.fileNameBox.setText(self.fileNames)
 
     def showHelp(self):
         """Reacts on help button"""
 
         #qgis.utils.showPluginHelp(filename = 'help/index')
-        webbrowser.open_new(os.path.join("file://",os.path.abspath(self.plugin_dir), 'help/build/html','index.html')) 
+        QDesktopServices().openUrl(QUrl.fromLocalFile(os.path.join("file://",
+                                                                   self.plugin_dir, 
+                                                                   'help/build/html',
+                                                                   'index.html')))
 
     def run(self):
         """Import and optionally add chosen files"""
@@ -298,13 +310,14 @@ class BGTImport:
             # set up some user communication
             QApplication.setOverrideCursor(Qt.WaitCursor)
 
-            self.iface.messageBar().pushMessage('INFO', self.tr(u'Start') + ' ' + self.tr(u'Importing BGT gml files ...'))
+            self.iface.messageBar().pushMessage("Info",
+                                                self.tr(u'Start') + ' ' + self.tr(u'Importing BGT gml files ...'))
             progressMessageBar = self.iface.messageBar().createMessage(self.tr(u'Importing BGT gml files ...'))
             bar = QProgressBar()
             bar.setRange(0,0)
             bar.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(bar)
-            self.iface.messageBar().pushWidget(progressMessageBar, iface.messageBar().INFO)
+            self.iface.messageBar().pushWidget(progressMessageBar, Qgis.Info)
 
             # test symlinking
             _can_symlink = can_symlink(os.path.abspath(os.path.dirname(file_names_list[0])))
@@ -313,16 +326,21 @@ class BGTImport:
             count = 0
             for file_name in file_names_list:
                 count = count + 1
-                progressMessageBar.setText(self.tr(u"Analyzing file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(file_name))
+                progressMessageBar.setText(self.tr(u"Analyzing file ") + str(count) + self.tr(u" from ") 
+                                                + str(number_of_files) + ": " + os.path.basename(file_name))
                 # find the ogr paths to the requested geometries
                 geom_names, geom_paths = self.getGeometryTypes(file_name, geometry_types, max_num_objects)
 
                 if len(geom_paths) == 0:
-                    self.iface.messageBar().pushMessage('Error', self.tr(u"Could not find any of the requested geometries in: " + os.path.basename(file_name)), level=QgsMessageBar.WARNING)
+                    self.iface.messageBar().pushMessage('Error', 
+                                                        self.tr(u"Could not find any of the requested geometries in: " + 
+                                                        os.path.basename(file_name)), level=Qgis.WARNING)
                 else: 
-                    for geom_type, geom_path in geom_paths.items():
+                    for geom_type, geom_path in list(geom_paths.items()):
                         geom_name = geom_path[0]
-                        progressMessageBar.setText(self.tr(u"Importing file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(file_name))
+                        progressMessageBar.setText( self.tr(u"Importing file ") + 
+                                                    str(count) + self.tr(u" from ") + str(number_of_files) + 
+                                                    ": " + os.path.basename(file_name))
 
                         #copy or symlink gml so we can add an appropriate gfs
                         if 'Polygon' in geom_type: 
@@ -340,7 +358,9 @@ class BGTImport:
                             else:
                                 shutil.copy(file_name,gml_name)
                         except Exception as v:
-                            self.iface.messageBar().pushMessage('Error', self.tr(u"Error in creating gml copies for import: ") + str(v), level=QgsMessageBar.WARNING)  
+                            self.iface.messageBar().pushMessage('Error', 
+                                                                self.tr(u"Error in creating gml copies for import: ") + 
+                                                                str(v), level=Qgis.Warning)  
                             QgsMessageLog.logMessage(u'Error in creating gml copies for import: ' + str(v), 'BGTImport')
                         else:
                             gfs_name = gml_name[:-4] + '.gfs'
@@ -355,7 +375,9 @@ class BGTImport:
                                     with open(gfs_name,'r') as f:
                                         gfs = f.read()
                             except Exception as v:
-                                self.iface.messageBar().pushMessage('Error', self.tr(u"Error in reading import definitions: ") + str(v), level=QgsMessageBar.WARNING)  
+                                self.iface.messageBar().pushMessage('Error', 
+                                                                    self.tr(u"Error in reading import definitions: ") + 
+                                                                    str(v), level=Qgis.Warning)  
                                 QgsMessageLog.logMessage(u'Error in reading import definitions: ' + str(v), 'BGTImport')
                             else:
                                 gfs_fragment = "<GeomPropertyDefn><Name>%s</Name><ElementPath>%s</ElementPath><Type>%s</Type></GeomPropertyDefn>" % (geom_name,'|'.join(geom_path),geom_type)
@@ -365,11 +387,14 @@ class BGTImport:
                                     with open(gfs_name,'w') as f:
                                         f.write(gfs)
                                 except Exception as v:
-                                    self.iface.messageBar().pushMessage('Error', self.tr(u"Error in writing import definitions: ") + str(v), level=QgsMessageBar.WARNING)  
+                                    self.iface.messageBar().pushMessage('Error', 
+                                                                        self.tr(u"Error in writing import definitions: ") + 
+                                                                        str(v), level=Qgis.Warning)  
                                     QgsMessageLog.logMessage(u'Error in writing import definitions: ' + str(v), 'BGTImport')
                                 else:
                                     if self.dlg.add_cbx.isChecked():
-                                        progressMessageBar.setText(self.tr(u"Adding file ") + str(count) + self.tr(u" from ") + str(number_of_files) + ": " + os.path.basename(gml_name))
+                                        progressMessageBar.setText(self.tr(u"Adding file ") + str(count) + self.tr(u" from ") + 
+                                                                   str(number_of_files) + ": " + os.path.basename(gml_name))
                                         self.iface.addVectorLayer(gml_name,os.path.basename(file_name)[:-4],'ogr')
 
             QApplication.restoreOverrideCursor()
