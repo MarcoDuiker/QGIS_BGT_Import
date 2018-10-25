@@ -139,6 +139,8 @@ def download_tiles(task, tiles, file_name, nam = None):
       "tiles=%7B%22layers%22%3A%5B%7B%22aggregateLevel%22%3A0%2C%22codes%22%3A%5B" + \
       '%2C'.join([str(x) for x in tiles]) + "%5D%7D%5D%7D"
     try:  
+        if os.path.exists(file_name):
+            os.remove(file_name)
         if nam:
             (response, content) = nam.request(encoded_url, task = task)
             with open(file_name,'wb') as f:
@@ -178,10 +180,8 @@ def import_to_geopackage(task, zip_file_name, geopackage):
     
     - `geopackage`      the file name of the geopackage.
     '''
-    
-    # gdal geopackage code
-    # https://svn.osgeo.org/gdal/trunk/autotest/ogr/ogr_gpkg.py
-    
+
+
     progress = 10
     if task:
         QgsMessageLog.logMessage(u'Start importing BGT-zip: ' + str(zip_file_name),

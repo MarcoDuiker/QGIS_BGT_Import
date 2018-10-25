@@ -43,12 +43,15 @@ try:
     import lxml.etree as le
 except:
     from xml import etree
+
+from functools import partial
 import glob
 import ogr
 import os
 import shutil
 import tempfile
 import time
+import uuid
 import webbrowser
 from xml.dom.pulldom import parse
 
@@ -311,12 +314,6 @@ class BGTImport(object):
             os.path.join("file://", self.plugin_dir, 'help/build/html', \
                          'index.html')))
 
-    def test_task(self, task, message):
-        '''Just a function to test the task manager'''
-        
-        QgsMessageLog.logMessage(message)
-        return True
-
 
     def tiles_to_download(self):
         """Finds the tiles to download from BGT"""
@@ -372,122 +369,6 @@ class BGTImport(object):
         '%2C'.join([str(x) for x in tiles]) + "%5D%7D%5D%7D"
 
 
-    def import_finished(self, geopackage):
-        """
-        OBSOLETE! IS CALLED TO EARLY
-        Inform the user and add layers if requested
-        """
-        
-        if not geopackage:
-            self.iface.messageBar().pushMessage("Error",
-                self.tr(u'Importing BGT-zip to geopackage failed.') +
-                self.tr(u'See message log for more info.'),
-                level=Qgis.Critical)
-            return
-            
-        # copy the qlr next to the gpkg and add to project!
-        # don't forget to add a filter on the expired objects!
-        self.iface.messageBar().pushMessage("Info",
-                self.tr(u'Done importing BGT data.'))
-
-    def adapt_qlr_to_geopackage(self, qlr, geopackage):
-        '''
-        OBSOLETE! We are not using qlr anymore
-        adapts qlr by removing extent and inserting the right path
-        '''
-
-        if le:
-            with open(qlr,'r') as f:
-                doc=le.parse(f)
-                for elem in doc.xpath('//*'):
-                    if elem.tag == 'layer-tree-layer':
-                        layer_path = elem.get('source')
-                        gpkg_path = layer_path.split('|')[0].strip()
-                        elem.set('source',layer_path.replace(gpkg_path,
-                            './' + os.path.basename(geopackage)))
-                    if elem.tag == 'datasource':
-                        layer_path = elem.text
-                        gpkg_path = layer_path.split('|')[0].strip()
-                        elem.text = layer_path.replace(gpkg_path,
-                            './' + os.path.basename(geopackage))
-                    if elem.tag == 'extent':
-                        parent=elem.getparent()
-                        parent.remove(elem)
-            return le.tostring(doc)
-        else:
-            # implement in etree 
-            pass
-
-    def add_to_project_using_qlr(self, task, geopackage):
-        '''
-        OBSOLETE ! NOT WORKING NICELY 
-        applies styling and filtering and scale dependency by adding the layers via qlr files
-        '''
-        
-        progress = 0
-        if task:
-            task.setProgress(progress)
-        
-        qlr_folder = os.path.join(self.plugin_dir,'qlr')
-        user_qlr_folder = os.path.join(self.plugin_dir,'user_qlr')
-        import_folder = os.path.dirname(geopackage)
-        
-        # add a layergroup to insert the layers in
-        layer_group = QgsProject.instance().layerTreeRoot().insertGroup(0, 
-            os.path.basename(geopackage)[:-5])
-        
-        standard_layers = bgt_utils.get_standard_layers()
-        layers_added = []
-        layers = []
-        gp =  ogr.GetDriverByName('GPKG').Open( geopackage )
-        for i in range(gp.GetLayerCount()):
-            layers.append(gp.GetLayerByIndex(i).GetName())
-        increment = 100/len(layers)
-        
-        # first add all standard layers this plugin knows of
-        for layer in reversed(standard_layers):
-            if layer in layers:
-                qlr = os.path.join(qlr_folder,layer + '.qlr')
-                user_qlr = os.path.join(user_qlr_folder,layer + '.qlr')
-                if os.path.exists(user_qlr):
-                    qlr = user_qlr
-                if os.path.exists(qlr):
-                    with open(os.path.join(import_folder,layer+'.qlr'),'wb') as f:
-                        f.write(self.adapt_qlr_to_geopackage(qlr,geopackage))
-                        QgsLayerDefinition().loadLayerDefinition(qlr, self.project, layer_group)
-                else:
-                    # add without qlr. This should not happen!
-                    uri = '%s|layername=%s|subset="eindRegistratie" IS NULL' %\
-                        (geopackage, layer)
-                    map_layer = QgsVectorLayer(uri, 
-                        layer.replace('_P',' (punt)').replace('_L',' (lijn)').replace('_V', ' (vlak)'), 
-                        "ogr")
-                    layer_group.insertLayer(0, map_layer)
-                layers_added.append(layer)
-                progress = progress + increment
-                if task:
-                    task.setProgress(progress)
-                
-        # then add all layers we might have missed
-        # should not happen as we don't have gfs for those ...
-        missed_layers = list(set(layers) - set(layers_added))
-        if missed_layers:
-            progress = 0
-            increment = 100/len(missed_layers)
-            for layer in missed_layers:
-                # add without qlr. This should not happen!
-                uri = '%s|layername=%s|subset="eindRegistratie" IS NULL' %\
-                    (geopackage, layer)
-                map_layer = QgsVectorLayer(uri, 
-                    layer.replace('_P',' (punt)').replace('_L',' (lijn)').replace('_V', ' (vlak)'), 
-                    "ogr")
-                layer_group.insertLayer(0, map_layer)
-                progress = progress + increment
-                if task:
-                    task.setProgress(progress)
-        if task:
-            task.setProgress(100)
-            
     def add_layer_to_group(self, geopackage, layer, group):
         '''
         Adds a layer to the group and returns the layer
@@ -587,6 +468,36 @@ class BGTImport(object):
         if task:
             task.setProgress(100)
 
+    def download_task_failed(self, task_to_cancel):
+        '''Show a message that the download has failed; cancel next task'''
+        
+        task_to_cancel.cancel()
+        self.iface.messageBar().pushMessage("Error",
+            self.tr(u'Downloading BGT tiles failed.') + u' ' +
+            self.tr(u'See message log for more info.'), level = Qgis.Critical)
+
+    def import_task_failed(self, task_to_cancel):
+        '''Show a message that the import has failed; cancel next task'''
+        
+        self.iface.messageBar().pushMessage("Error",
+            self.tr(u'Importing BGT tiles failed.') + u' ' +
+            self.tr(u'See message log for more info.'), level = Qgis.Critical)
+            
+    def add_to_project_task_failed(self):
+        '''Show a message that adding to project has failed'''
+        
+        self.iface.messageBar().pushMessage("Error",
+            self.tr(u'Adding BGT tiles to project failed.') + u' ' +
+            self.tr(u'See message log for more info.'), level = Qgis.Critical)
+
+    def import_finished(self):
+        """
+        Inform the user everything is done
+        """
+
+        self.iface.messageBar().pushMessage("Info",
+                self.tr(u'Done importing BGT data.'))
+
 
     def run(self):
         """Import and optionally add chosen files"""
@@ -602,7 +513,7 @@ class BGTImport(object):
             if self.dlg.download_map_extent_rbt.isChecked() \
             or self.dlg.download_layer_rbt.isChecked():
                 tiles = self.tiles_to_download()
-                zip_file_name = os.path.join(tempfile.gettempdir(), 'extract.zip')
+                zip_file_name = os.path.join(tempfile.gettempdir(), 'extract-' + str(uuid.uuid4()) +'.zip')
                 #download_task = QgsNetworkContentFetcherTask(QUrl(self.tiles_download_url(tiles)))
                 # the QgsNetworkContentFetcherTask doesn't give a nice progress indication
                 download_task = QgsTask.fromFunction(
@@ -636,13 +547,19 @@ class BGTImport(object):
                 self.iface.messageBar().pushMessage("Info",
                     self.tr(u'Started importing BGT tiles ...'))
             
+            download_task.taskTerminated.connect(partial(self.download_task_failed, import_task))
+            import_task.taskTerminated.connect(partial(self.import_task_failed, add_to_project_task))
+            add_to_project_task.taskTerminated.connect(self.add_to_project_task_failed)
+            
             self.tsk_mngr = QgsApplication.taskManager()   
             if self.dlg.add_cbx.isChecked():
                 add_to_project_task.addSubTask(import_task,[],QgsTask.ParentDependsOnSubTask)
+                add_to_project_task.taskCompleted.connect(self.import_finished)
                 self.tsk_mngr.addTask(add_to_project_task)
             else:
+                import_task.taskCompleted.connect(self.import_finished)
                 self.tsk_mngr.addTask(import_task)
-            # todo: attach to some task slots to inform on errors and see if things are done
+
             self.dlg.close()
 
         ########### TAB 1: old style processing of individual files ############
