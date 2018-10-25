@@ -5,11 +5,16 @@ About
 =====
 This plug-in is developed by Marco Duiker from `MD-kwadraat <http://www.md-kwadraat.nl/>`_ .
 
-The plug-in provides a way to directly import Dutch Basisregistratie Grootschalige Topografie (BGT) gml files and select the wanted feature types. GML-light is not supported.
-This plug-in avoids the problems with the multiple feature types present in BGT gml files. 
+The plug-in provides a way to directly import Dutch Basisregistratie Grootschalige Topografie (BGT) data into QGIS, avoiding the (silent !) errors which occur using the standard QGIS import utilities. The phenomenon of the silent errors is explained on `QGIS.nl (in Dutch) <http://www.qgis.nl/2017/07/16/de-qgis-bgt-plugin/>`_.
+
+Furthermore the plugin downloads the BGT data from map extent or intersect layer. On importing the data a nice styling mimicking the official one is added on the go. When adding the layers to the project, expired objects are filtered out.
+
 
 How does the plug-in work?
 ==========================
+
+You will find the plugin in the Vector menu.
+
 The BGT gml files can contain objects which have multiple geometries, of different types. Eg. the bgt_kunstwerkdeel.gml can contain polygons, lines and points for the same type of objects (class).
 
 The plug-in scans the file to see which geometry types are used and will generate ogr import definition file (.gfs) for each type of geometry. 

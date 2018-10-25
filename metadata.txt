@@ -11,12 +11,11 @@ name=BGT Import
 qgisMinimumVersion=2.99
 qgisMaximumVersion=3.99
 description=Import Basisregistratie Grootschalige Topografie (BGT) for QGIS3
-version=3.6
+version=3.7
 author=Marco Duiker - MD-kwadraat
 email=md@md-kwadraat.nl
 
-about=This plugin imports the Dutch Basisregistratie Grootschalige Topografie (BGT) gml files. The user can choose which geometry from multiple geometry types should be imported.
-
+about=This plugin imports the Dutch Basisregistratie Grootschalige Topografie (BGT) directly form download or via individual gml files. 
 tracker=https://github.com/MarcoDuiker/QGIS_BGT_Import/issues/
 repository=https://github.com/MarcoDuiker/QGIS_BGT_Import/
 # End of mandatory metadata

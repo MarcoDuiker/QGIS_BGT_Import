@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Introduction &#8212; BGT Import 3.6 documentation</title>
+    <title>Introduction &#8212; BGT Import 3.7 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '3.6',
+        VERSION:     '3.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -23,6 +23,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Limitations" href="limitations.html" />
     <link rel="prev" title="Welcome to the BGT Import plugin documentation" href="index.html" /> 
   </head>
   <body>
@@ -33,9 +34,12 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="limitations.html" title="Limitations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
           <a href="index.html" title="Welcome to the BGT Import plugin documentation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.7 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -49,11 +53,12 @@
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
 <p>This plug-in is developed by Marco Duiker from <a class="reference external" href="http://www.md-kwadraat.nl/">MD-kwadraat</a> .</p>
-<p>The plug-in provides a way to directly import Dutch Basisregistratie Grootschalige Topografie (BGT) gml files and select the wanted feature types. GML-light is not supported.
-This plug-in avoids the problems with the multiple feature types present in BGT gml files.</p>
+<p>The plug-in provides a way to directly import Dutch Basisregistratie Grootschalige Topografie (BGT) data into QGIS, avoiding the (silent !) errors which occur using the standard QGIS import utilities. The phenomenon of the silent errors is explained on <a class="reference external" href="http://www.qgis.nl/2017/07/16/de-qgis-bgt-plugin/">QGIS.nl (in Dutch)</a>.</p>
+<p>Furthermore the plugin downloads the BGT data from map extent or intersect layer. On importing the data a nice styling mimicking the official one is added on the go. When adding the layers to the project, expired objects are filtered out.</p>
 </div>
 <div class="section" id="how-does-the-plug-in-work">
 <h2>How does the plug-in work?<a class="headerlink" href="#how-does-the-plug-in-work" title="Permalink to this headline">¶</a></h2>
+<p>You will find the plugin in the Vector menu.</p>
 <p>The BGT gml files can contain objects which have multiple geometries, of different types. Eg. the bgt_kunstwerkdeel.gml can contain polygons, lines and points for the same type of objects (class).</p>
 <p>The plug-in scans the file to see which geometry types are used and will generate ogr import definition file (.gfs) for each type of geometry.</p>
 <p>As a .gfs file needs to have the same name as the .gml file (except for the extension of course) the gml file will be copied or symlinked. The name of the copy will contain a _V, _L or _P extension to denote either polygons (_V), lines (_L) or points (_P).</p>
@@ -89,6 +94,9 @@ This plug-in avoids the problems with the multiple feature types present in BGT 
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
                         title="previous chapter">Welcome to the BGT Import plugin documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="limitations.html"
+                        title="next chapter">Limitations</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -117,9 +125,12 @@ This plug-in avoids the problems with the multiple feature types present in BGT 
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="limitations.html" title="Limitations"
+             >next</a> |</li>
+        <li class="right" >
           <a href="index.html" title="Welcome to the BGT Import plugin documentation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.7 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

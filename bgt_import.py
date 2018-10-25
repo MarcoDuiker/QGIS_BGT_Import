@@ -23,26 +23,43 @@
 from __future__ import absolute_import
 from builtins import str
 from builtins import object
-from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QUrl
-from qgis.PyQt.QtWidgets import QAction, QFileDialog, QProgressBar
-from qgis.PyQt.QtGui import QIcon, QDesktopServices
+
 from qgis.PyQt.Qt import Qt
-from qgis.core import *
-from qgis.core import Qgis
-from qgis.gui import *
-from qgis.utils import *
+from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication,\
+    QUrl
+from qgis.PyQt.QtWidgets import QAction, QFileDialog, QProgressBar, QApplication
+from qgis.PyQt.QtGui import QIcon, QDesktopServices
+from qgis.core import Qgis, QgsTask, QgsNetworkContentFetcherTask, QgsTaskManager,\
+    QgsMessageLog, QgsProject, QgsApplication, QgsVectorLayer, QgsLayerDefinition,\
+    QgsLayerTreeLayer
+import processing
 
 # Initialize Qt resources from file resources.py
 from . import resources
 # Import the code for the dialog
 from .bgt_import_dialog import BGTImportDialog
 
-from xml.dom.pulldom import parse
+try:
+    import lxml.etree as le
+except:
+    from xml import etree
+import glob
 import ogr
 import os
 import shutil
+import tempfile
 import time
 import webbrowser
+from xml.dom.pulldom import parse
+
+
+from .network import networkaccessmanager
+from .bgt_utils import utils as bgt_utils
+
+
+__author__ = 'Marco Duiker MD-kwadraat'
+__date__ = 'October 2018'
+
 
 _can_symlink = None
 def can_symlink(folder):
@@ -96,6 +113,9 @@ class BGTImport(object):
         # TODO: We are going to let the user set this up in a future iteration
         self.toolbar = self.iface.addToolBar(u'BGTImport')
         self.toolbar.setObjectName(u'BGTImport')
+        
+        self.nam = networkaccessmanager.NetworkAccessManager()
+        self.project = QgsProject.instance()
 
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
@@ -164,9 +184,14 @@ class BGTImport(object):
         # Create the dialog (after translation) and keep reference
         self.dlg = BGTImportDialog()
 
+        # define some connections
         self.dlg.fileBrowseButton_2.clicked.connect(self.chooseFile)
         self.dlg.help_btn.clicked.connect(self.showHelp)
+        
+        # modify some widgets
+        self.dlg.save_gpkg_cmb.setStorageMode(3)        # gives us a save button
 
+        # add the buttons to the interface
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
         action.triggered.connect(callback)
@@ -208,11 +233,10 @@ class BGTImport(object):
                 self.tr(u'&BGT Import'),
                 action)
             self.iface.removeToolBarIcon(action)
-        # remove the toolbar
         del self.toolbar
 
     def getGeometryTypes(self, gml_file, requested_geometry_types, max_num_objects = False):
-        '''determines geometry types and names in bgt-file'''
+        '''determines geometry types and names in a bgt-file'''
 
         num_objects = 0
         num_requested_geom_types = len(requested_geometry_types)
@@ -261,11 +285,14 @@ class BGTImport(object):
                         geom_names['Point'] = geom_name
                         geom_paths['Point'] = ogr_el_path[:-1]
                 if len(geom_types) == num_requested_geom_types:
+                    self.results[gml_file] = {'geom_names': geom_names, 'geom_paths': geom_paths}
                     return geom_names, geom_paths
         except Exception as v:
             QgsMessageLog.logMessage(u'Error parsing gml: ' + str(v), 'BGTImport')
 
+        self.results[gml_file] = {'geom_names': geom_names, 'geom_paths': geom_paths}
         return geom_names, geom_paths
+
 
     def chooseFile(self):
         """Reacts on browse button and opens the right file selector dialog"""
@@ -280,17 +307,349 @@ class BGTImport(object):
         """Reacts on help button"""
 
         #qgis.utils.showPluginHelp(filename = 'help/index')
-        QDesktopServices().openUrl(QUrl.fromLocalFile(os.path.join("file://",
-                                                                   self.plugin_dir, 
-                                                                   'help/build/html',
-                                                                   'index.html')))
+        QDesktopServices().openUrl(QUrl.fromLocalFile( \
+            os.path.join("file://", self.plugin_dir, 'help/build/html', \
+                         'index.html')))
+
+    def test_task(self, task, message):
+        '''Just a function to test the task manager'''
+        
+        QgsMessageLog.logMessage(message)
+        return True
+
+
+    def tiles_to_download(self):
+        """Finds the tiles to download from BGT"""
+
+        # Gets the tile numbers by intersecting with the grid
+        tiles_to_request = []
+        
+        if self.dlg.download_layer_rbt.isChecked():
+            # select tiles intersecting a layer
+            select_layer = self.dlg.download_layer_cmb.currentLayer()
+            if select_layer.selectedFeatureCount() \
+            and self.dlg.selected_features_cbx.isChecked():
+                # selected features only
+                result = processing.run("native:saveselectedfeatures", 
+                                        {'INPUT': select_layer,
+                                         'OUTPUT': 'memory:selectie'})
+                select_layer = result['OUTPUT']
+                
+            result = processing.run("native:extractbylocation", 
+                                    {'INPUT': os.path.join(self.plugin_dir, \
+                                              'bgt_grid.gpkg'),
+                                     'PREDICATE': 0,
+                                     'INTERSECT': select_layer,
+                                     'OUTPUT': 'memory:tiles'})
+                                     
+            for feature in result['OUTPUT'].getFeatures():
+                tiles_to_request.append(feature["tile"])
+            if select_layer.selectedFeatureCount() \
+            and self.dlg.selected_features_cbx.isChecked():
+                QgsProject.instance().removeMapLayer(select_layer.id())
+            QgsProject.instance().removeMapLayer(result['OUTPUT'].id())
+            
+        if self.dlg.download_map_extent_rbt.isChecked():
+            # select tiles intersecting the map extent
+            wkt_extent = self.iface.mapCanvas().extent().asWktPolygon()
+
+            driver = ogr.GetDriverByName("GPKG")
+            dataSource = driver.Open(os.path.join(self.plugin_dir, 'bgt_grid.gpkg'), 0)
+            grid = dataSource.GetLayer()
+            grid.SetSpatialFilter(ogr.CreateGeometryFromWkt(wkt_extent))
+
+            for feature in grid:
+                tiles_to_request.append(feature.GetField("tile"))
+                
+        return tiles_to_request
+
+    def tiles_download_url(self, tiles):
+        '''Returns the BGT download url for a set of tiles'''
+        
+        return "https://downloads.pdok.nl/service/extract.zip?" +\
+        "extractname=bgt&extractset=citygml&excludedtypes=plaatsbepalingspunt&history=true&" +\
+        "tiles=%7B%22layers%22%3A%5B%7B%22aggregateLevel%22%3A0%2C%22codes%22%3A%5B" + \
+        '%2C'.join([str(x) for x in tiles]) + "%5D%7D%5D%7D"
+
+
+    def import_finished(self, geopackage):
+        """
+        OBSOLETE! IS CALLED TO EARLY
+        Inform the user and add layers if requested
+        """
+        
+        if not geopackage:
+            self.iface.messageBar().pushMessage("Error",
+                self.tr(u'Importing BGT-zip to geopackage failed.') +
+                self.tr(u'See message log for more info.'),
+                level=Qgis.Critical)
+            return
+            
+        # copy the qlr next to the gpkg and add to project!
+        # don't forget to add a filter on the expired objects!
+        self.iface.messageBar().pushMessage("Info",
+                self.tr(u'Done importing BGT data.'))
+
+    def adapt_qlr_to_geopackage(self, qlr, geopackage):
+        '''
+        OBSOLETE! We are not using qlr anymore
+        adapts qlr by removing extent and inserting the right path
+        '''
+
+        if le:
+            with open(qlr,'r') as f:
+                doc=le.parse(f)
+                for elem in doc.xpath('//*'):
+                    if elem.tag == 'layer-tree-layer':
+                        layer_path = elem.get('source')
+                        gpkg_path = layer_path.split('|')[0].strip()
+                        elem.set('source',layer_path.replace(gpkg_path,
+                            './' + os.path.basename(geopackage)))
+                    if elem.tag == 'datasource':
+                        layer_path = elem.text
+                        gpkg_path = layer_path.split('|')[0].strip()
+                        elem.text = layer_path.replace(gpkg_path,
+                            './' + os.path.basename(geopackage))
+                    if elem.tag == 'extent':
+                        parent=elem.getparent()
+                        parent.remove(elem)
+            return le.tostring(doc)
+        else:
+            # implement in etree 
+            pass
+
+    def add_to_project_using_qlr(self, task, geopackage):
+        '''
+        OBSOLETE ! NOT WORKING NICELY 
+        applies styling and filtering and scale dependency by adding the layers via qlr files
+        '''
+        
+        progress = 0
+        if task:
+            task.setProgress(progress)
+        
+        qlr_folder = os.path.join(self.plugin_dir,'qlr')
+        user_qlr_folder = os.path.join(self.plugin_dir,'user_qlr')
+        import_folder = os.path.dirname(geopackage)
+        
+        # add a layergroup to insert the layers in
+        layer_group = QgsProject.instance().layerTreeRoot().insertGroup(0, 
+            os.path.basename(geopackage)[:-5])
+        
+        standard_layers = bgt_utils.get_standard_layers()
+        layers_added = []
+        layers = []
+        gp =  ogr.GetDriverByName('GPKG').Open( geopackage )
+        for i in range(gp.GetLayerCount()):
+            layers.append(gp.GetLayerByIndex(i).GetName())
+        increment = 100/len(layers)
+        
+        # first add all standard layers this plugin knows of
+        for layer in reversed(standard_layers):
+            if layer in layers:
+                qlr = os.path.join(qlr_folder,layer + '.qlr')
+                user_qlr = os.path.join(user_qlr_folder,layer + '.qlr')
+                if os.path.exists(user_qlr):
+                    qlr = user_qlr
+                if os.path.exists(qlr):
+                    with open(os.path.join(import_folder,layer+'.qlr'),'wb') as f:
+                        f.write(self.adapt_qlr_to_geopackage(qlr,geopackage))
+                        QgsLayerDefinition().loadLayerDefinition(qlr, self.project, layer_group)
+                else:
+                    # add without qlr. This should not happen!
+                    uri = '%s|layername=%s|subset="eindRegistratie" IS NULL' %\
+                        (geopackage, layer)
+                    map_layer = QgsVectorLayer(uri, 
+                        layer.replace('_P',' (punt)').replace('_L',' (lijn)').replace('_V', ' (vlak)'), 
+                        "ogr")
+                    layer_group.insertLayer(0, map_layer)
+                layers_added.append(layer)
+                progress = progress + increment
+                if task:
+                    task.setProgress(progress)
+                
+        # then add all layers we might have missed
+        # should not happen as we don't have gfs for those ...
+        missed_layers = list(set(layers) - set(layers_added))
+        if missed_layers:
+            progress = 0
+            increment = 100/len(missed_layers)
+            for layer in missed_layers:
+                # add without qlr. This should not happen!
+                uri = '%s|layername=%s|subset="eindRegistratie" IS NULL' %\
+                    (geopackage, layer)
+                map_layer = QgsVectorLayer(uri, 
+                    layer.replace('_P',' (punt)').replace('_L',' (lijn)').replace('_V', ' (vlak)'), 
+                    "ogr")
+                layer_group.insertLayer(0, map_layer)
+                progress = progress + increment
+                if task:
+                    task.setProgress(progress)
+        if task:
+            task.setProgress(100)
+            
+    def add_layer_to_group(self, geopackage, layer, group):
+        '''
+        Adds a layer to the group and returns the layer
+        '''
+        
+        uri = '%s|layername=%s|subset="eindRegistratie" IS NULL' % (geopackage, layer)
+        map_layer = QgsVectorLayer(uri, 
+            layer.replace('bgt_','').replace('_P',' (punt)').replace('_L',' (lijn)').replace('_V', ' (vlak)'), 
+            "ogr")
+        self.project.addMapLayer(map_layer, False)
+        group.insertChildNode(-1, QgsLayerTreeLayer(map_layer))
+        
+        return map_layer
+        
+    def add_styling(self, map_layer, layer):
+        '''
+        Adds the styling to the layer.
+        First we try qml, the sld. In both cases the user has the option to 
+        overrule the style by placing something in the user_qml or _sld folder.
+        But ... if there is a file in qml, sld will never be used.
+        '''
+        
+        qml_folder = os.path.join(self.plugin_dir,'qml')
+        user_qml_folder = os.path.join(self.plugin_dir,'user_qml')
+        
+        sld_folder = os.path.join(self.plugin_dir,'sld')
+        user_sld_folder = os.path.join(self.plugin_dir,'user_sld')
+        
+        qml = os.path.join(qml_folder,layer + '.qml')
+        user_qml = os.path.join(user_qml_folder,layer + '.qml')
+        if os.path.exists(user_qml):
+            qml = user_qml
+        if os.path.exists(qml):
+            map_layer.loadNamedStyle(qml) 
+        else:
+            sld = os.path.join(sld_folder,layer + '.sld')
+            user_sld = os.path.join(user_sld_folder,layer + '.sld')
+            if os.path.exists(user_sld):
+                sld = user_sld
+            if os.path.exists(sld):
+                map_layer.loadSldStyle(sld) 
+
+
+    def add_to_project(self, task, geopackage):
+        '''
+        Adds layers applying filtering and styles on the go.
+        When done, save the whole shebang to a qlr for easy access.
+        '''
+        
+        progress = 0
+        if task:
+            task.setProgress(progress)
+        
+        import_folder = os.path.dirname(geopackage)
+        
+        # add a layergroup to insert the layers in
+        layer_group = QgsProject.instance().layerTreeRoot().insertGroup(0, 
+            os.path.basename(geopackage)[:-5])
+        
+        standard_layers = bgt_utils.get_standard_layers()
+        layers_added = []
+        layers = []
+        gp =  ogr.GetDriverByName('GPKG').Open( geopackage )
+        for i in range(gp.GetLayerCount()):
+            layers.append(gp.GetLayerByIndex(i).GetName())
+        increment = 100/len(layers)
+        
+        # first add all standard layers this plugin knows
+        for layer in standard_layers:
+            if layer in layers:
+                map_layer = self.add_layer_to_group(geopackage, layer, layer_group)
+                self.add_styling(map_layer, layer)
+                # turn layers on and of
+                if not layer in bgt_utils.get_visible_layers():
+                    self.project.layerTreeRoot().findLayer(map_layer.id()).setItemVisibilityChecked(False)                  
+                layers_added.append(layer)
+                progress = progress + increment
+                if task:
+                    task.setProgress(progress)
+                
+        # then add all layers we might have missed
+        # should not happen as we don't have .gfs for those ...
+        missed_layers = list(set(layers) - set(layers_added))
+        if missed_layers:
+            progress = 0
+            increment = 100/len(missed_layers)
+            for layer in missed_layers:
+                map_layer = self.add_layer_to_group(geopackage, layer, layer_group)
+                if task:
+                    task.setProgress(progress)
+                    
+        # now save the whole shebang in qlr file:
+        # Unfortonately we cannot save the group itself. And if we save the chilren we miss the group header
+        # So we leave this up to the user.
+        #QgsLayerDefinition.exportLayerDefinition(geopackage.replace('.gpkg','.qlr'), 
+        #   self.project.layerTreeRoot().findGroup(os.path.basename(geopackage)[:-5]).children())
+        if task:
+            task.setProgress(100)
+
 
     def run(self):
         """Import and optionally add chosen files"""
         
         self.dlg.show()
         result = self.dlg.exec_()
-        if result:
+        
+        ########### TAB 0: new style processing of complete zip ################
+        
+        if result and self.dlg.tabWidget.currentIndex() == 0:
+            QApplication.setOverrideCursor(Qt.WaitCursor)
+            download_task = None
+            if self.dlg.download_map_extent_rbt.isChecked() \
+            or self.dlg.download_layer_rbt.isChecked():
+                tiles = self.tiles_to_download()
+                zip_file_name = os.path.join(tempfile.gettempdir(), 'extract.zip')
+                #download_task = QgsNetworkContentFetcherTask(QUrl(self.tiles_download_url(tiles)))
+                # the QgsNetworkContentFetcherTask doesn't give a nice progress indication
+                download_task = QgsTask.fromFunction(
+                    'BGTImport: download tiles', 
+                    bgt_utils.download_tiles, 
+                    tiles = tiles, 
+                    file_name = zip_file_name,
+                    nam = self.nam)
+
+            if self.dlg.import_existing_zip_rbt.isChecked():
+                zip_file_name = self.dlg.open_zip_cmb.filePath()
+                
+            geopackage = self.dlg.save_gpkg_cmb.filePath()
+            import_task = QgsTask.fromFunction(
+                'BGTImport: (download and) import tiles', 
+                bgt_utils.import_to_geopackage, 
+                zip_file_name = zip_file_name,
+                geopackage = geopackage)
+                # , on_finished = self.import_finished(geopackage)
+                # fires directly, instead of waiting for a task to finish?
+            add_to_project_task = QgsTask.fromFunction(
+                'BGTImport: (download and) import tiles', 
+                self.add_to_project,
+                geopackage = geopackage)
+            QApplication.restoreOverrideCursor()
+            if download_task:
+                import_task.addSubTask(download_task,[],QgsTask.ParentDependsOnSubTask)
+                self.iface.messageBar().pushMessage("Info",
+                    self.tr(u'Started downloading and importing BGT tiles ...'))
+            else:
+                self.iface.messageBar().pushMessage("Info",
+                    self.tr(u'Started importing BGT tiles ...'))
+            
+            self.tsk_mngr = QgsApplication.taskManager()   
+            if self.dlg.add_cbx.isChecked():
+                add_to_project_task.addSubTask(import_task,[],QgsTask.ParentDependsOnSubTask)
+                self.tsk_mngr.addTask(add_to_project_task)
+            else:
+                self.tsk_mngr.addTask(import_task)
+            # todo: attach to some task slots to inform on errors and see if things are done
+            self.dlg.close()
+
+        ########### TAB 1: old style processing of individual files ############
+        # usefull if BGT definitions are changed.                              #
+        # With this tab we can check if a fresh import looks the same as the   #
+        # automatic one on tab 0.                                              #
+        if result and self.dlg.tabWidget.currentIndex() == 1:
             # get all stuff from the dialog
             geometry_types = []
             if self.dlg.polygon_cbx.isChecked():
@@ -311,8 +670,9 @@ class BGTImport(object):
             QApplication.setOverrideCursor(Qt.WaitCursor)
 
             self.iface.messageBar().pushMessage("Info",
-                                                self.tr(u'Start') + ' ' + self.tr(u'Importing BGT gml files ...'))
-            progressMessageBar = self.iface.messageBar().createMessage(self.tr(u'Importing BGT gml files ...'))
+                self.tr(u'Start') + ' ' + self.tr(u'Importing BGT gml files ...'))
+            progressMessageBar = self.iface.messageBar().createMessage( \
+                self.tr(u'Importing BGT gml files ...'))
             bar = QProgressBar()
             bar.setRange(0,0)
             bar.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
@@ -320,27 +680,28 @@ class BGTImport(object):
             self.iface.messageBar().pushWidget(progressMessageBar, Qgis.Info)
 
             # test symlinking
-            _can_symlink = can_symlink(os.path.abspath(os.path.dirname(file_names_list[0])))
+            self._can_symlink = _can_symlink = can_symlink(os.path.abspath(os.path.dirname(file_names_list[0])))
 
             # import the files
             count = 0
+            self.results = {}
             for file_name in file_names_list:
                 count = count + 1
                 progressMessageBar.setText(self.tr(u"Analyzing file ") + str(count) + self.tr(u" from ") 
-                                                + str(number_of_files) + ": " + os.path.basename(file_name))
+                    + str(number_of_files) + ": " + os.path.basename(file_name))
                 # find the ogr paths to the requested geometries
                 geom_names, geom_paths = self.getGeometryTypes(file_name, geometry_types, max_num_objects)
 
                 if len(geom_paths) == 0:
                     self.iface.messageBar().pushMessage('Error', 
-                                                        self.tr(u"Could not find any of the requested geometries in: " + 
-                                                        os.path.basename(file_name)), level=Qgis.WARNING)
+                        self.tr(u"Could not find any of the requested geometries in: " + 
+                        os.path.basename(file_name)), level=Qgis.WARNING)
                 else: 
                     for geom_type, geom_path in list(geom_paths.items()):
                         geom_name = geom_path[0]
                         progressMessageBar.setText( self.tr(u"Importing file ") + 
-                                                    str(count) + self.tr(u" from ") + str(number_of_files) + 
-                                                    ": " + os.path.basename(file_name))
+                            str(count) + self.tr(u" from ") + str(number_of_files) + 
+                            ": " + os.path.basename(file_name))
 
                         #copy or symlink gml so we can add an appropriate gfs
                         if 'Polygon' in geom_type: 
@@ -359,9 +720,10 @@ class BGTImport(object):
                                 shutil.copy(file_name,gml_name)
                         except Exception as v:
                             self.iface.messageBar().pushMessage('Error', 
-                                                                self.tr(u"Error in creating gml copies for import: ") + 
-                                                                str(v), level=Qgis.Warning)  
-                            QgsMessageLog.logMessage(u'Error in creating gml copies for import: ' + str(v), 'BGTImport')
+                                self.tr(u"Error in creating gml copies for import: ") + 
+                                str(v), level=Qgis.Warning)  
+                            QgsMessageLog.logMessage(u'Error in creating gml copies for import: ' + 
+                                str(v), 'BGTImport')
                         else:
                             gfs_name = gml_name[:-4] + '.gfs'
                             driver = ogr.GetDriverByName('gml')
@@ -376,25 +738,24 @@ class BGTImport(object):
                                         gfs = f.read()
                             except Exception as v:
                                 self.iface.messageBar().pushMessage('Error', 
-                                                                    self.tr(u"Error in reading import definitions: ") + 
-                                                                    str(v), level=Qgis.Warning)  
+                                    self.tr(u"Error in reading import definitions: ") + 
+                                    str(v), level=Qgis.Warning)  
                                 QgsMessageLog.logMessage(u'Error in reading import definitions: ' + str(v), 'BGTImport')
                             else:
                                 gfs_fragment = "<GeomPropertyDefn><Name>%s</Name><ElementPath>%s</ElementPath><Type>%s</Type></GeomPropertyDefn>" % (geom_name,'|'.join(geom_path),geom_type)
                                 gfs = gfs.replace('<GMLFeatureClass>','<GMLFeatureClass>' + gfs_fragment)
-
                                 try:
                                     with open(gfs_name,'w') as f:
                                         f.write(gfs)
                                 except Exception as v:
                                     self.iface.messageBar().pushMessage('Error', 
-                                                                        self.tr(u"Error in writing import definitions: ") + 
-                                                                        str(v), level=Qgis.Warning)  
+                                        self.tr(u"Error in writing import definitions: ") + 
+                                        str(v), level=Qgis.Warning)  
                                     QgsMessageLog.logMessage(u'Error in writing import definitions: ' + str(v), 'BGTImport')
                                 else:
                                     if self.dlg.add_cbx.isChecked():
                                         progressMessageBar.setText(self.tr(u"Adding file ") + str(count) + self.tr(u" from ") + 
-                                                                   str(number_of_files) + ": " + os.path.basename(gml_name))
+                                               str(number_of_files) + ": " + os.path.basename(gml_name))
                                         self.iface.addVectorLayer(gml_name,os.path.basename(file_name)[:-4],'ogr')
 
             QApplication.restoreOverrideCursor()
