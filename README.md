@@ -1,7 +1,7 @@
 QGIS BGT Import Plugin
 ======================
 
-This plugin imports the Dutch Basisregistratie Grootschalige Topografie (BGT) gml files. The user can choose which geometry from multiple geometry types should be imported.
+This plugin imports the Dutch Basisregistratie Grootschalige Topografie (BGT) gml files. Either by downloading and importing a complete package directly form the BGT download site or by selecting and importing individual BGT gml files. 
 
 You will find the plugin in the Vector menu.
 
