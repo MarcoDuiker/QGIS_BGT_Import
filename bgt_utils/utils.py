@@ -2,7 +2,7 @@
 Uitility functions for working with the BGT.
 '''
 
-
+import argparse
 import os
 import shutil
 import tempfile
@@ -241,3 +241,9 @@ def import_to_geopackage(task, zip_file_name, geopackage):
             QgsMessageLog.logMessage(u'Error importing BGT-zip: ' + str(v), 
                 tag = 'BGTImport', level = Qgis.Critical)
         return False
+
+
+if __name__ == "__main__":
+    pass
+    # todo: add command line interface
+    

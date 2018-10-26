@@ -13,33 +13,51 @@ Furthermore the plugin downloads the BGT data from map extent or intersect layer
 How does the plug-in work?
 ==========================
 
-You will find the plugin in the Vector menu.
-
-The BGT gml files can contain objects which have multiple geometries, of different types. Eg. the bgt_kunstwerkdeel.gml can contain polygons, lines and points for the same type of objects (class).
-
-The plug-in scans the file to see which geometry types are used and will generate ogr import definition file (.gfs) for each type of geometry. 
-
-As a .gfs file needs to have the same name as the .gml file (except for the extension of course) the gml file will be copied or symlinked. The name of the copy will contain a _V, _L or _P extension to denote either polygons (_V), lines (_L) or points (_P).
-
-Once these files are generated, QGIS will read the right geometry type on openening the file with one of the _V, _L or _P extensions. No need to use the BGT import plug-in for that.
+You will find the plugin in the Vector menu. A menu bar with a button is added to the QGIS interface as well. If you cannot find it, you can activate it in the same manner as all other menu bars.
 
 
-How to import BGT gml files?
-============================
-First download a zip with some BGT gml files from the `BGT download site <https://www.pdok.nl/nl/producten/pdok-downloads/download-basisregistratie-grootschalige-topografie>`_. Download small areas or be prepared to wait when importing!
+First Tab: Complete package
+---------------------------
 
-Unzip the package so you get a folder with .gml files and use the import tool to select one or more BGT gml files.
+The easiest way (but not necessarily the fastest way) is to use the first tab of the plugin and download the data, and add it to your project in one go. Alternatively you can use zip files which you can download from the `BGT download site <https://www.pdok.nl/nl/producten/pdok-downloads/download-basisregistratie-grootschalige-topografie>`_.
 
-Choose the geometry types to import and click the OK button. If you choose only one geometry type, the import process will go quicker as the importer only scans the file until it has found the first geometry of the chosen type.
+The plugin will download a zip file with data from the BGT website based on the extent of you map view, or based on the intersection with (the selected features) of a layer you choose.
 
-When importing large and/ or a lot of BGT gml files it is recommended to use the option to inspect a most a limited number of objects to find the requested geometry types. This wil speed up the import process a lot!
+Then based on a set of predefinied import rules, the data is imported to a geopackage. If necessary objects are split to polygon, line and point layers. Then all layers are added to your project in a layer group. Filtering is applied to remove all objects which are expired (have a non-empty ``eindRegistratie`` ). Furthermore, styling is applied to mimick the official BGT styling where possible. The zip file which was downloaded is stored next to the geopackage for reference.
 
-The plug-in will generate the described (above) copies and import definition files (.gfs). If you've checked the "add to project" check box the plug-in will add the files as layers to your project.
+Once the import is done it might be wise to save the layer group as a QGIS layer file for future use in other QGIS projects. 
 
-Scanning BGT files can be a time consuming process especially on platforms with low io speed. Please be patient.
-
+Downloading and importing actions from this tab are done as background tasks. The progress indicator in the status bar will show progress. During download this progress indicator will run to about 30% and the start at about 5% again. This is normal behaviour. As long as the percentages are changing your download is running as it should. If you download large areas, be prepared to wait (a long time).
 
 
+Second Tab: Individual files
+----------------------------
+
+On this tab you can select one or more BGT gml files to import. The plug-in scans the file and will determine the import rules on the go. These import rules are saved to a ``.gfs`` file.
+
+As a ``.gfs`` file needs to have the same name as the ``.gml`` file (except for the extension of course) the gml file will be copied or symlinked. The name of the copy will contain a ``_V``, ``_L`` or ``_P`` extension to denote either polygons (_V), lines (_L) or points (_P).
+
+Once these files are generated, QGIS will read the gml files properly on openening the file with one of the _V, _L or _P extensions. No need to use the BGT import plug-in for that.
+
+Scanning BGT files and determining the import rules can be a time consuming process especially on platforms with low io speed. Please be patient, as this operation is not running as a background task.
+
+
+Usage Tips
+==========
+
+If you import data using the second tab of this plugin ('Individual files'), you can still apply a nice style. The styles you can find in the ``qml`` folder in the plugin folder.
+
+If you don't like the default styles this plugin applies, you can overide these on a per layer basis by adding files to the ``user_qml`` folder in the plugin folder. Naming convention will be obvious once you look at the files in the ``qml`` folder in the plugin folder.
+
+
+Troubleshooting
+================
+
+The BGT is a complex dataset to import into a GIS package. Things can go wrong. See the limitations in this help and the `issues list <https://github.com/MarcoDuiker/QGIS_BGT_Import/issues>`_. if you think something went wrong.
+
+If you need to investigate an import which seems of, first use the second tab of this plugin ('Individual files') WITHOUT SETTING A MAXIMUM NUMBER OF GEOMETRIES TO INSPECT to import this file without the predefined import rules. If the file then imports well, please report the issue on the `issues list <https://github.com/MarcoDuiker/QGIS_BGT_Import/issues>`_, and make the ``.gml`` file available.
+
+If the import still seems to be wrong then check if the import is really wrong, are that there is a mistake in the data. Most of the time you can find out by inspecting an object in the ``.gml`` file, and the imported version of this object. If you then find out that the import is wrong, please report the issue on the `issues list <https://github.com/MarcoDuiker/QGIS_BGT_Import/issues>`_, and make the ``.gml`` file available.
 
 
 

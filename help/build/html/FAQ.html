@@ -46,16 +46,21 @@
             
   <div class="section" id="faq">
 <h1>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="why-does-downloading-and-importing-take-so-long">
+<h2>Why does downloading and importing take so long?<a class="headerlink" href="#why-does-downloading-and-importing-take-so-long" title="Permalink to this headline">¶</a></h2>
+<p>The download takes a lot of time. Please ask the maintainers of the <a class="reference external" href="https://www.pdok.nl/nl/producten/pdok-downloads/download-basisregistratie-grootschalige-topografie">BGT download site</a> why.</p>
+<p>If you don’t use predefined import rules, each gml file in your download has to be scanned to see if there are geometries hidden in unexpected places. This requires a time consuming complete scan of the entire file.</p>
+<p>Furthermore, a lot of data is involved. This always takes some time.</p>
+</div>
 <div class="section" id="why-did-you-make-this-plugin">
 <h2>Why did you make this plugin?<a class="headerlink" href="#why-did-you-make-this-plugin" title="Permalink to this headline">¶</a></h2>
 <p>In my professional life I almost exclusively use Free an Open Source Software. I am very gratefull that all those very nice products made by nice people are available to me free of charge and license hassles.</p>
 <p>As Open Source is not about “taking”, but much more about “giving” I like to do my share in giving. I try to spread knowledge by climbing the stage at almost all conferences I attend, by writing on eg. <a class="reference external" href="http://www.qgis.nl/">QGIS.nl</a>, and by teaching at <a class="reference external" href="http://www.geo-academie.nl/">Geo Academie</a>.</p>
-<p>My frustrations using the BGT in QGIS during teachinh one of my courses led to this plugin. It is a completely volunteered effort, and I do not make any money out of it. Unfortonately the last incarnation of this plugin took a lot of time to create.</p>
+<p>My frustrations using the BGT in QGIS during teaching one of my courses led to this plugin. It is a completely volunteered effort, and I do not make any money out of it. Unfortunately the last incarnation of this plugin took a lot of time to create.</p>
 </div>
 <div class="section" id="why-does-the-progress-indicator-move-in-such-a-weird-way">
 <h2>Why does the progress indicator move in such a weird way?<a class="headerlink" href="#why-does-the-progress-indicator-move-in-such-a-weird-way" title="Permalink to this headline">¶</a></h2>
 <p>The BGT download website does not give any information on the size of the downloads. So in the best MS tradition the progress indicator jumps from ‘almost half way’ to ‘just started’ as often as needed to get the download in.</p>
-<p>A bug in the great (but very new) task manager in QGIS makes this matter even worse as the last very small task (applying styling to the BGT) gets the last 33% of the progress bar.</p>
 </div>
 <div class="section" id="why-is-the-second-tab-individual-files-still-in-the-plugin">
 <h2>Why is the second tab (“Individual Files”) still in the plugin?<a class="headerlink" href="#why-is-the-second-tab-individual-files-still-in-the-plugin" title="Permalink to this headline">¶</a></h2>
@@ -66,6 +71,16 @@
 <h2>Why is the BGT-zip containing all those bloated gml files smaller than the geopackage containing the same data?<a class="headerlink" href="#why-is-the-bgt-zip-containing-all-those-bloated-gml-files-smaller-than-the-geopackage-containing-the-same-data" title="Permalink to this headline">¶</a></h2>
 <p>The gml files contain objects, optionally having points, lines and polygons. To use them in QGIS these object needs to be split in up to 3 layers containing only lines, only points or only polygons. Of course all information shown in the attribute table is then duplicated or triplicated. And of course, zip is a very powerfull way of making text (much) smaller.</p>
 <p>Furthermore spatial indexes are added which gives you the nice performance compared to using the gml files directly.</p>
+</div>
+<div class="section" id="your-styling-sucks-can-i-apply-my-own-default-styling">
+<h2>Your styling sucks! Can I apply my own default styling?<a class="headerlink" href="#your-styling-sucks-can-i-apply-my-own-default-styling" title="Permalink to this headline">¶</a></h2>
+<p>The styling mimicks the ‘official’ styling of the BGT. It is rather complex, and I have made mistakes (please correct me where possible). But … if I had done the styling myself, it would have looked much worse!</p>
+<p>Anyhow, you can add your own default styling for a layer in the <code class="docutils literal"><span class="pre">user_qml</span></code> folder in the plugin folder. Naming convention will be obvious once you look at the files in the <code class="docutils literal"><span class="pre">qml</span></code> folder in the plugin folder.</p>
+<p>If you have created a nice styling, please share it!</p>
+</div>
+<div class="section" id="i-like-to-run-a-bgt-download-and-import-automagically-on-a-reguler-basis-can-your-plugin-help">
+<h2>I like to run a BGT download and import automagically on a reguler basis. Can your plugin help?<a class="headerlink" href="#i-like-to-run-a-bgt-download-and-import-automagically-on-a-reguler-basis-can-your-plugin-help" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">utils.py</span></code> script in the <code class="docutils literal"><span class="pre">bgt_utils</span></code> folder in the plugin folder contains some functions which will help you.</p>
 </div>
 <div class="section" id="i-like-this-plugin-can-i-buy-you-a-beer">
 <h2>I like this plugin. Can I buy you a beer?<a class="headerlink" href="#i-like-this-plugin-can-i-buy-you-a-beer" title="Permalink to this headline">¶</a></h2>
@@ -84,10 +99,13 @@ But do remember, I don’t like the sweet beers that much (I already am a very s
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">FAQ</a><ul>
+<li><a class="reference internal" href="#why-does-downloading-and-importing-take-so-long">Why does downloading and importing take so long?</a></li>
 <li><a class="reference internal" href="#why-did-you-make-this-plugin">Why did you make this plugin?</a></li>
 <li><a class="reference internal" href="#why-does-the-progress-indicator-move-in-such-a-weird-way">Why does the progress indicator move in such a weird way?</a></li>
 <li><a class="reference internal" href="#why-is-the-second-tab-individual-files-still-in-the-plugin">Why is the second tab (“Individual Files”) still in the plugin?</a></li>
 <li><a class="reference internal" href="#why-is-the-bgt-zip-containing-all-those-bloated-gml-files-smaller-than-the-geopackage-containing-the-same-data">Why is the BGT-zip containing all those bloated gml files smaller than the geopackage containing the same data?</a></li>
+<li><a class="reference internal" href="#your-styling-sucks-can-i-apply-my-own-default-styling">Your styling sucks! Can I apply my own default styling?</a></li>
+<li><a class="reference internal" href="#i-like-to-run-a-bgt-download-and-import-automagically-on-a-reguler-basis-can-your-plugin-help">I like to run a BGT download and import automagically on a reguler basis. Can your plugin help?</a></li>
 <li><a class="reference internal" href="#i-like-this-plugin-can-i-buy-you-a-beer">I like this plugin. Can I buy you a beer?</a></li>
 </ul>
 </li>

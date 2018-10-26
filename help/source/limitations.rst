@@ -1,5 +1,10 @@
 Limitations
-************
+***********
+
+Downloads
+=========
+
+The BGT server from where the data is downloaded might be slow, down, or intermittently available. This means that downloads can fail or take very, very long. On larger downloads your more likely to run into trouble.
 
 Openbareruimtelabel (punt)
 ==========================
