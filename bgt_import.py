@@ -31,7 +31,7 @@ from qgis.PyQt.QtWidgets import QAction, QFileDialog, QProgressBar, QApplication
 from qgis.PyQt.QtGui import QIcon, QDesktopServices
 from qgis.core import Qgis, QgsTask, QgsNetworkContentFetcherTask, QgsTaskManager,\
     QgsMessageLog, QgsProject, QgsApplication, QgsVectorLayer, QgsLayerDefinition,\
-    QgsLayerTreeLayer
+    QgsLayerTreeLayer, QgsMapLayerProxyModel
 import processing
 
 # Initialize Qt resources from file resources.py
@@ -193,6 +193,7 @@ class BGTImport(object):
         
         # modify some widgets
         self.dlg.save_gpkg_cmb.setStorageMode(3)        # gives us a save button
+        self.dlg.download_layer_cmb.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
         # add the buttons to the interface
         icon = QIcon(icon_path)
@@ -385,17 +386,12 @@ class BGTImport(object):
         
     def add_styling(self, map_layer, layer):
         '''
-        Adds the styling to the layer.
-        First we try qml, the sld. In both cases the user has the option to 
-        overrule the style by placing something in the user_qml or _sld folder.
-        But ... if there is a file in qml, sld will never be used.
+        Adds the styling to the layer. The user has the option to 
+        overrule the style by placing something in the user_qml folder.
         '''
         
         qml_folder = os.path.join(self.plugin_dir,'qml')
         user_qml_folder = os.path.join(self.plugin_dir,'user_qml')
-        
-        sld_folder = os.path.join(self.plugin_dir,'sld')
-        user_sld_folder = os.path.join(self.plugin_dir,'user_sld')
         
         qml = os.path.join(qml_folder,layer + '.qml')
         user_qml = os.path.join(user_qml_folder,layer + '.qml')
@@ -403,13 +399,6 @@ class BGTImport(object):
             qml = user_qml
         if os.path.exists(qml):
             map_layer.loadNamedStyle(qml) 
-        else:
-            sld = os.path.join(sld_folder,layer + '.sld')
-            user_sld = os.path.join(user_sld_folder,layer + '.sld')
-            if os.path.exists(user_sld):
-                sld = user_sld
-            if os.path.exists(sld):
-                map_layer.loadSldStyle(sld) 
 
 
     def add_to_project(self, task, geopackage):
@@ -674,6 +663,7 @@ class BGTImport(object):
                                         progressMessageBar.setText(self.tr(u"Adding file ") + str(count) + self.tr(u" from ") + 
                                                str(number_of_files) + ": " + os.path.basename(gml_name))
                                         self.iface.addVectorLayer(gml_name,os.path.basename(file_name)[:-4],'ogr')
+                                        #    def add_styling(self, map_layer, layer):
 
             QApplication.restoreOverrideCursor()
 
