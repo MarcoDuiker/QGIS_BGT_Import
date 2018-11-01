@@ -55,7 +55,6 @@ import uuid
 import webbrowser
 from xml.dom.pulldom import parse
 
-
 from .network import networkaccessmanager
 from .bgt_utils import utils as bgt_utils
 
@@ -450,7 +449,7 @@ class BGTImport(object):
                     task.setProgress(progress)
                     
         # now save the whole shebang in qlr file:
-        # Unfortonately we cannot save the group itself. And if we save the chilren we miss the group header
+        # Unfortunately we cannot save the group itself. And if we save the chilren we miss the group header
         # So we leave this up to the user.
         #QgsLayerDefinition.exportLayerDefinition(geopackage.replace('.gpkg','.qlr'), 
         #   self.project.layerTreeRoot().findGroup(os.path.basename(geopackage)[:-5]).children())
@@ -532,21 +531,20 @@ class BGTImport(object):
                 import_task.addSubTask(download_task,[],QgsTask.ParentDependsOnSubTask)
                 self.iface.messageBar().pushMessage("Info",
                     self.tr(u'Started downloading and importing BGT tiles ...'))
+                download_task.taskTerminated.connect(partial(self.download_task_failed, import_task))
             else:
                 self.iface.messageBar().pushMessage("Info",
                     self.tr(u'Started importing BGT tiles ...'))
-            
-            download_task.taskTerminated.connect(partial(self.download_task_failed, import_task))
-            import_task.taskTerminated.connect(partial(self.import_task_failed, add_to_project_task))
-            add_to_project_task.taskTerminated.connect(self.add_to_project_task_failed)
-            
+             
             self.tsk_mngr = QgsApplication.taskManager()   
             if self.dlg.add_cbx.isChecked():
                 add_to_project_task.addSubTask(import_task,[],QgsTask.ParentDependsOnSubTask)
                 add_to_project_task.taskCompleted.connect(self.import_finished)
+                add_to_project_task.taskTerminated.connect(self.add_to_project_task_failed)
                 self.tsk_mngr.addTask(add_to_project_task)
             else:
                 import_task.taskCompleted.connect(self.import_finished)
+                import_task.taskTerminated.connect(partial(self.import_task_failed, add_to_project_task))
                 self.tsk_mngr.addTask(import_task)
 
             self.dlg.close()
