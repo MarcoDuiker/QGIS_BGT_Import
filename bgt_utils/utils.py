@@ -43,6 +43,7 @@ def get_standard_layers():
         'bgt_vegetatieobject_P',
         'bgt_waterinrichtingselement_P',
         'bgt_weginrichtingselement_P',
+        'bgt_ongeclassificeerdobject_P'
         'bgt_begroeidterreindeel_L',
         'bgt_onbegroeidterreindeel_L',
         'bgt_ondersteunendwegdeel_L',
@@ -52,6 +53,7 @@ def get_standard_layers():
         'bgt_waterinrichtingselement_L',
         'bgt_wegdeel_L',
         'bgt_weginrichtingselement_L',
+        'bgt_ongeclassificeerdobject_L',
         'bgt_overbruggingsdeel_V',
         'bgt_functioneelgebied_V',
         'bgt_gebouwinstallatie_V',
@@ -224,9 +226,11 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                                 os.path.join(tmp_folder, base_name.replace('.gml','.gfs')))
                             ds = ogr.GetDriverByName('gml').Open(os.path.join(tmp_folder, base_name))
                             input_layer = ds.GetLayer()
-                            new_layer = gp.CopyLayer(input_layer, 
-                                 base_name.replace('.gml', postfix))
-                            del input_layer, new_layer, ds
+                            if input_layer.GetFeatureCount():
+                                new_layer = gp.CopyLayer(input_layer, 
+                                    base_name.replace('.gml', postfix))
+                                del new_layer
+                            del input_layer, ds
                     progress = progress + increment
                     if task:
                         task.setProgress(progress)
