@@ -496,11 +496,19 @@ class BGTImport(object):
         ########### TAB 0: new style processing of complete zip ################
         
         if result and self.dlg.tabWidget.currentIndex() == 0:
-            QApplication.setOverrideCursor(Qt.WaitCursor)
+            geopackage = self.dlg.save_gpkg_cmb.filePath()
+            if not os.path.exists(os.path.dirname(geopackage)):
+                self.iface.messageBar().pushMessage("Error",
+                    self.tr(u'No file selected to save the imports to.'), level = Qgis.Critical)    
+                return
+        
             download_task = None
             if self.dlg.download_map_extent_rbt.isChecked() \
             or self.dlg.download_layer_rbt.isChecked():
+                QApplication.setOverrideCursor(Qt.WaitCursor)
                 tiles = self.tiles_to_download()
+                QApplication.restoreOverrideCursor()
+
                 zip_file_name = os.path.join(tempfile.gettempdir(), 'extract-' + str(uuid.uuid4()) +'.zip')
                 #download_task = QgsNetworkContentFetcherTask(QUrl(self.tiles_download_url(tiles)))
                 # the QgsNetworkContentFetcherTask doesn't give a nice progress indication
@@ -513,8 +521,11 @@ class BGTImport(object):
 
             if self.dlg.import_existing_zip_rbt.isChecked():
                 zip_file_name = self.dlg.open_zip_cmb.filePath()
+                if not os.path.exists(zip_file_name):
+                    self.iface.messageBar().pushMessage("Error",
+                    self.tr(u'No zip file selected.'), level = Qgis.Critical)    
+                    return
                 
-            geopackage = self.dlg.save_gpkg_cmb.filePath()
             import_task = QgsTask.fromFunction(
                 'BGTImport: (download and) import tiles', 
                 bgt_utils.import_to_geopackage, 
@@ -526,7 +537,6 @@ class BGTImport(object):
                 'BGTImport: (download and) import tiles', 
                 self.add_to_project,
                 geopackage = geopackage)
-            QApplication.restoreOverrideCursor()
             if download_task:
                 import_task.addSubTask(download_task,[],QgsTask.ParentDependsOnSubTask)
                 self.iface.messageBar().pushMessage("Info",
@@ -547,7 +557,7 @@ class BGTImport(object):
                 import_task.taskTerminated.connect(partial(self.import_task_failed, add_to_project_task))
                 self.tsk_mngr.addTask(import_task)
 
-            self.dlg.close()
+            return
 
         ########### TAB 1: old style processing of individual files ############
         # usefull if BGT definitions are changed.                              #
@@ -567,8 +577,15 @@ class BGTImport(object):
             if self.dlg.max_num_object_cbx.isChecked():
                 max_num_objects = self.dlg.max_num_object_sbx.value()
 
-            file_names_list = self.fileNames.split(';')
-            number_of_files = len(file_names_list)
+            try:
+                file_names_list = self.fileNames.split(';')
+                number_of_files = len(file_names_list)
+                if not number_of_files:
+                    raise Exception()
+            except:
+                self.iface.messageBar().pushMessage("Error",
+                    self.tr(u'Select at least one file to import.'), level = Qgis.Critical)    
+                return
 
             # set up some user communication
             QApplication.setOverrideCursor(Qt.WaitCursor)
