@@ -190,6 +190,13 @@ class BGTImport(object):
         self.dlg.fileBrowseButton_2.clicked.connect(self.chooseFile)
         self.dlg.help_btn.clicked.connect(self.showHelp)
         
+        self.dlg.download_map_extent_rbt.toggled.connect(self.radio_toggled)
+        self.dlg.download_layer_rbt.toggled.connect(self.radio_toggled)
+        self.dlg.import_existing_zip_rbt.toggled.connect(self.radio_toggled)
+        
+        # disable the widgets associated to unselected radio buttons
+        self.radio_toggled()
+        
         # modify some widgets
         self.dlg.save_gpkg_cmb.setStorageMode(3)        # gives us a save button
         self.dlg.download_layer_cmb.setFilters(QgsMapLayerProxyModel.VectorLayer)
@@ -313,6 +320,13 @@ class BGTImport(object):
         QDesktopServices().openUrl(QUrl.fromLocalFile( \
             os.path.join("file://", self.plugin_dir, 'help/build/html', \
                          'index.html')))
+
+    def radio_toggled(self):
+        '''Toggles the widgets associated with a radio button'''
+        
+        self.dlg.selected_features_cbx.setEnabled(self.dlg.download_layer_rbt.isChecked())
+        self.dlg.download_layer_cmb.setEnabled(self.dlg.download_layer_rbt.isChecked())
+        self.dlg.open_zip_cmb.setEnabled(self.dlg.import_existing_zip_rbt.isChecked())
 
 
     def tiles_to_download(self):

@@ -23,11 +23,11 @@ The easiest way (but not necessarily the fastest way) is to use the first tab of
 
 The plugin will download a zip file with data from the BGT website based on the extent of you map view, or based on the intersection with (the selected features) of a layer you choose.
 
-Then based on a set of predefinied import rules, the data is imported to a geopackage. If necessary objects are split to polygon, line and point layers. Then all layers are added to your project in a layer group. Filtering is applied to remove all objects which are expired (have a non-empty ``eindRegistratie`` ). Furthermore, styling is applied to mimick the official BGT styling where possible. The zip file which was downloaded is stored next to the geopackage for reference.
+Then based on a set of predefined import rules, the data is imported to a geopackage. If necessary objects are split to polygon, line and point layers. Then all layers are added to your project in a layer group. Filtering is applied to remove all objects which are expired (have a non-empty ``eindRegistratie`` ). Furthermore, styling is applied to mimic the official BGT styling where possible. The zip file which was downloaded is stored next to the geopackage for reference.
 
 Once the import is done it might be wise to save the layer group as a QGIS layer file for future use in other QGIS projects. 
 
-Downloading and importing actions from this tab are done as background tasks. The progress indicator in the status bar will show progress. During download this progress indicator will run to about 30% and the start at about 5% again. This is normal behaviour. As long as the percentages are changing your download is running as it should. If you download large areas, be prepared to wait (a long time).
+Downloading and importing actions from this tab are done as background tasks. The progress indicator in the status bar will show progress. During download this progress indicator will run to about 30% and the start at about 5% again. This is normal behavior. As long as the percentages are changing your download is running as it should. If you download large areas, be prepared to wait (a long time).
 
 
 Second Tab: Individual files
@@ -37,7 +37,7 @@ On this tab you can select one or more BGT gml files to import. The plug-in scan
 
 As a ``.gfs`` file needs to have the same name as the ``.gml`` file (except for the extension of course) the gml file will be copied or symlinked. The name of the copy will contain a ``_V``, ``_L`` or ``_P`` extension to denote either polygons (_V), lines (_L) or points (_P).
 
-Once these files are generated, QGIS will read the gml files properly on openening the file with one of the _V, _L or _P extensions. No need to use the BGT import plug-in for that.
+Once these files are generated, QGIS will read the gml files properly on opening the file with one of the _V, _L or _P extensions. No need to use the BGT import plug-in for that.
 
 Scanning BGT files and determining the import rules can be a time consuming process especially on platforms with low io speed. Please be patient, as this operation is not running as a background task.
 
@@ -47,7 +47,7 @@ Usage Tips
 
 If you import data using the second tab of this plugin ('Individual files'), you can still apply a nice style. The styles you can find in the ``qml`` folder in the plugin folder.
 
-If you don't like the default styles this plugin applies, you can overide these on a per layer basis by adding files to the ``user_qml`` folder in the plugin folder. Naming convention will be obvious once you look at the files in the ``qml`` folder in the plugin folder.
+If you don't like the default styles this plugin applies, you can override these on a per layer basis by adding files to the ``user_qml`` folder in the plugin folder. Naming convention will be obvious once you look at the files in the ``qml`` folder in the plugin folder.
 
 
 Troubleshooting

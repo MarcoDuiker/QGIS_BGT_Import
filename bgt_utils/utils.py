@@ -10,12 +10,19 @@ import urllib.request
 import uuid
 import zipfile
 
+from copy import deepcopy
+
 from osgeo import gdal
 from osgeo import ogr
 from osgeo import osr
 
 try:
     from qgis.core import Qgis, QgsTask, QgsTaskManager, QgsMessageLog
+except:
+    pass
+
+try:
+    from lxml import etree
 except:
     pass
     
@@ -193,7 +200,7 @@ def import_to_geopackage(task, zip_file_name, geopackage):
     gfs_folder = os.path.join(os.path.dirname(__file__), 'gfs')
     
     try:
-        # have a copy of the zip file available next to the gopackage
+        # have a copy of the zip file available next to the geopackage
         # so we can check the gml files if needed
         if not os.path.exists(geopackage.replace('.gpkg','.zip')):
             shutil.copy(zip_file_name, geopackage.replace('.gpkg','.zip'))
@@ -215,6 +222,11 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                     base_name = os.path.basename(info.filename)
                     QgsMessageLog.logMessage(u'Importing from BGT-zip: ' + str(base_name), 
                             tag = 'BGTImport', level = Qgis.Info)
+                    if base_name == 'bgt_openbareruimtelabel.gml' and 'etree' in globals():
+                        if task:
+                            QgsMessageLog.logMessage(u'Start processing OpenbareRuimteLabel.', 
+                            tag = 'BGTImport', level = Qgis.Info)
+                        _process_ORL(task, base_name, tmp_folder)
                     for postfix in ['_V','_L','_P']:
                         gfs_file_name = base_name.replace('.gml', postfix + '.gfs')
                         if os.path.exists(os.path.join(gfs_folder, gfs_file_name)):
@@ -245,6 +257,69 @@ def import_to_geopackage(task, zip_file_name, geopackage):
             QgsMessageLog.logMessage(u'Error importing BGT-zip: ' + str(v), 
                 tag = 'BGTImport', level = Qgis.Critical)
         return False
+
+
+def _duplicateOrl(xf, elem):
+    '''
+    A private helper function for the processing of openbare ruimte labels.
+    
+    Adapted from NLExtract.
+    '''
+
+    out_elem = deepcopy(elem)
+    ns = {'imgeo': 'http://www.geostandaarden.nl/imgeo/2.1'}
+    count = int(out_elem.xpath('count(//imgeo:positie)', namespaces=ns))
+
+    for i in range(0, count):
+        out_elem = deepcopy(elem)
+        # Remove all position elements except for the i'th. This is done by first collecting all positions into
+        # a list, then remove the position from that list which should be kept, and then remove all remaining positions
+        # in the list from the XML element.
+        positions = out_elem.xpath('//imgeo:positie', namespaces=ns)
+        del positions[i]
+        for pos in positions:
+            pos.getparent().remove(pos)
+
+        xf.write(out_elem)
+
+
+def _process_ORL(task, orl_gml, tmp_folder):
+    '''
+    A private helper function to process OpenbareRuimteLabel.
+    It duplicate features so that all labels will be shown.
+
+    Adapted from NLExtract.
+    '''
+
+    input_gml = os.path.join(tmp_folder, orl_gml)
+    temp_file = os.path.join(tmp_folder, 'bgt_orl.gml')
+
+    nsmap = {None: "http://www.opengis.net/citygml/2.0"}
+
+    try:
+        with etree.xmlfile(temp_file) as xf:
+            with xf.element('{http://www.opengis.net/citygml/2.0}CityModel', nsmap=nsmap):
+                with open(input_gml,'rb') as f:
+                    context = etree.iterparse(f)
+                    for action, elem in context:
+                        if action == 'end' and elem.tag == '{http://www.opengis.net/citygml/2.0}cityObjectMember':
+                            # Duplicate openbareruimtelabel
+                            _duplicateOrl(xf, elem)
+                            # Clean up the original element and the node of its previous sibling
+                            # (https://www.ibm.com/developerworks/xml/library/x-hiperfparse/)
+                            elem.clear()
+                            while elem.getprevious() is not None:
+                                del elem.getparent()[0]
+                    del context
+            xf.flush()
+    except Exception as v:
+        # we'll just keep the original gml with it's limitations
+        if task:
+            QgsMessageLog.logMessage(u'Error processing openbareruimtelabel: ' + str(v), 
+                tag = 'BGTImport', level = Qgis.Info)
+        pass
+    else:
+        shutil.copyfile(temp_file, input_gml)
 
 
 if __name__ == "__main__":

@@ -19,6 +19,11 @@ As Open Source is not about "taking", but much more about "giving" I like to do 
 
 My frustrations using the BGT in QGIS during teaching one of my courses led to this plugin. It is a completely volunteered effort, and I do not make any money out of it. Unfortunately the last incarnation of this plugin took a lot of time to create.
 
+Why all those funnels next to the layer names in the table of contents?
+=======================================================================
+
+Those funnels indicate that there is a filter active on the layer. In this case all objects (features) which are expired (have a non-empty ``eindRegistratie`` ) are filtered out.
+
 
 Why does the progress indicator move in such a weird way?
 =========================================================
@@ -45,9 +50,11 @@ Furthermore spatial indexes are added which gives you the nice performance compa
 Your styling sucks! Can I apply my own default styling?
 =======================================================
 
-The styling mimicks the 'official' styling of the BGT. It is rather complex, and I have made mistakes (please correct me where possible). But ... if I had done the styling myself, it would have looked much worse!
+The styling mimics the 'official' styling of the BGT for a large part. It is rather complex, and I have made mistakes (please correct me where possible). But ... if I had done the styling myself, it would have looked much worse!
 
 Anyhow, you can add your own default styling for a layer in the ``user_qml`` folder in the plugin folder. Naming convention will be obvious once you look at the files in the ``qml`` folder in the plugin folder.
+
+In the plugin folder you will find several folders with useful symbols to use in your styling.
 
 If you have created a nice styling, please share it!
 

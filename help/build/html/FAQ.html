@@ -58,6 +58,10 @@
 <p>As Open Source is not about “taking”, but much more about “giving” I like to do my share in giving. I try to spread knowledge by climbing the stage at almost all conferences I attend, by writing on eg. <a class="reference external" href="http://www.qgis.nl/">QGIS.nl</a>, and by teaching at <a class="reference external" href="http://www.geo-academie.nl/">Geo Academie</a>.</p>
 <p>My frustrations using the BGT in QGIS during teaching one of my courses led to this plugin. It is a completely volunteered effort, and I do not make any money out of it. Unfortunately the last incarnation of this plugin took a lot of time to create.</p>
 </div>
+<div class="section" id="why-all-those-funnels-next-to-the-layer-names-in-the-table-of-contents">
+<h2>Why all those funnels next to the layer names in the table of contents?<a class="headerlink" href="#why-all-those-funnels-next-to-the-layer-names-in-the-table-of-contents" title="Permalink to this headline">¶</a></h2>
+<p>Those funnels indicate that there is a filter active on the layer. In this case all objects (features) which are expired (have a non-empty <code class="docutils literal"><span class="pre">eindRegistratie</span></code> ) are filtered out.</p>
+</div>
 <div class="section" id="why-does-the-progress-indicator-move-in-such-a-weird-way">
 <h2>Why does the progress indicator move in such a weird way?<a class="headerlink" href="#why-does-the-progress-indicator-move-in-such-a-weird-way" title="Permalink to this headline">¶</a></h2>
 <p>The BGT download website does not give any information on the size of the downloads. So in the best MS tradition the progress indicator jumps from ‘almost half way’ to ‘just started’ as often as needed to get the download in.</p>
@@ -74,8 +78,9 @@
 </div>
 <div class="section" id="your-styling-sucks-can-i-apply-my-own-default-styling">
 <h2>Your styling sucks! Can I apply my own default styling?<a class="headerlink" href="#your-styling-sucks-can-i-apply-my-own-default-styling" title="Permalink to this headline">¶</a></h2>
-<p>The styling mimicks the ‘official’ styling of the BGT. It is rather complex, and I have made mistakes (please correct me where possible). But … if I had done the styling myself, it would have looked much worse!</p>
+<p>The styling mimics the ‘official’ styling of the BGT for a large part. It is rather complex, and I have made mistakes (please correct me where possible). But … if I had done the styling myself, it would have looked much worse!</p>
 <p>Anyhow, you can add your own default styling for a layer in the <code class="docutils literal"><span class="pre">user_qml</span></code> folder in the plugin folder. Naming convention will be obvious once you look at the files in the <code class="docutils literal"><span class="pre">qml</span></code> folder in the plugin folder.</p>
+<p>In the plugin folder you will find several folders with useful symbols to use in your styling.</p>
 <p>If you have created a nice styling, please share it!</p>
 </div>
 <div class="section" id="i-like-to-run-a-bgt-download-and-import-automagically-on-a-reguler-basis-can-your-plugin-help">
@@ -101,6 +106,7 @@ But do remember, I don’t like the sweet beers that much (I already am a very s
 <li><a class="reference internal" href="#">FAQ</a><ul>
 <li><a class="reference internal" href="#why-does-downloading-and-importing-take-so-long">Why does downloading and importing take so long?</a></li>
 <li><a class="reference internal" href="#why-did-you-make-this-plugin">Why did you make this plugin?</a></li>
+<li><a class="reference internal" href="#why-all-those-funnels-next-to-the-layer-names-in-the-table-of-contents">Why all those funnels next to the layer names in the table of contents?</a></li>
 <li><a class="reference internal" href="#why-does-the-progress-indicator-move-in-such-a-weird-way">Why does the progress indicator move in such a weird way?</a></li>
 <li><a class="reference internal" href="#why-is-the-second-tab-individual-files-still-in-the-plugin">Why is the second tab (“Individual Files”) still in the plugin?</a></li>
 <li><a class="reference internal" href="#why-is-the-bgt-zip-containing-all-those-bloated-gml-files-smaller-than-the-geopackage-containing-the-same-data">Why is the BGT-zip containing all those bloated gml files smaller than the geopackage containing the same data?</a></li>
