@@ -5,6 +5,6 @@ This plugin imports the Dutch Basisregistratie Grootschalige Topografie (BGT) gm
 
 You will find the plugin in the Vector menu.
 
-More info in the [help](https://marcoduiker.github.io/QGIS_BGT_Import/). 
+More info in the [help](https://marcoduiker.github.io/QGIS_BGT_Import/help/build/html/index.html). 
 
 Please refer to metadata.txt for source code repository and bug tracking.
