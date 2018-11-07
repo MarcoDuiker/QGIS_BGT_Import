@@ -5,6 +5,7 @@ Uitility functions for working with the BGT.
 import argparse
 import os
 import shutil
+import sys
 import tempfile
 import urllib.request
 import uuid
@@ -16,15 +17,20 @@ from osgeo import gdal
 from osgeo import ogr
 from osgeo import osr
 
+import xml.etree.ElementTree as ET
+
 try:
     from qgis.core import Qgis, QgsTask, QgsTaskManager, QgsMessageLog
 except:
     pass
 
 try:
+    # this gives us a (much) faster end cleaner implementation
+    import lxml
     from lxml import etree
 except:
     pass
+    
     
 __author__ = 'Marco Duiker MD-kwadraat'
 __date__ = 'October 2018'
@@ -222,11 +228,14 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                     base_name = os.path.basename(info.filename)
                     QgsMessageLog.logMessage(u'Importing from BGT-zip: ' + str(base_name), 
                             tag = 'BGTImport', level = Qgis.Info)
-                    if base_name == 'bgt_openbareruimtelabel.gml' and 'etree' in globals():
+                    if base_name == 'bgt_openbareruimtelabel.gml':
                         if task:
                             QgsMessageLog.logMessage(u'Start processing OpenbareRuimteLabel.', 
                             tag = 'BGTImport', level = Qgis.Info)
-                        _process_ORL(task, base_name, tmp_folder)
+                        if 'lxml' in globals():
+                            _process_ORL(task, base_name, tmp_folder)
+                        else:
+                            _process_ORL_ugly(task, base_name, tmp_folder)
                     for postfix in ['_V','_L','_P']:
                         gfs_file_name = base_name.replace('.gml', postfix + '.gfs')
                         if os.path.exists(os.path.join(gfs_folder, gfs_file_name)):
@@ -261,7 +270,7 @@ def import_to_geopackage(task, zip_file_name, geopackage):
 
 def _duplicateOrl(xf, elem):
     '''
-    A private helper function for the processing of openbare ruimte labels.
+    A private helper function for the processing of openbareruimte labels.
     
     Adapted from NLExtract.
     '''
@@ -320,6 +329,81 @@ def _process_ORL(task, orl_gml, tmp_folder):
         pass
     else:
         shutil.copyfile(temp_file, input_gml)
+        if task:
+            QgsMessageLog.logMessage(u'Succesfully created a new openbareruimtelabel gml.', 
+                                     tag = 'BGTImport', level = Qgis.Info)
+
+
+def _duplicateOrl_ugly(elem):
+    '''
+    A private helper function for the processing of openbareruimte labels.
+    
+    Adapted (a lot) from NLExtract.
+    '''
+
+    out_elem = deepcopy(elem)
+    ns = {'imgeo': 'http://www.geostandaarden.nl/imgeo/2.1'}
+    count = len(out_elem.findall('.//imgeo:positie', namespaces=ns))
+
+    xml_string = ''
+    for i in range(0, count):
+        out_elem = deepcopy(elem)
+        for el in out_elem.iter():
+            if el.tag == '{http://www.geostandaarden.nl/imgeo/2.1}Label':
+                j=0
+                for child in el.getchildren():
+                    if child.tag == '{http://www.geostandaarden.nl/imgeo/2.1}positie':
+                        if not j == i:
+                            el.remove(child) 
+                        j = j + 1
+        xml_string = xml_string + str(ET.tostring(out_elem, encoding = 'utf-8'))
+        
+    return xml_string 
+
+def _process_ORL_ugly(task, orl_gml, tmp_folder):
+    '''
+    A private helper function to process OpenbareRuimteLabel.
+    It duplicate features so that all labels will be shown.
+
+    It avoids using lxml as that is a major hassle under windows.
+    Of course, this implementation has a small memory footprint but it is rather ugly.
+    '''
+
+    input_gml = os.path.join(tmp_folder, orl_gml)
+    temp_file = os.path.join(tmp_folder, 'bgt_orl.gml')
+
+    nsmap = {None: "http://www.opengis.net/citygml/2.0"}
+
+    header = '''<?xml version="1.0" encoding="UTF-8"?>
+<CityModel xmlns:gml="http://www.opengis.net/gml" xmlns:imgeo="http://www.geostandaarden.nl/imgeo/2.1" xmlns="http://www.opengis.net/citygml/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geostandaarden.nl/imgeo/2.1 http://schemas.geonovum.nl/imgeo/2.1/imgeo-2.1.1.xsd">'''
+
+    footer = '''</CityModel>'''
+
+    try:
+        with open(temp_file, 'w') as xf:
+            with open(input_gml,'rb') as f:
+                xf.write(header)
+                context = ET.iterparse(f)
+                for action, elem in context:
+                    if action == 'end' and elem.tag == '{http://www.opengis.net/citygml/2.0}cityObjectMember':
+                        # Duplicate openbareruimtelabel
+                        xf.write(_duplicateOrl_ugly(elem))
+                        # Clean up the original element and the node of its previous sibling
+                        # (https://www.ibm.com/developerworks/xml/library/x-hiperfparse/)
+                        elem.clear()
+                del context
+            xf.write(footer)
+    except Exception as v:
+        # we'll just keep the original gml with it's limitations
+        if task:
+            QgsMessageLog.logMessage(u'Error processing openbareruimtelabel: ' + str(v), 
+                tag = 'BGTImport', level = Qgis.Info)
+        pass
+    else:
+        shutil.copyfile(temp_file, input_gml)
+        if task:
+            QgsMessageLog.logMessage(u'Succesfully created a new openbareruimtelabel gml.', 
+                                     tag = 'BGTImport', level = Qgis.Info)
 
 
 if __name__ == "__main__":
