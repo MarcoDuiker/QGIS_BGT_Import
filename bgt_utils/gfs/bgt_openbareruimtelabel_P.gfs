@@ -72,7 +72,7 @@
       <Name>tekst</Name>
       <ElementPath>openbareRuimteNaam|Label|tekst</ElementPath>
       <Type>String</Type>
-      <Width>36</Width>
+      <Width>128</Width>
     </PropertyDefn>
     <PropertyDefn>
       <Name>hoek</Name>
@@ -83,7 +83,7 @@
       <Name>openbareRuimteType</Name>
       <ElementPath>openbareRuimteType</ElementPath>
       <Type>String</Type>
-      <Width>9</Width>
+      <Width>32</Width>
     </PropertyDefn>
     <PropertyDefn>
       <Name>terminationDate</Name>

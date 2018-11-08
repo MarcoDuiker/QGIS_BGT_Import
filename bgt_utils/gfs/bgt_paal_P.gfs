@@ -91,7 +91,7 @@
       <Name>hectometeraanduiding</Name>
       <ElementPath>hectometeraanduiding</ElementPath>
       <Type>String</Type>
-      <Width>5</Width>
+      <Width>8</Width>
     </PropertyDefn>
   </GMLFeatureClass>
 </GMLFeatureClassList>
