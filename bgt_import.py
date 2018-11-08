@@ -27,7 +27,8 @@ from builtins import object
 from qgis.PyQt.Qt import Qt
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication,\
     QUrl
-from qgis.PyQt.QtWidgets import QAction, QFileDialog, QProgressBar, QApplication
+from qgis.PyQt.QtWidgets import QAction, QFileDialog, QProgressBar, QApplication, \
+    QMessageBox
 from qgis.PyQt.QtGui import QIcon, QDesktopServices
 from qgis.core import Qgis, QgsTask, QgsNetworkContentFetcherTask, QgsTaskManager,\
     QgsMessageLog, QgsProject, QgsApplication, QgsVectorLayer, QgsLayerDefinition,\
@@ -522,7 +523,12 @@ class BGTImport(object):
                 QApplication.setOverrideCursor(Qt.WaitCursor)
                 tiles = self.tiles_to_download()
                 QApplication.restoreOverrideCursor()
-
+                if len(tiles) > 12:
+                    proceed = QMessageBox.question(self.iface.mainWindow(), u'BGT Import', 
+                        self.tr(u"You selected %s tiles to download. This might take (very) long. Continue?") % len(tiles), 
+                        QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                    if proceed == QMessageBox.No:
+                        return
                 zip_file_name = os.path.join(tempfile.gettempdir(), 'extract-' + str(uuid.uuid4()) +'.zip')
                 #download_task = QgsNetworkContentFetcherTask(QUrl(self.tiles_download_url(tiles)))
                 # the QgsNetworkContentFetcherTask doesn't give a nice progress indication
