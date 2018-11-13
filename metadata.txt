@@ -11,7 +11,7 @@ name=BGT Import
 qgisMinimumVersion=2.99
 qgisMaximumVersion=3.99
 description=Import Basisregistratie Grootschalige Topografie (BGT) for QGIS3
-version=3.7
+version=3.8
 author=Marco Duiker - MD-kwadraat
 email=md@md-kwadraat.nl
 
@@ -23,7 +23,7 @@ repository=https://github.com/MarcoDuiker/QGIS_BGT_Import/
 # Recommended items:
 
 # Uncomment the following line and add your changelog:
-changelog=Improved user messaging and error handling
+changelog=Fixed Bluetooth error on some windows versions
 
 # Tags are comma separated with spaces allowed
 tags=BGT, import, gml
