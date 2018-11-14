@@ -27,7 +27,7 @@ Then based on a set of predefined import rules, the data is imported to a geopac
 
 Once the import is done it might be wise to save the layer group as a QGIS layer file for future use in other QGIS projects. 
 
-Downloading and importing actions from this tab are done as background tasks. The progress indicator in the status bar will show progress. During download this progress indicator will run to about 30% and the start at about 5% again. This is normal behavior. As long as the percentages are changing your download is running as it should. If you download large areas, be prepared to wait (a long time).
+Downloading and importing actions from this tab are done as background tasks. The progress indicator in the status bar will show progress. During download this progress indicator will run to about 30% and the start at about 5% again. This is normal behavior. As long as the percentages are changing your download is running as it should. If you download large areas, be prepared to wait (a long time). And if you get bored you can always abort the download via the progress indicator.
 
 
 Second Tab: Individual files
