@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/plugins/BGTImport" >
-        <file>icon.png</file>
-    </qresource>
-</RCC>
