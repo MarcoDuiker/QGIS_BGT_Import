@@ -24,7 +24,7 @@ from __future__ import absolute_import
 from builtins import str
 from builtins import object
 
-from qgis.PyQt.Qt import Qt
+from qgis.PyQt import QtCore
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication,\
     QUrl
 from qgis.PyQt.QtWidgets import QAction, QFileDialog, QProgressBar, QApplication, \
@@ -520,7 +520,7 @@ class BGTImport(object):
             download_task = None
             if self.dlg.download_map_extent_rbt.isChecked() \
             or self.dlg.download_layer_rbt.isChecked():
-                QApplication.setOverrideCursor(Qt.WaitCursor)
+                QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
                 tiles = self.tiles_to_download()
                 QApplication.restoreOverrideCursor()
                 if len(tiles) > 12:
@@ -608,7 +608,7 @@ class BGTImport(object):
                 return
 
             # set up some user communication
-            QApplication.setOverrideCursor(Qt.WaitCursor)
+            QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
 
             self.iface.messageBar().pushMessage("Info",
                 self.tr(u'Start') + ' ' + self.tr(u'Importing BGT gml files ...'))
@@ -616,7 +616,7 @@ class BGTImport(object):
                 self.tr(u'Importing BGT gml files ...'))
             bar = QProgressBar()
             bar.setRange(0,0)
-            bar.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+            bar.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
             progressMessageBar.layout().addWidget(bar)
             self.iface.messageBar().pushWidget(progressMessageBar, Qgis.Info)
 
