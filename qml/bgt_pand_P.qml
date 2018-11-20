@@ -18,7 +18,7 @@
           <Option type="Map" name="properties">
             <Option type="Map" name="LabelRotation">
               <Option value="true" type="bool" name="active"/>
-              <Option value="to_real( regexp_substr(  &quot;hoek&quot;  , '([-]?\\d+(\\.\\d+)?)[)]'))" type="QString" name="expression"/>
+              <Option value="to_real( regexp_substr(  &quot;hoek&quot;  , '([-]?\\d+(\\.\\w+)?)[)]'))" type="QString" name="expression"/>
               <Option value="3" type="int" name="type"/>
             </Option>
           </Option>
