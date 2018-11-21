@@ -6,6 +6,14 @@ Downloads
 
 The BGT server from where the data is downloaded might be slow, down, or intermittently available. This means that downloads can fail or take very, very long. On larger downloads you are more likely to run into trouble.
 
+Pand (punt) (Huisnummers)
+=========================
+
+Sometimes the gml file of bgt_pand containes multiple labels with multiple rotations for a pand.
+
+Only the first label and the first rotation is used.
+
+
 Openbareruimtelabel (punt)
 ==========================
 
