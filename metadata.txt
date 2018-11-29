@@ -21,6 +21,7 @@ repository=https://github.com/MarcoDuiker/QGIS_BGT_Import/
 # End of mandatory metadata
 
 # Recommended items:
+# aint any
 
 # Uncomment the following line and add your changelog:
 changelog=Fixed huisnummer toevoegingen and reeksen
