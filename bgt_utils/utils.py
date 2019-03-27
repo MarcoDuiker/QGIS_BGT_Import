@@ -226,8 +226,9 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                 increment = 80 / len(f.infolist()) 
                 for info in f.infolist(): 
                     base_name = os.path.basename(info.filename)
-                    QgsMessageLog.logMessage(u'Importing from BGT-zip: ' + str(base_name), 
-                            tag = 'BGTImport', level = Qgis.Info)
+                    if task:
+                        QgsMessageLog.logMessage(u'Importing from BGT-zip: ' \
+                            + str(base_name), tag = 'BGTImport', level = Qgis.Info)
                     if base_name == 'bgt_openbareruimtelabel.gml':
                         if task:
                             QgsMessageLog.logMessage(u'Start processing OpenbareRuimteLabel.', 
@@ -247,6 +248,13 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                                 os.path.join(tmp_folder, base_name.replace('.gml','.gfs')))
                             ds = ogr.GetDriverByName('gml').Open(os.path.join(tmp_folder, base_name))
                             input_layer = ds.GetLayer()
+                            if postfix == '_V':
+                                
+                                input_layer.SetAttributeFilter("OGR_GEOMETRY='Polygon'")
+                            elif postfix == '_L':
+                                input_layer.SetAttributeFilter("OGR_GEOMETRY='LineString'")
+                            elif postfix == '_P':
+                                input_layer.SetAttributeFilter("OGR_GEOMETRY='Point'")
                             if input_layer.GetFeatureCount():
                                 new_layer = gp.CopyLayer(input_layer, 
                                     base_name.replace('.gml', postfix))
