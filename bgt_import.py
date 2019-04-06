@@ -464,10 +464,9 @@ class BGTImport(object):
                     task.setProgress(progress)
                     
         # now save the whole shebang in qlr file:
-        # Unfortunately we cannot save the group itself. And if we save the chilren we miss the group header
-        # So we leave this up to the user.
-        #QgsLayerDefinition.exportLayerDefinition(geopackage.replace('.gpkg','.qlr'), 
-        #   self.project.layerTreeRoot().findGroup(os.path.basename(geopackage)[:-5]).children())
+        QgsLayerDefinition.exportLayerDefinition(geopackage.replace('.gpkg','.qlr'),
+            [QgsProject.instance().layerTreeRoot().findGroup(os.path.basename(geopackage)[:-5])])
+
         if task:
             task.setProgress(100)
 
