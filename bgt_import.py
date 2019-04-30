@@ -120,6 +120,24 @@ class BGTImport(object):
         self.nam = networkaccessmanager.NetworkAccessManager()
         self.project = QgsProject.instance()
 
+        # Create the dialog (after translation) and keep reference
+        self.dlg = BGTImportDialog()
+
+        # define some connections
+        self.dlg.fileBrowseButton_2.clicked.connect(self.chooseFile)
+        self.dlg.help_btn.clicked.connect(self.showHelp)
+        
+        self.dlg.download_map_extent_rbt.toggled.connect(self.radio_toggled)
+        self.dlg.download_layer_rbt.toggled.connect(self.radio_toggled)
+        self.dlg.import_existing_zip_rbt.toggled.connect(self.radio_toggled)
+        
+        # disable the widgets associated to unselected radio buttons
+        self.radio_toggled()
+        
+        # modify some widgets
+        self.dlg.save_gpkg_cmb.setStorageMode(3)        # gives us a save button
+        self.dlg.download_layer_cmb.setFilters(QgsMapLayerProxyModel.VectorLayer)
+
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
 
@@ -183,24 +201,6 @@ class BGTImport(object):
             added to self.actions list.
         :rtype: QAction
         """
-
-        # Create the dialog (after translation) and keep reference
-        self.dlg = BGTImportDialog()
-
-        # define some connections
-        self.dlg.fileBrowseButton_2.clicked.connect(self.chooseFile)
-        self.dlg.help_btn.clicked.connect(self.showHelp)
-        
-        self.dlg.download_map_extent_rbt.toggled.connect(self.radio_toggled)
-        self.dlg.download_layer_rbt.toggled.connect(self.radio_toggled)
-        self.dlg.import_existing_zip_rbt.toggled.connect(self.radio_toggled)
-        
-        # disable the widgets associated to unselected radio buttons
-        self.radio_toggled()
-        
-        # modify some widgets
-        self.dlg.save_gpkg_cmb.setStorageMode(3)        # gives us a save button
-        self.dlg.download_layer_cmb.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
         # add the buttons to the interface
         icon = QIcon(icon_path)
@@ -464,10 +464,9 @@ class BGTImport(object):
                     task.setProgress(progress)
                     
         # now save the whole shebang in qlr file:
-        # Unfortunately we cannot save the group itself. And if we save the chilren we miss the group header
-        # So we leave this up to the user.
-        #QgsLayerDefinition.exportLayerDefinition(geopackage.replace('.gpkg','.qlr'), 
-        #   self.project.layerTreeRoot().findGroup(os.path.basename(geopackage)[:-5]).children())
+        QgsLayerDefinition.exportLayerDefinition(geopackage.replace('.gpkg','.qlr'),
+            [QgsProject.instance().layerTreeRoot().findGroup(os.path.basename(geopackage)[:-5])])
+
         if task:
             task.setProgress(100)
 
