@@ -247,7 +247,10 @@ class BGTImport(object):
         del self.toolbar
 
     def getGeometryTypes(self, gml_file, requested_geometry_types, max_num_objects = False):
-        '''determines geometry types and names in a bgt-file'''
+        '''
+        Determines geometry types and names in a bgt-file. 
+        All geometry types are forced to the multi-type.
+        '''
 
         num_objects = 0
         num_requested_geom_types = len(requested_geometry_types)
@@ -280,21 +283,21 @@ class BGTImport(object):
                 if 'gml:' in node.nodeName and in_geometry:
                     node_name = str(node.nodeName).lower()
                     in_geometry = False
-                    if ((not 'Polygon' in geom_types) and 'Polygon' in requested_geometry_types) \
+                    if ((not 'MultiPolygon' in geom_types) and 'Polygon' in requested_geometry_types) \
                     and ('polygon' in node_name or 'surface' in node_name):
-                        geom_types.append('Polygon')
-                        geom_names['Polygon'] = geom_name 
-                        geom_paths['Polygon'] = ogr_el_path[:-1]
-                    elif ((not 'LineString' in geom_types) and 'LineString' in requested_geometry_types) \
+                        geom_types.append('MultiPolygon')
+                        geom_names['MultiPolygon'] = geom_name 
+                        geom_paths['MultiPolygon'] = ogr_el_path[:-1]
+                    elif ((not 'MultiLineString' in geom_types) and 'LineString' in requested_geometry_types) \
                     and 'linestring' in node_name:
-                        geom_types.append('LineString')
-                        geom_names['LineString'] = geom_name
-                        geom_paths['LineString'] = ogr_el_path[:-1]
-                    elif ((not 'Point' in geom_types) and 'Point' in requested_geometry_types) \
+                        geom_types.append('MultiLineString')
+                        geom_names['MultiLineString'] = geom_name
+                        geom_paths['MultiLineString'] = ogr_el_path[:-1]
+                    elif ((not 'MultiPoint' in geom_types) and 'Point' in requested_geometry_types) \
                     and 'point' in node_name:
-                        geom_types.append('Point')
-                        geom_names['Point'] = geom_name
-                        geom_paths['Point'] = ogr_el_path[:-1]
+                        geom_types.append('MultiPoint')
+                        geom_names['MultiPoint'] = geom_name
+                        geom_paths['MultiPoint'] = ogr_el_path[:-1]
                 if len(geom_types) == num_requested_geom_types:
                     self.results[gml_file] = {'geom_names': geom_names, 'geom_paths': geom_paths}
                     return geom_names, geom_paths

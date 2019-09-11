@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dBegroeidTerreindeel</Name><ElementPath>geometrie2dBegroeidTerreindeel</ElementPath><Type>Polygon</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dBegroeidTerreindeel</Name><ElementPath>geometrie2dBegroeidTerreindeel</ElementPath><Type>MultiPolygon</Type></GeomPropertyDefn>
     <Name>PlantCover</Name>
     <ElementPath>PlantCover</ElementPath>
     <GeometryType>-2147483648</GeometryType>

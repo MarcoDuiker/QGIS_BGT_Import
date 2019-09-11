@@ -6,6 +6,8 @@ Why does downloading and importing take so long?
 
 The download takes a lot of time. Please ask the maintainers of the `BGT download site <https://www.pdok.nl/nl/producten/pdok-downloads/download-basisregistratie-grootschalige-topografie>`_ why.
 
+Kadaster has launched an `alternative download site with beta status <https://download.pdok.io/lv/bgt/viewer/>`_, but a much better performance. It is recommended to download your BGT zip there and then import this zip using the plugin.
+
 If you don't use predefined import rules, each gml file in your download has to be scanned to see if there are geometries hidden in unexpected places. This requires a time consuming complete scan of the entire file. 
 
 Furthermore, a lot of data is involved. This always takes some time. 
@@ -34,7 +36,7 @@ The BGT download website does not give any information on the size of the downlo
 Why is the second tab ("Individual Files") still in the plugin?
 ===============================================================
 
-Actually, the stuff used to make the first tab work is made with the second tab. I might have missed something. So, there you have a way to check the import doen form the first tab. If you find a mistake or something I missed, please `report the issue <https://github.com/MarcoDuiker/QGIS_BGT_Import/issues>`_.
+Actually, the stuff used to make the first tab work is made with the second tab. I might have missed something. So, there you have a way to check the import done form the first tab. If you find a mistake or something I missed, please `report the issue <https://github.com/MarcoDuiker/QGIS_BGT_Import/issues>`_.
 
 Of course it is also handy if you need only one or two gml files from the BGT.
 
@@ -59,7 +61,7 @@ In the plugin folder you will find several folders with useful symbols to use in
 If you have created a nice styling, please share it!
 
 
-I like to run a BGT download and import automagically on a reguler basis. Can your plugin help?
+I like to run a BGT download and import automagically on a regular basis. Can your plugin help?
 ===============================================================================================
 
 The ``utils.py`` script in the ``bgt_utils`` folder in the plugin folder contains some functions which will help you.

@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dMast</Name><ElementPath>geometrie2dMast</ElementPath><Type>Point</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dMast</Name><ElementPath>geometrie2dMast</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
     <Name>Mast</Name>
     <ElementPath>Mast</ElementPath>
     <GeometryType>1</GeometryType>

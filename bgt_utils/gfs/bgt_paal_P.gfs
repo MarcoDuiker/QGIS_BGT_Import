@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dPaal</Name><ElementPath>geometrie2dPaal</ElementPath><Type>Point</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dPaal</Name><ElementPath>geometrie2dPaal</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
     <Name>Paal</Name>
     <ElementPath>Paal</ElementPath>
     <GeometryType>1</GeometryType>

@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOndersteunendWegdeel</Name><ElementPath>geometrie2dOndersteunendWegdeel</ElementPath><Type>Polygon</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOndersteunendWegdeel</Name><ElementPath>geometrie2dOndersteunendWegdeel</ElementPath><Type>MultiPolygon</Type></GeomPropertyDefn>
     <Name>AuxiliaryTrafficArea</Name>
     <ElementPath>AuxiliaryTrafficArea</ElementPath>
     <GeometryType>-2147483648</GeometryType>
