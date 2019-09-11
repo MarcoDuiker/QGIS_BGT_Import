@@ -6,6 +6,8 @@ Downloads
 
 The BGT server from where the data is downloaded might be slow, down, or intermittently available. This means that downloads can fail or take very, very long. On larger downloads you are more likely to run into trouble.
 
+Kadaster has launched an `alternative download site with beta status <https://download.pdok.io/lv/bgt/viewer/>`_, but a much better performance. It is recommended to download your BGT zip there and then import this zip using the plugin.
+
 Pand (punt) (Huisnummers)
 =========================
 

@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2d</Name><ElementPath>geometrie2d</ElementPath><Type>LineString</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2d</Name><ElementPath>geometrie2d</ElementPath><Type>MultiLineString</Type></GeomPropertyDefn>
     <Name>OngeclassificeerdObject</Name>
     <ElementPath>OngeclassificeerdObject</ElementPath>
     <GeometryType>3</GeometryType>

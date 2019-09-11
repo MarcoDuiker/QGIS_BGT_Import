@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dInstallatie</Name><ElementPath>geometrie2dInstallatie</ElementPath><Type>Point</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dInstallatie</Name><ElementPath>geometrie2dInstallatie</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
     <Name>Installatie</Name>
     <ElementPath>Installatie</ElementPath>
     <GeometryType>1</GeometryType>

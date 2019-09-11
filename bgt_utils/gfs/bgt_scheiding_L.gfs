@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOverigeConstructie</Name><ElementPath>geometrie2dOverigeConstructie</ElementPath><Type>LineString</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOverigeConstructie</Name><ElementPath>geometrie2dOverigeConstructie</ElementPath><Type>MultiLineString</Type></GeomPropertyDefn>
     <Name>Scheiding</Name>
     <ElementPath>Scheiding</ElementPath>
     <SRSName>EPSG:28992</SRSName>

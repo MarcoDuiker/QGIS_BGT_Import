@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>kruinlijnOnbegroeidTerreindeel</Name><ElementPath>kruinlijnOnbegroeidTerreindeel</ElementPath><Type>LineString</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>kruinlijnOnbegroeidTerreindeel</Name><ElementPath>kruinlijnOnbegroeidTerreindeel</ElementPath><Type>MultiLineString</Type></GeomPropertyDefn>
     <Name>OnbegroeidTerreindeel</Name>
     <ElementPath>OnbegroeidTerreindeel</ElementPath>
     <GeometryType>3</GeometryType>

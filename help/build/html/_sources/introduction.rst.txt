@@ -21,6 +21,8 @@ First Tab: Complete package
 
 The easiest way (but not necessarily the fastest way) is to use the first tab of the plugin and download the data, and add it to your project in one go. Alternatively you can use zip files which you can download from the `BGT download site <https://www.pdok.nl/nl/producten/pdok-downloads/download-basisregistratie-grootschalige-topografie>`_.
 
+Kadaster has launched an `alternative download site with beta status <https://download.pdok.io/lv/bgt/viewer/>`_, but a much better performance. It is recommended to download your BGT zip there and then import this zip using the plugin.
+
 The plugin will download a zip file with data from the BGT website based on the extent of you map view, or based on the intersection with (the selected features) of a layer you choose.
 
 Then based on a set of predefined import rules, the data is imported to a geopackage. If necessary objects are split to polygon, line and point layers. Then all layers are added to your project in a layer group. Filtering is applied to remove all objects which are expired (have a non-empty ``eindRegistratie`` ). Furthermore, styling is applied to mimic the official BGT styling where possible. 

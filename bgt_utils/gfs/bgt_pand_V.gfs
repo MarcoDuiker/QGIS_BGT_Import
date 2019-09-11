@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dGrondvlak</Name><ElementPath>geometrie2dGrondvlak</ElementPath><Type>Polygon</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dGrondvlak</Name><ElementPath>geometrie2dGrondvlak</ElementPath><Type>MultiPolygon</Type></GeomPropertyDefn>
     <SRSName>EPSG:28992</SRSName>
     <Name>BuildingPart</Name>
     <ElementPath>BuildingPart</ElementPath>
@@ -65,7 +65,8 @@
     <PropertyDefn>
       <Name>identificatieBAGPND</Name>
       <ElementPath>identificatieBAGPND</ElementPath>
-      <Type>Real</Type>
+      <Type>String</Type>
+      <Width>16</Width>
     </PropertyDefn>
     <PropertyDefn>
       <Name>tekst</Name>
