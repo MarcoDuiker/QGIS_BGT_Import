@@ -658,7 +658,7 @@ class BGTImport(object):
                 if len(geom_paths) == 0:
                     self.iface.messageBar().pushMessage('Error', 
                         self.tr(u"Could not find any of the requested geometries in: " + 
-                        os.path.basename(file_name)), level=Qgis.WARNING)
+                        os.path.basename(file_name)), level=Qgis.Warning)
                 else: 
                     for geom_type, geom_path in list(geom_paths.items()):
                         geom_name = geom_path[0]
