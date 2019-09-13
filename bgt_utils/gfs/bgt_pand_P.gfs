@@ -86,7 +86,7 @@
     <PropertyDefn>
       <Name>identificatieBAGVBOHoogsteHuisnummer</Name>
       <ElementPath>nummeraanduidingreeks|Nummeraanduidingreeks|identificatieBAGVBOHoogsteHuisnummer</ElementPath>
-      <Type>RealList</Type>
+      <Type>StringList</Type>
     </PropertyDefn>
     <PropertyDefn>
       <Name>eindRegistratie</Name>
