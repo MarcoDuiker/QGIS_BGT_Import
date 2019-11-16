@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dSensor</Name><ElementPath>geometrie2dSensor</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dSensor</Name><ElementPath>geometrie2dSensor</ElementPath></GeomPropertyDefn>
     <Name>Sensor</Name>
     <ElementPath>Sensor</ElementPath>
     <GeometryType>1</GeometryType>

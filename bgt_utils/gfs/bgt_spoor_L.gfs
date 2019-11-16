@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dSpoor</Name><ElementPath>geometrie2dSpoor</ElementPath><Type>MultiLineString</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dSpoor</Name><ElementPath>geometrie2dSpoor</ElementPath></GeomPropertyDefn>
     <Name>Railway</Name>
     <ElementPath>Railway</ElementPath>
     <GeometryType>2</GeometryType>

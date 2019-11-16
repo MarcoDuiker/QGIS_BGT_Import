@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dFunctioneelGebied</Name><ElementPath>geometrie2dFunctioneelGebied</ElementPath><Type>MultiPolygon</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dFunctioneelGebied</Name><ElementPath>geometrie2dFunctioneelGebied</ElementPath></GeomPropertyDefn>
     <Name>FunctioneelGebied</Name>
     <ElementPath>FunctioneelGebied</ElementPath>
     <GeometryType>3</GeometryType>

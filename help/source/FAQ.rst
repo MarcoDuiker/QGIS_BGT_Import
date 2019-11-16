@@ -15,7 +15,7 @@ Furthermore, a lot of data is involved. This always takes some time.
 Why did you make this plugin?
 =============================
 
-In my professional life I almost exclusively use Free an Open Source Software. I am very gratefull that all those very nice products made by nice people are available to me free of charge and license hassles.
+In my professional life I almost exclusively use Free an Open Source Software. I am very grateful that all those very nice products made by nice people are available to me free of charge and license hassles.
 
 As Open Source is not about "taking", but much more about "giving" I like to do my share in giving. I try to spread knowledge by climbing the stage at almost all conferences I attend, by writing on eg. `QGIS.nl <http://www.qgis.nl/>`_, and by teaching at `Geo Academie <http://www.geo-academie.nl/>`_. 
 
@@ -44,7 +44,7 @@ Of course it is also handy if you need only one or two gml files from the BGT.
 Why is the BGT-zip containing all those bloated gml files smaller than the geopackage containing the same data?
 ===============================================================================================================
 
-The gml files contain objects, optionally having points, lines and polygons. To use them in QGIS these object needs to be split in up to 3 layers containing only lines, only points or only polygons. Of course all information shown in the attribute table is then duplicated or triplicated. And of course, zip is a very powerfull way of making text (much) smaller.
+The gml files contain objects, optionally having points, lines and polygons. To use them in QGIS these object needs to be split in up to 3 layers containing only lines, only points or only polygons. Of course all information shown in the attribute table is then duplicated or triplicated. And of course, zip is a very powerful way of making text files (much) smaller.
 
 Furthermore spatial indexes are added which gives you the nice performance compared to using the gml files directly.
 

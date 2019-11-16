@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dTunneldeel</Name><ElementPath>geometrie2dTunneldeel</ElementPath><Type>MultiPolygon</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dTunneldeel</Name><ElementPath>geometrie2dTunneldeel</ElementPath></GeomPropertyDefn>
     <Name>TunnelPart</Name>
     <ElementPath>TunnelPart</ElementPath>
     <GeometryType>3</GeometryType>

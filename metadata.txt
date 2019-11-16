@@ -11,7 +11,7 @@ name=BGT Import
 qgisMinimumVersion=2.99
 qgisMaximumVersion=3.99
 description=Import Basisregistratie Grootschalige Topografie (BGT) for QGIS3
-version=3.13
+version=3.14
 author=Marco Duiker - MD-kwadraat
 email=md@md-kwadraat.nl
 
@@ -24,7 +24,7 @@ repository=https://github.com/MarcoDuiker/QGIS_BGT_Import/
 # aint any
 
 # Uncomment the following line and add your changelog:
-changelog=Changed docs to point to the new BGT download site. Added handling of begroeidterreindeel_L. Improved messaging. Improved on Fixed import of multi type geometries : https://github.com/MarcoDuiker/QGIS_BGT_Import/issues/10
+changelog=Improved on data types to fix issue https://github.com/MarcoDuiker/QGIS_BGT_Import/issues/9
 
 # Tags are comma separated with spaces allowed
 tags=BGT, import, gml

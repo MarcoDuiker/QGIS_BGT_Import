@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dBord</Name><ElementPath>geometrie2dBord</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dBord</Name><ElementPath>geometrie2dBord</ElementPath></GeomPropertyDefn>
     <Name>Bord</Name>
     <ElementPath>Bord</ElementPath>
     <GeometryType>1</GeometryType>

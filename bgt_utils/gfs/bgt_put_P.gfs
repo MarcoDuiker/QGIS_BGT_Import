@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dPut</Name><ElementPath>geometrie2dPut</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dPut</Name><ElementPath>geometrie2dPut</ElementPath></GeomPropertyDefn>
     <Name>Put</Name>
     <ElementPath>Put</ElementPath>
     <GeometryType>1</GeometryType>

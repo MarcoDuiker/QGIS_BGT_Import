@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOverigeConstructie</Name><ElementPath>geometrie2dOverigeConstructie</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOverigeConstructie</Name><ElementPath>geometrie2dOverigeConstructie</ElementPath></GeomPropertyDefn>
     <SRSName>EPSG:28992</SRSName>
     <Name>Kunstwerkdeel</Name>
     <ElementPath>Kunstwerkdeel</ElementPath>

@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOnbegroeidTerreindeel</Name><ElementPath>geometrie2dOnbegroeidTerreindeel</ElementPath><Type>MultiPolygon</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOnbegroeidTerreindeel</Name><ElementPath>geometrie2dOnbegroeidTerreindeel</ElementPath></GeomPropertyDefn>
     <Name>OnbegroeidTerreindeel</Name>
     <ElementPath>OnbegroeidTerreindeel</ElementPath>
     <GeometryType>3</GeometryType>

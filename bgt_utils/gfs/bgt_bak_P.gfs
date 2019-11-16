@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dBak</Name><ElementPath>geometrie2dBak</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dBak</Name><ElementPath>geometrie2dBak</ElementPath></GeomPropertyDefn>
     <Name>Bak</Name>
     <ElementPath>Bak</ElementPath>
     <GeometryType>1</GeometryType>

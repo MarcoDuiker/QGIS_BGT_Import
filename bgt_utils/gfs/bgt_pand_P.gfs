@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>nummeraanduidingreeks</Name><ElementPath>nummeraanduidingreeks|Nummeraanduidingreeks|nummeraanduidingreeks|Label|positie|Labelpositie|plaatsingspunt</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>nummeraanduidingreeks</Name><ElementPath>nummeraanduidingreeks|Nummeraanduidingreeks|nummeraanduidingreeks|Label|positie|Labelpositie|plaatsingspunt</ElementPath></GeomPropertyDefn>
     <SRSName>EPSG:28992</SRSName>
     <Name>BuildingPart</Name>
     <ElementPath>BuildingPart</ElementPath>

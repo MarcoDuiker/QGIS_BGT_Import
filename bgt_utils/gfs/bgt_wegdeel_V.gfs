@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dWegdeel</Name><ElementPath>geometrie2dWegdeel</ElementPath><Type>MultiPolygon</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dWegdeel</Name><ElementPath>geometrie2dWegdeel</ElementPath></GeomPropertyDefn>
     <Name>TrafficArea</Name>
     <ElementPath>TrafficArea</ElementPath>
     <GeometryType>3</GeometryType>
