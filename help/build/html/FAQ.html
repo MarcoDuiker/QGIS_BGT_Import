@@ -55,7 +55,7 @@
 </div>
 <div class="section" id="why-did-you-make-this-plugin">
 <h2>Why did you make this plugin?<a class="headerlink" href="#why-did-you-make-this-plugin" title="Permalink to this headline">¶</a></h2>
-<p>In my professional life I almost exclusively use Free an Open Source Software. I am very gratefull that all those very nice products made by nice people are available to me free of charge and license hassles.</p>
+<p>In my professional life I almost exclusively use Free an Open Source Software. I am very grateful that all those very nice products made by nice people are available to me free of charge and license hassles.</p>
 <p>As Open Source is not about “taking”, but much more about “giving” I like to do my share in giving. I try to spread knowledge by climbing the stage at almost all conferences I attend, by writing on eg. <a class="reference external" href="http://www.qgis.nl/">QGIS.nl</a>, and by teaching at <a class="reference external" href="http://www.geo-academie.nl/">Geo Academie</a>.</p>
 <p>My frustrations using the BGT in QGIS during teaching one of my courses led to this plugin. It is a completely volunteered effort, and I do not make any money out of it. Unfortunately the last incarnation of this plugin took a lot of time to create.</p>
 </div>
@@ -71,10 +71,11 @@
 <h2>Why is the second tab (“Individual Files”) still in the plugin?<a class="headerlink" href="#why-is-the-second-tab-individual-files-still-in-the-plugin" title="Permalink to this headline">¶</a></h2>
 <p>Actually, the stuff used to make the first tab work is made with the second tab. I might have missed something. So, there you have a way to check the import done form the first tab. If you find a mistake or something I missed, please <a class="reference external" href="https://github.com/MarcoDuiker/QGIS_BGT_Import/issues">report the issue</a>.</p>
 <p>Of course it is also handy if you need only one or two gml files from the BGT.</p>
+<p>Beware: As the <code class="docutils literal"><span class="pre">.gfs</span></code> files used by the plugin are getting tweaked more and more using this second tab might give you inferior result compared to the first tab. The second tab does not have support for non-linear geometries (“bogen”) and does not support “voorloopnullen” on eg. BAG id’s.</p>
 </div>
 <div class="section" id="why-is-the-bgt-zip-containing-all-those-bloated-gml-files-smaller-than-the-geopackage-containing-the-same-data">
 <h2>Why is the BGT-zip containing all those bloated gml files smaller than the geopackage containing the same data?<a class="headerlink" href="#why-is-the-bgt-zip-containing-all-those-bloated-gml-files-smaller-than-the-geopackage-containing-the-same-data" title="Permalink to this headline">¶</a></h2>
-<p>The gml files contain objects, optionally having points, lines and polygons. To use them in QGIS these object needs to be split in up to 3 layers containing only lines, only points or only polygons. Of course all information shown in the attribute table is then duplicated or triplicated. And of course, zip is a very powerfull way of making text (much) smaller.</p>
+<p>The gml files contain objects, optionally having points, lines and polygons. To use them in QGIS these object needs to be split in up to 3 layers containing only lines, only points or only polygons. Of course all information shown in the attribute table is then duplicated or triplicated. And of course, zip is a very powerful way of making text files (much) smaller.</p>
 <p>Furthermore spatial indexes are added which gives you the nice performance compared to using the gml files directly.</p>
 </div>
 <div class="section" id="your-styling-sucks-can-i-apply-my-own-default-styling">

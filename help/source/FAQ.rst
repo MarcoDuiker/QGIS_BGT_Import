@@ -40,6 +40,9 @@ Actually, the stuff used to make the first tab work is made with the second tab.
 
 Of course it is also handy if you need only one or two gml files from the BGT.
 
+Beware: As the ``.gfs`` files used by the plugin are getting tweaked more and more using this second tab might give you inferior result compared to the first tab. The second tab does not have support for non-linear geometries ("bogen") and does not support "voorloopnullen" on eg. BAG id's.
+
+
 
 Why is the BGT-zip containing all those bloated gml files smaller than the geopackage containing the same data?
 ===============================================================================================================

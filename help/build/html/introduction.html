@@ -74,6 +74,10 @@
 <p>As a <code class="docutils literal"><span class="pre">.gfs</span></code> file needs to have the same name as the <code class="docutils literal"><span class="pre">.gml</span></code> file (except for the extension of course) the gml file will be copied or symlinked. The name of the copy will contain a <code class="docutils literal"><span class="pre">_V</span></code>, <code class="docutils literal"><span class="pre">_L</span></code> or <code class="docutils literal"><span class="pre">_P</span></code> extension to denote either polygons (_V), lines (_L) or points (_P).</p>
 <p>Once these files are generated, QGIS will read the gml files properly on opening the file with one of the _V, _L or _P extensions. No need to use the BGT import plug-in for that.</p>
 <p>Scanning BGT files and determining the import rules can be a time consuming process especially on platforms with low io speed. Please be patient, as this operation is not running as a background task.</p>
+<div class="section" id="warning">
+<h4>Warning<a class="headerlink" href="#warning" title="Permalink to this headline">¶</a></h4>
+<p>As the <code class="docutils literal"><span class="pre">.gfs</span></code> files used by the plugin are getting tweaked more and more using this second tab might give you inferior result compared to the first tab. The second tab does not have support for non-linear geometries (“bogen”) and does not support “voorloopnullen” on eg. BAG id’s.</p>
+</div>
 </div>
 </div>
 <div class="section" id="usage-tips">
@@ -101,7 +105,10 @@
 <li><a class="reference internal" href="#about">About</a></li>
 <li><a class="reference internal" href="#how-does-the-plug-in-work">How does the plug-in work?</a><ul>
 <li><a class="reference internal" href="#first-tab-complete-package">First Tab: Complete package</a></li>
-<li><a class="reference internal" href="#second-tab-individual-files">Second Tab: Individual files</a></li>
+<li><a class="reference internal" href="#second-tab-individual-files">Second Tab: Individual files</a><ul>
+<li><a class="reference internal" href="#warning">Warning</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#usage-tips">Usage Tips</a></li>
