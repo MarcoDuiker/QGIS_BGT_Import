@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dWaterdeel</Name><ElementPath>geometrie2dWaterdeel</ElementPath></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dWaterdeel</Name><ElementPath>geometrie2dWaterdeel</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
     <Name>Waterdeel</Name>
     <ElementPath>Waterdeel</ElementPath>
     <GeometryType>3</GeometryType>

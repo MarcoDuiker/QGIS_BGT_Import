@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>kruinlijnWegdeel</Name><ElementPath>kruinlijnWegdeel</ElementPath></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>kruinlijnWegdeel</Name><ElementPath>kruinlijnWegdeel</ElementPath><Type>MultiCurve</Type></GeomPropertyDefn>
     <Name>TrafficArea</Name>
     <ElementPath>TrafficArea</ElementPath>
     <GeometryType>3</GeometryType>

@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>kruinlijnBegroeidTerreindeel</Name><ElementPath>kruinlijnBegroeidTerreindeel</ElementPath></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>kruinlijnBegroeidTerreindeel</Name><ElementPath>kruinlijnBegroeidTerreindeel</ElementPath><Type>MultiCurve</Type></GeomPropertyDefn>
     <Name>PlantCover</Name>
     <ElementPath>PlantCover</ElementPath>
     <GeometryType>-2147483648</GeometryType>

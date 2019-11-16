@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dGrondvlak</Name><ElementPath>geometrie2dGrondvlak</ElementPath></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dGrondvlak</Name><ElementPath>geometrie2dGrondvlak</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
     <SRSName>EPSG:28992</SRSName>
     <Name>BuildingPart</Name>
     <ElementPath>BuildingPart</ElementPath>
@@ -86,7 +86,7 @@
     <PropertyDefn>
       <Name>identificatieBAGVBOHoogsteHuisnummer</Name>
       <ElementPath>nummeraanduidingreeks|Nummeraanduidingreeks|identificatieBAGVBOHoogsteHuisnummer</ElementPath>
-      <Type>StringList</Type>
+      <Type>RealList</Type>
     </PropertyDefn>
     <PropertyDefn>
       <Name>eindRegistratie</Name>

@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dKast</Name><ElementPath>geometrie2dKast</ElementPath></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dKast</Name><ElementPath>geometrie2dKast</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
     <Name>Kast</Name>
     <ElementPath>Kast</ElementPath>
     <GeometryType>1</GeometryType>

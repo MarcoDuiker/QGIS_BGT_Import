@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dVegetatieObject</Name><ElementPath>geometrie2dVegetatieObject</ElementPath></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dVegetatieObject</Name><ElementPath>geometrie2dVegetatieObject</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
     <Name>SolitaryVegetationObject</Name>
     <ElementPath>SolitaryVegetationObject</ElementPath>
     <SRSName>EPSG:28992</SRSName>

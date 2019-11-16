@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dStraatmeubilair</Name><ElementPath>geometrie2dStraatmeubilair</ElementPath></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dStraatmeubilair</Name><ElementPath>geometrie2dStraatmeubilair</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
     <Name>Straatmeubilair</Name>
     <ElementPath>Straatmeubilair</ElementPath>
     <GeometryType>1</GeometryType>

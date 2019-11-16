@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>kruinlijnOndersteunendWegdeel</Name><ElementPath>kruinlijnOndersteunendWegdeel</ElementPath></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>kruinlijnOndersteunendWegdeel</Name><ElementPath>kruinlijnOndersteunendWegdeel</ElementPath><Type>MultiCurve</Type></GeomPropertyDefn>
     <Name>AuxiliaryTrafficArea</Name>
     <ElementPath>AuxiliaryTrafficArea</ElementPath>
     <GeometryType>-2147483648</GeometryType>

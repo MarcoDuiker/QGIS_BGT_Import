@@ -249,9 +249,9 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                             ds = ogr.GetDriverByName('gml').Open(os.path.join(tmp_folder, base_name))
                             input_layer = ds.GetLayer()
                             if postfix == '_V':
-                                input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiPolygon'")
+                                input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiSurface'")
                             elif postfix == '_L':
-                                input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiLineString'")
+                                input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiCurve'")
                             elif postfix == '_P':
                                 input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiPoint'")
                             if input_layer.GetFeatureCount():

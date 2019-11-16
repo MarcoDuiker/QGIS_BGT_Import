@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dWaterinrichtingselement</Name><ElementPath>geometrie2dWaterinrichtingselement</ElementPath></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dWaterinrichtingselement</Name><ElementPath>geometrie2dWaterinrichtingselement</ElementPath><Type>MultiCurve</Type></GeomPropertyDefn>
     <Name>Waterinrichtingselement</Name>
     <ElementPath>Waterinrichtingselement</ElementPath>
     <SRSName>EPSG:28992</SRSName>

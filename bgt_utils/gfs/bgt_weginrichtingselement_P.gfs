@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dWeginrichtingselement</Name><ElementPath>geometrie2dWeginrichtingselement</ElementPath></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dWeginrichtingselement</Name><ElementPath>geometrie2dWeginrichtingselement</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
     <Name>Weginrichtingselement</Name>
     <ElementPath>Weginrichtingselement</ElementPath>
     <SRSName>EPSG:28992</SRSName>

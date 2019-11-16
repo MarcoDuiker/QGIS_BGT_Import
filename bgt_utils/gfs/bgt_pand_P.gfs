@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>nummeraanduidingreeks</Name><ElementPath>nummeraanduidingreeks|Nummeraanduidingreeks|nummeraanduidingreeks|Label|positie|Labelpositie|plaatsingspunt</ElementPath></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>nummeraanduidingreeks</Name><ElementPath>nummeraanduidingreeks|Nummeraanduidingreeks|nummeraanduidingreeks|Label|positie|Labelpositie|plaatsingspunt</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
     <SRSName>EPSG:28992</SRSName>
     <Name>BuildingPart</Name>
     <ElementPath>BuildingPart</ElementPath>
@@ -86,7 +86,7 @@
     <PropertyDefn>
       <Name>identificatieBAGVBOHoogsteHuisnummer</Name>
       <ElementPath>nummeraanduidingreeks|Nummeraanduidingreeks|identificatieBAGVBOHoogsteHuisnummer</ElementPath>
-      <Type>StringList</Type>
+      <Type>RealList</Type>
     </PropertyDefn>
     <PropertyDefn>
       <Name>eindRegistratie</Name>

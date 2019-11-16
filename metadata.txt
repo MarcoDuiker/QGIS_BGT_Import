@@ -24,7 +24,7 @@ repository=https://github.com/MarcoDuiker/QGIS_BGT_Import/
 # aint any
 
 # Uncomment the following line and add your changelog:
-changelog=Improved on data types to fix issue https://github.com/MarcoDuiker/QGIS_BGT_Import/issues/9
+changelog=Added support for non-linear datatypes to fix https://github.com/MarcoDuiker/QGIS_BGT_Import/issues/11; Improved on data types to fix issue https://github.com/MarcoDuiker/QGIS_BGT_Import/issues/9.
 
 # Tags are comma separated with spaces allowed
 tags=BGT, import, gml
