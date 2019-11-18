@@ -431,26 +431,39 @@ class BGTImport(object):
         import_folder = os.path.dirname(geopackage)
         
         # add a layergroup to insert the layers in
+        QgsMessageLog.logMessage(u'Adding layer group to project ...', 
+                                  'BGTImport', level=Qgis.Info)
         layer_group = QgsProject.instance().layerTreeRoot().insertGroup(0, 
             os.path.basename(geopackage)[:-5])
         
         standard_layers = bgt_utils.get_standard_layers()
         layers_added = []
         layers = []
+        QgsMessageLog.logMessage(u'Opening geopackage ...' , 
+                                  'BGTImport', level=Qgis.Info)
         gp =  ogr.GetDriverByName('GPKG').Open( geopackage )
+        QgsMessageLog.logMessage(u'Getting a layer inventory ...',
+                                      'BGTImport', level=Qgis.Info)
         for i in range(gp.GetLayerCount()):
             layers.append(gp.GetLayerByIndex(i).GetName())
+            QgsMessageLog.logMessage(u'Found layer "' + layers[-1] + '"',
+                                      'BGTImport', level=Qgis.Info)
         increment = 100/len(layers)
         
         # first add all standard layers this plugin knows
+        QgsMessageLog.logMessage(u'Start adding layers ...',
+                                  'BGTImport', level=Qgis.Info)
         for layer in standard_layers:
             if layer in layers:
+                QgsMessageLog.logMessage(u'Adding layer "' + str(layer) + \
+                                          '" to project.' , 'BGTImport',
+                                          level=Qgis.Info)
                 map_layer = self.add_layer_to_group(geopackage, layer, layer_group)
                 self.add_styling(map_layer, layer)
+                layers_added.append(layer)
                 # turn layers on and of
                 if not layer in bgt_utils.get_visible_layers():
                     self.project.layerTreeRoot().findLayer(map_layer.id()).setItemVisibilityChecked(False)                  
-                layers_added.append(layer)
                 progress = progress + increment
                 if task:
                     task.setProgress(progress)
@@ -459,14 +472,21 @@ class BGTImport(object):
         # should not happen as we don't have .gfs for those ...
         missed_layers = list(set(layers) - set(layers_added))
         if missed_layers:
+            QgsMessageLog.logMessage(u'Found some unexpected layers, adding those as well...',
+                                      'BGTImport', level=Qgis.Warning)
             progress = 0
             increment = 100/len(missed_layers)
             for layer in missed_layers:
                 map_layer = self.add_layer_to_group(geopackage, layer, layer_group)
+                QgsMessageLog.logMessage(u'Adding layer "' + str(layer) + \
+                                          '" to project.' , 'BGTImport',
+                                          level=Qgis.Info)
                 if task:
                     task.setProgress(progress)
                     
         # now save the whole shebang in qlr file:
+        QgsMessageLog.logMessage(u'Saving the group layer as a layer file ...' ,
+                                  'BGTImport', level=Qgis.Info)
         QgsLayerDefinition.exportLayerDefinition(geopackage.replace('.gpkg','.qlr'),
             [QgsProject.instance().layerTreeRoot().findGroup(os.path.basename(geopackage)[:-5])])
 
@@ -638,7 +658,7 @@ class BGTImport(object):
                 if len(geom_paths) == 0:
                     self.iface.messageBar().pushMessage('Error', 
                         self.tr(u"Could not find any of the requested geometries in: " + 
-                        os.path.basename(file_name)), level=Qgis.WARNING)
+                        os.path.basename(file_name)), level=Qgis.Warning)
                 else: 
                     for geom_type, geom_path in list(geom_paths.items()):
                         geom_name = geom_path[0]

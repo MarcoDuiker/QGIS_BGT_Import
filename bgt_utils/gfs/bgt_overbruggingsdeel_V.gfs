@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOverbruggingsdeel</Name><ElementPath>geometrie2dOverbruggingsdeel</ElementPath><Type>MultiPolygon</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOverbruggingsdeel</Name><ElementPath>geometrie2dOverbruggingsdeel</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
     <Name>BridgeConstructionElement</Name>
     <ElementPath>BridgeConstructionElement</ElementPath>
     <GeometryType>3</GeometryType>

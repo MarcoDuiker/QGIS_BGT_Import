@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOndersteunendWaterdeel</Name><ElementPath>geometrie2dOndersteunendWaterdeel</ElementPath><Type>MultiPolygon</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOndersteunendWaterdeel</Name><ElementPath>geometrie2dOndersteunendWaterdeel</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
     <Name>OndersteunendWaterdeel</Name>
     <ElementPath>OndersteunendWaterdeel</ElementPath>
     <GeometryType>3</GeometryType>

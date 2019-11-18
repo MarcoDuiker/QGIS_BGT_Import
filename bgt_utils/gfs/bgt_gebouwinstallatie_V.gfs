@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dGebouwInstallatie</Name><ElementPath>geometrie2dGebouwInstallatie</ElementPath><Type>MultiPolygon</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dGebouwInstallatie</Name><ElementPath>geometrie2dGebouwInstallatie</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
     <Name>BuildingInstallation</Name>
     <ElementPath>BuildingInstallation</ElementPath>
     <GeometryType>3</GeometryType>

@@ -1,5 +1,5 @@
 <GMLFeatureClassList>
-  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dGrondvlak</Name><ElementPath>geometrie2dGrondvlak</ElementPath><Type>MultiPolygon</Type></GeomPropertyDefn>
+  <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dGrondvlak</Name><ElementPath>geometrie2dGrondvlak</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
     <SRSName>EPSG:28992</SRSName>
     <Name>BuildingPart</Name>
     <ElementPath>BuildingPart</ElementPath>

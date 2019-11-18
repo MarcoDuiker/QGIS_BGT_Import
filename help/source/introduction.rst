@@ -43,6 +43,11 @@ Once these files are generated, QGIS will read the gml files properly on opening
 
 Scanning BGT files and determining the import rules can be a time consuming process especially on platforms with low io speed. Please be patient, as this operation is not running as a background task.
 
+Warning
+~~~~~~~
+
+As the ``.gfs`` files used by the plugin are getting tweaked more and more using this second tab might give you inferior result compared to the first tab. The second tab does not have support for non-linear geometries ("bogen") and does not support "voorloopnullen" on eg. BAG id's.
+
 
 Usage Tips
 ==========

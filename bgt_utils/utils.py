@@ -56,7 +56,7 @@ def get_standard_layers():
         'bgt_vegetatieobject_P',
         'bgt_waterinrichtingselement_P',
         'bgt_weginrichtingselement_P',
-        'bgt_ongeclassificeerdobject_P'
+        'bgt_ongeclassificeerdobject_P',
         'bgt_begroeidterreindeel_L',
         'bgt_onbegroeidterreindeel_L',
         'bgt_ondersteunendwegdeel_L',
@@ -249,11 +249,11 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                             ds = ogr.GetDriverByName('gml').Open(os.path.join(tmp_folder, base_name))
                             input_layer = ds.GetLayer()
                             if postfix == '_V':
-                                input_layer.SetAttributeFilter("OGR_GEOMETRY='Polygon'")
+                                input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiSurface'")
                             elif postfix == '_L':
-                                input_layer.SetAttributeFilter("OGR_GEOMETRY='LineString'")
+                                input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiCurve'")
                             elif postfix == '_P':
-                                input_layer.SetAttributeFilter("OGR_GEOMETRY='Point'")
+                                input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiPoint'")
                             if input_layer.GetFeatureCount():
                                 new_layer = gp.CopyLayer(input_layer, 
                                     base_name.replace('.gml', postfix))
