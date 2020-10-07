@@ -19,17 +19,15 @@ You will find the plugin in the Vector menu. A menu bar with a button is added t
 First Tab: Complete package
 ---------------------------
 
-The easiest way (but not necessarily the fastest way) is to use the first tab of the plugin and download the data, and add it to your project in one go. Alternatively you can use zip files which you can download from the `BGT download site <https://www.pdok.nl/nl/producten/pdok-downloads/download-basisregistratie-grootschalige-topografie>`_.
+**As PDOK has a new API which is not supported (yet) downloading straight from the plugin is not possible anymore.**
 
-Kadaster has launched an `alternative download site with beta status <https://download.pdok.io/lv/bgt/viewer/>`_, but a much better performance. It is recommended to download your BGT zip there and then import this zip using the plugin.
-
-The plugin will download a zip file with data from the BGT website based on the extent of you map view, or based on the intersection with (the selected features) of a layer you choose.
+Alternatively you can use zip files which you can download from the `BGT download site <https://app.pdok.nl/lv/bgt/download-viewer/>`_.
 
 Then based on a set of predefined import rules, the data is imported to a geopackage. If necessary objects are split to polygon, line and point layers. Then all layers are added to your project in a layer group. Filtering is applied to remove all objects which are expired (have a non-empty ``eindRegistratie`` ). Furthermore, styling is applied to mimic the official BGT styling where possible. 
 
 The zip file which was downloaded is stored next to the geopackage for reference. Furthermore the layergroup is saved as a QGIS layer file for future use in other QGIS projects. 
 
-Downloading and importing actions from this tab are done as background tasks. The progress indicator in the status bar will show progress. During download this progress indicator will run to about 30% and the start at about 5% again. This is normal behavior. As long as the percentages are changing your download is running as it should. If you download large areas, be prepared to wait (a long time). And if you get bored you can always abort the download via the progress indicator.
+Importing actions from this tab is done as a background task. The progress indicator in the status bar will show progress. During download this progress indicator will run to about 30% and the start at about 5% again. This is normal behavior. As long as the percentages are changing your download is running as it should. If you download large areas, be prepared to wait (a long time). And if you get bored you can always abort the download via the progress indicator.
 
 
 Second Tab: Individual files

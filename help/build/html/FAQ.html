@@ -46,12 +46,14 @@
             
   <div class="section" id="faq">
 <h1>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="why-does-downloading-and-importing-take-so-long">
-<h2>Why does downloading and importing take so long?<a class="headerlink" href="#why-does-downloading-and-importing-take-so-long" title="Permalink to this headline">¶</a></h2>
-<p>The download takes a lot of time. Please ask the maintainers of the <a class="reference external" href="https://www.pdok.nl/nl/producten/pdok-downloads/download-basisregistratie-grootschalige-topografie">BGT download site</a> why.</p>
-<p>Kadaster has launched an <a class="reference external" href="https://download.pdok.io/lv/bgt/viewer/">alternative download site with beta status</a>, but a much better performance. It is recommended to download your BGT zip there and then import this zip using the plugin.</p>
-<p>If you don’t use predefined import rules, each gml file in your download has to be scanned to see if there are geometries hidden in unexpected places. This requires a time consuming complete scan of the entire file.</p>
-<p>Furthermore, a lot of data is involved. This always takes some time.</p>
+<div class="section" id="why-doesn-t-downloading-data-from-the-plugin-work-anymore">
+<h2>Why doesn’t downloading data from the plugin work anymore?<a class="headerlink" href="#why-doesn-t-downloading-data-from-the-plugin-work-anymore" title="Permalink to this headline">¶</a></h2>
+<p>The BGT download service has a new API which is not supported (yet).</p>
+</div>
+<div class="section" id="why-is-the-new-pdok-api-for-downloading-bgt-data-not-supported-yet">
+<h2>Why is the new PDOK API for downloading BGT data not supported yet?<a class="headerlink" href="#why-is-the-new-pdok-api-for-downloading-bgt-data-not-supported-yet" title="Permalink to this headline">¶</a></h2>
+<p>Kadaster was -in our opinion- very late in notifying that the beta-status download site would become the new production API.</p>
+<p>As this API works in a completely different way than the old API implementation of the new API is a lot more work than swapping a few URLS. We didn’t come around to this just yet. And yes, it might take a long time before we do.</p>
 </div>
 <div class="section" id="why-did-you-make-this-plugin">
 <h2>Why did you make this plugin?<a class="headerlink" href="#why-did-you-make-this-plugin" title="Permalink to this headline">¶</a></h2>
@@ -106,7 +108,8 @@ But do remember, I don’t like the sweet beers that much (I already am a very s
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">FAQ</a><ul>
-<li><a class="reference internal" href="#why-does-downloading-and-importing-take-so-long">Why does downloading and importing take so long?</a></li>
+<li><a class="reference internal" href="#why-doesn-t-downloading-data-from-the-plugin-work-anymore">Why doesn’t downloading data from the plugin work anymore?</a></li>
+<li><a class="reference internal" href="#why-is-the-new-pdok-api-for-downloading-bgt-data-not-supported-yet">Why is the new PDOK API for downloading BGT data not supported yet?</a></li>
 <li><a class="reference internal" href="#why-did-you-make-this-plugin">Why did you make this plugin?</a></li>
 <li><a class="reference internal" href="#why-all-those-funnels-next-to-the-layer-names-in-the-table-of-contents">Why all those funnels next to the layer names in the table of contents?</a></li>
 <li><a class="reference internal" href="#why-does-the-progress-indicator-move-in-such-a-weird-way">Why does the progress indicator move in such a weird way?</a></li>

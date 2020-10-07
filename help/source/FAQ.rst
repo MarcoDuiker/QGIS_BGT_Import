@@ -1,16 +1,18 @@
 FAQ
 ***
 
-Why does downloading and importing take so long?
-================================================
+Why doesn't downloading data from the plugin work anymore?
+==========================================================
 
-The download takes a lot of time. Please ask the maintainers of the `BGT download site <https://www.pdok.nl/nl/producten/pdok-downloads/download-basisregistratie-grootschalige-topografie>`_ why.
+The BGT download service has a new API which is not supported (yet).
 
-Kadaster has launched an `alternative download site with beta status <https://download.pdok.io/lv/bgt/viewer/>`_, but a much better performance. It is recommended to download your BGT zip there and then import this zip using the plugin.
+Why is the new PDOK API for downloading BGT data not supported yet?
+===================================================================
 
-If you don't use predefined import rules, each gml file in your download has to be scanned to see if there are geometries hidden in unexpected places. This requires a time consuming complete scan of the entire file. 
+Kadaster was -in our opinion- very late in notifying that the beta-status download site would become the new production API.
 
-Furthermore, a lot of data is involved. This always takes some time. 
+As this API works in a completely different way than the old API implementation of the new API is a lot more work than swapping a few URLS. We didn't come around to this just yet. And yes, it might take a long time before we do.
+
 
 Why did you make this plugin?
 =============================
