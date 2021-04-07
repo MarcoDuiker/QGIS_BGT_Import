@@ -50,6 +50,9 @@
          <layout class="QFormLayout" name="formLayout">
           <item row="0" column="0" colspan="2">
            <widget class="QRadioButton" name="download_map_extent_rbt">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -59,13 +62,19 @@
             <property name="text">
              <string>Download BGT zipped data within map extent</string>
             </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
           <item row="1" column="0" colspan="2">
            <widget class="QRadioButton" name="download_layer_rbt">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -75,6 +84,9 @@
             <property name="text">
              <string>Download BGT zipped data intersecting layer</string>
             </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
           <item row="2" column="0" colspan="2">
@@ -82,11 +94,17 @@
           </item>
           <item row="3" column="1">
            <widget class="QCheckBox" name="selected_features_cbx">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Selected features only</string>
             </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -95,14 +113,17 @@
             <property name="text">
              <string> Import BGT zipped data</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item row="5" column="1">
-           <widget class="QgsFileWidget" name="open_zip_cmb">
-            <property name="dialogTitle">
+           <widget class="QgsFileWidget" name="open_zip_cmb" native="true">
+            <property name="dialogTitle" stdset="0">
              <string>Select zip file with BGT data</string>
             </property>
-            <property name="filter">
+            <property name="filter" stdset="0">
              <string notr="true">*.zip</string>
             </property>
            </widget>
@@ -131,11 +152,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QgsFileWidget" name="save_gpkg_cmb">
-         <property name="dialogTitle">
+        <widget class="QgsFileWidget" name="save_gpkg_cmb" native="true">
+         <property name="dialogTitle" stdset="0">
           <string>Save as ...</string>
          </property>
-         <property name="filter">
+         <property name="filter" stdset="0">
           <string>*.gpkg</string>
          </property>
         </widget>

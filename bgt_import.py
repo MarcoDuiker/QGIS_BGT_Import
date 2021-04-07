@@ -47,7 +47,7 @@ except:
 
 from functools import partial
 import glob
-import ogr
+from osgeo import ogr
 import os
 import shutil
 import tempfile
