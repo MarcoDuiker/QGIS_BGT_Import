@@ -73,7 +73,7 @@
       <Name>plus-type</Name>
       <ElementPath>plus-type</ElementPath>
       <Type>String</Type>
-      <Width>28</Width>
+      <Width>64</Width>
     </PropertyDefn>
     <PropertyDefn>
       <Name>terminationDate</Name>

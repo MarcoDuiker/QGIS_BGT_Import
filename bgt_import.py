@@ -422,6 +422,9 @@ class BGTImport(object):
         '''
         Adds layers applying filtering and styles on the go.
         When done, save the whole shebang to a qlr for easy access.
+
+        !!! THIS PROBABLY SHOULD BE DONE IN THE MAIN THREAD: https://stackoverflow.com/questions/14541477/qobjectconnect-cannot-queue-arguments-of-type-qvectorint
+
         '''
         
         progress = 0
