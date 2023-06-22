@@ -214,13 +214,11 @@ def import_to_geopackage(task, zip_file_name, geopackage):
         pass
     
     try:
-        tmp_dir = tempfile.TemporaryDirectory()
         if os.path.exists(geopackage):
             os.remove(geopackage)
         gp = ogr.GetDriverByName('GPKG').CreateDataSource(geopackage)
         #gp =  ogr.GetDriverByName('GPKG').Open( geopackage, update = 1 )
-        with tmp_dir:
-            tmp_folder = tmp_dir.name
+        with tempfile.TemporaryDirectory() as tmp_folder:
             with zipfile.ZipFile(zip_file_name, "r") as f:
                 f.extractall(tmp_folder)
                 increment = 80 / len(f.infolist()) 
@@ -244,21 +242,34 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                                 QgsMessageLog.logMessage(u'Importing from BGT-zip: ' \
                                     + u'...' + str(base_name) + str(postfix),
                                     tag = 'BGTImport', level = Qgis.Info)
-                            shutil.copyfile(os.path.join(gfs_folder, gfs_file_name),
+                            copy_ok = shutil.copyfile(os.path.join(gfs_folder, gfs_file_name),
                                 os.path.join(tmp_folder, base_name.replace('.gml','.gfs')))
-                            ds = ogr.GetDriverByName('gml').Open(os.path.join(tmp_folder, base_name))
-                            input_layer = ds.GetLayer()
-                            if postfix == '_V':
-                                input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiSurface'")
-                            elif postfix == '_L':
-                                input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiCurve'")
-                            elif postfix == '_P':
-                                input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiPoint'")
-                            if input_layer.GetFeatureCount():
-                                new_layer = gp.CopyLayer(input_layer, 
-                                    base_name.replace('.gml', postfix))
-                                del new_layer
-                            del input_layer, ds
+                            if copy_ok:
+                                try:
+                                    ds = ogr.GetDriverByName('gml').Open(os.path.join(tmp_folder, base_name))
+                                    input_layer = ds.GetLayer()
+                                    if postfix == '_V':
+                                        input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiSurface'")
+                                    elif postfix == '_L':
+                                        input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiCurve'")
+                                    elif postfix == '_P':
+                                        input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiPoint'")
+                                    if input_layer.GetFeatureCount():
+                                        new_layer = gp.CopyLayer(input_layer, 
+                                            base_name.replace('.gml', postfix))
+                                        del new_layer
+                                    del input_layer, ds
+                                except Exception as v:
+                                    if task:
+                                        QgsMessageLog.logMessage(u'Error importing: ' \
+                                            + str(base_name) + str(postfix), 
+                                            tag = 'BGTImport', level = Qgis.Warning)
+                            else:
+                                if task:
+                                  QgsMessageLog.logMessage(u'Failed to copy: ' \
+                                      + str(os.path.join(gfs_folder, gfs_file_name)) + "to" \
+                                      + str(os.path.join(tmp_folder, base_name.replace('.gml','.gfs'))),
+                                      tag = 'BGTImport', level = Qgis.Warning)
                     progress = progress + increment
                     if task:
                         task.setProgress(progress)

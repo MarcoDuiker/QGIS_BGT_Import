@@ -73,7 +73,7 @@
       <Name>plus-typeGebouwInstallatie</Name>
       <ElementPath>plus-typeGebouwInstallatie</ElementPath>
       <Type>String</Type>
-      <Width>14</Width>
+      <Width>64</Width>
     </PropertyDefn>
     <PropertyDefn>
       <Name>terminationDate</Name>
