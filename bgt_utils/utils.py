@@ -3,6 +3,7 @@ Uitility functions for working with the BGT.
 '''
 
 import argparse
+import logging
 import os
 import shutil
 import sys
@@ -224,6 +225,10 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                 increment = 80 / len(f.infolist()) 
                 for info in f.infolist(): 
                     base_name = os.path.basename(info.filename)
+
+                    # temporary fix for: https://github.com/MarcoDuiker/QGIS_BGT_Import/issues/19
+                    add_srs_dimension(task, base_name, tmp_folder)
+
                     if task:
                         QgsMessageLog.logMessage(u'Importing from BGT-zip: ' \
                             + str(base_name), tag = 'BGTImport', level = Qgis.Info)
@@ -248,6 +253,10 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                                 try:
                                     ds = ogr.GetDriverByName('gml').Open(os.path.join(tmp_folder, base_name))
                                     input_layer = ds.GetLayer()
+                                    if task:
+                                        QgsMessageLog.logMessage(u'Succesfully opened: ' \
+                                            + str(base_name) + str(postfix) , 
+                                            tag = 'BGTImport', level = Qgis.Info)
                                     if postfix == '_V':
                                         input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiSurface'")
                                     elif postfix == '_L':
@@ -258,11 +267,15 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                                         new_layer = gp.CopyLayer(input_layer, 
                                             base_name.replace('.gml', postfix))
                                         del new_layer
+                                        if task:
+                                          QgsMessageLog.logMessage(u'Succesfully copied into gpkg: ' \
+                                              + str(base_name) + str(postfix) , 
+                                              tag = 'BGTImport', level = Qgis.Info)
                                     del input_layer, ds
                                 except Exception as v:
                                     if task:
                                         QgsMessageLog.logMessage(u'Error importing: ' \
-                                            + str(base_name) + str(postfix), 
+                                            + str(base_name) + str(postfix) + " " + str(v), 
                                             tag = 'BGTImport', level = Qgis.Warning)
                             else:
                                 if task:
@@ -284,6 +297,18 @@ def import_to_geopackage(task, zip_file_name, geopackage):
             QgsMessageLog.logMessage(u'Error importing BGT-zip: ' + str(v), 
                 tag = 'BGTImport', level = Qgis.Critical)
         return False
+
+def add_srs_dimension(task, gml_file_name, tmp_folder):
+    '''
+    A quick and dirty function to add srsDimension to a posList if not already there.
+    see: https://github.com/MarcoDuiker/QGIS_BGT_Import/issues/19
+    '''
+
+    gml_file = os.path.join(tmp_folder, gml_file_name)
+    with open(gml_file, encoding="utf-8") as f:
+        txt = f.read().replace("<gml:posList>", '<gml:posList srsDimension="2">')
+    with open(gml_file, mode = 'w', encoding="utf-8") as f:
+        f.write(txt)
 
 
 def _duplicateOrl(xf, elem):
