@@ -258,11 +258,14 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                                             + str(base_name) + str(postfix) , 
                                             tag = 'BGTImport', level = Qgis.Info)
                                     if postfix == '_V':
-                                        input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiSurface' and geom IS NOT NULL")
+                                        #input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiSurface' and geom IS NOT NULL")
+                                        input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiSurface'")
                                     elif postfix == '_L':
-                                        input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiCurve'  and geom IS NOT NULL")
+                                        #input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiCurve'  and geom IS NOT NULL")
+                                        input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiCurve'")
                                     elif postfix == '_P':
-                                        input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiPoint'  and geom IS NOT NULL")
+                                        #input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiPoint'  and geom IS NOT NULL")
+                                        input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiPoint'")
                                     if input_layer.GetFeatureCount():
                                         new_layer = gp.CopyLayer(input_layer, 
                                             base_name.replace('.gml', postfix))

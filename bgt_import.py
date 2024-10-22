@@ -24,6 +24,8 @@ from __future__ import absolute_import
 from builtins import str
 from builtins import object
 
+import qgis
+
 from qgis.PyQt import QtCore
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication,\
     QUrl
@@ -320,10 +322,8 @@ class BGTImport(object):
     def showHelp(self):
         """Reacts on help button"""
 
-        #qgis.utils.showPluginHelp(filename = 'help/index')
-        QDesktopServices().openUrl(QUrl.fromLocalFile( \
-            os.path.join("file://", self.plugin_dir, 'help/build/html', \
-                         'index.html')))
+        QDesktopServices().openUrl(QUrl(
+			"https://marcoduiker.github.io/QGIS_BGT_Import/help/build/html/index.html"))
 
     def radio_toggled(self):
         '''Toggles the widgets associated with a radio button'''
