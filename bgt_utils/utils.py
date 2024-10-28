@@ -3,8 +3,10 @@ Uitility functions for working with the BGT.
 '''
 
 import argparse
+import json
 import logging
 import os
+import requests
 import shutil
 import sys
 import tempfile
@@ -13,6 +15,7 @@ import uuid
 import zipfile
 
 from copy import deepcopy
+from time import sleep
 
 from osgeo import gdal
 from osgeo import ogr
@@ -21,12 +24,25 @@ from osgeo import osr
 import xml.etree.ElementTree as ET
 
 try:
-    from qgis.core import Qgis, QgsTask, QgsTaskManager, QgsMessageLog
+    QGIS_NETWORKING = True
+    # We MAY and MUST use QGIS networking to respect all network
+    # settings in QGIS
+    
+    from qgis.core import Qgis, QgsTask, QgsTaskManager, QgsMessageLog,\
+      QgsBlockingNetworkRequest, QgsFileDownloader, QgsNetworkContentFetcher
+      
+    from qgis.PyQt.QtNetwork import QNetworkReply, QNetworkRequest
+    from qgis.PyQt.QtCore import QUrl, QEventLoop
+
+    
 except:
-    pass
+    QGIS_NETWORKING = False
+    # This module is used from outside QGIS.
+    # We CANNOT use QGIS networking
 
 try:
-    # this gives us a (much) faster end cleaner implementation
+    # this gives us a (much) faster and cleaner implementation
+    # on the openbare ruimtelabel verwerking
     import lxml
     from lxml import etree
 except:
@@ -120,9 +136,51 @@ def get_visible_layers():
         'bgt_kunstwerkdeel_V',
         'bgt_waterdeel_V',
         'bgt_ongeclassificeerdobject_V']
+        
+def get_featuretypes():
+    '''
+    Returns a list of all BGT featuretypes
+    '''
+    
+    return [    "bak",
+                "begroeidterreindeel",
+                "bord",
+                "buurt",
+                "functioneelgebied",
+                "gebouwinstallatie",
+                "installatie",
+                "kast",
+                "kunstwerkdeel",
+                "mast",
+                "onbegroeidterreindeel",
+                "ondersteunendwaterdeel",
+                "ondersteunendwegdeel",
+                "ongeclassificeerdobject",
+                "openbareruimte",
+                "openbareruimtelabel",
+                "overbruggingsdeel",
+                "overigbouwwerk",
+                "overigescheiding",
+                "paal",
+                "pand",
+                "put",
+                "scheiding",
+                "sensor",
+                "spoor",
+                "stadsdeel",
+                "straatmeubilair",
+                "tunneldeel",
+                "vegetatieobject",
+                "waterdeel",
+                "waterinrichtingselement",
+                "waterschap",
+                "wegdeel",
+                "weginrichtingselement",
+                "wijk" ]
 
 
-def download_tiles(task, tiles, file_name, nam = None):
+
+def download_zip(task, file_name, geofilter, featuretypes = get_featuretypes()):
     '''
     Downloads the tiles from the BGT server and saves the zip as file_name.
     
@@ -130,52 +188,131 @@ def download_tiles(task, tiles, file_name, nam = None):
     
     - `task`            a QgsTask provided by QgsTaskManager. 
                         `None` will do fine when no taskmanager is used.
-    - `tiles`           an iterable containing BGT tile numbers.
+    - `geofilter`       a polygon in WKT format.
     - `file_name`       the file name as which the downloaded zip will be saved.
     
     Optional parameters:
     
-    - `nam`             An urllib compatible QgsNetworkAccessManager.
-                        You should use this when running from QGIS.
-                        When not provided urllib is used for downloads, which
-                        is fine when not run from QGIS.
+    - `featuretypes`    The featuretypes to request. If not provided
+                        the default set with all BGT featuretypes 
+                        will be used.
 
     Returns:
 
     `file_name`         the file name as which the downloaded zip was saved.
     '''
     
+    
+    
+    API_url = "https://api.pdok.nl"
+    prepare_download_url = API_url + "/lv/bgt/download/v1_0/full/custom"
+    post_params = { "format":           "citygml",
+                    "featuretypes":     featuretypes,
+                    "geofilter":        geofilter }
+                    
+    fetcher = QgsNetworkContentFetcher()
+    def fetcher_finished():
+        with open(file_name,'wb') as f:
+            # this string cannot be converted to a proper zip file
+            f.write(fetcher.contentAsString())
+
+    def show_download_progress():
+        progress = round(bytesReceived/ bytesTotal)
+        if progress < 100:
+            task.setProgress(progress)
+        
+        
+    #task = None   
+    #if True:             
     if task:
-        QgsMessageLog.logMessage(u'Start downloading BGT-tiles: ' + str(tiles),
+        progress = 0
+        if task:
+            task.setProgress(progress)
+        
+        QgsMessageLog.logMessage(u'Start preparing BGT-zip',
             tag = 'BGTImport', level = Qgis.Info)
-        task.setProgress(5)
-
-    encoded_url = "https://downloads.pdok.nl/service/extract.zip?" +\
-      "extractname=bgt&extractset=citygml&excludedtypes=plaatsbepalingspunt&history=true&" +\
-      "tiles=%7B%22layers%22%3A%5B%7B%22aggregateLevel%22%3A0%2C%22codes%22%3A%5B" + \
-      '%2C'.join([str(x) for x in tiles]) + "%5D%7D%5D%7D"
-    try:  
-        if os.path.exists(file_name):
-            os.remove(file_name)
-        if nam:
-            (response, content) = nam.request(encoded_url, task = task)
-            with open(file_name,'wb') as f:
-                f.write(content)
-        else:
-            with urllib.request.urlopen(encoded_url) as response:
-                with open(file_name,'wb') as f:
-                    f.write(response.read())
-        if task:
-            QgsMessageLog.logMessage(u'Done downloading BGT-tiles',
+        
+        request = QgsBlockingNetworkRequest()
+        req = QNetworkRequest(QUrl(prepare_download_url))
+        req.setHeader(  QNetworkRequest.KnownHeaders.ContentTypeHeader, 
+                        'application/json')
+        err = request.post(req, bytes(json.dumps(post_params), 'utf-8'))
+        if err == QgsBlockingNetworkRequest.ErrorCode.NoError:
+            resp = request.reply()
+            QgsMessageLog.logMessage(u'API response: ' + str(
+                resp.content(), encoding='utf-8'),
                 tag = 'BGTImport', level = Qgis.Info)
-            task.setProgress(100)
-        return True
-    except Exception as v:
-        if task:
-            QgsMessageLog.logMessage(u'Error downloading BGT-tiles: ' + str(v),
+            json_resp = json.loads(resp.content().data())
+            
+            status_request = QgsBlockingNetworkRequest()
+            status_req = QNetworkRequest(QUrl(API_url + 
+                json_resp["_links"]["status"]["href"]))
+                
+            status = "PENDING"
+            while status == "RUNNING" \
+            or    status == "PENDING":
+                sleep(1)
+                err = status_request.get(status_req, forceRefresh = True)
+                if err == QgsBlockingNetworkRequest.ErrorCode.NoError:
+                    status_msg = json.loads(
+                                    status_request.reply().content().data())
+                    status = status_msg['status']
+                    QgsMessageLog.logMessage(u'API-message: ' + \
+                        str(status_msg),
+                        tag = 'BGTImport', level = Qgis.Info)
+                    if task:
+                        task.setProgress(status_msg['progress'])
+                else:
+                    QgsMessageLog.logMessage(u'API error: ' + \
+                        status_request.errorMessage(),
+                        tag = 'BGTImport', level = Qgis.Critical)
+                        
+                    return
+                    
+            if status_msg['status'] == "COMPLETED":
+                download_url = API_url + \
+                               status_msg["_links"]["download"]["href"]
+                QgsMessageLog.logMessage(
+                    u'BGT-zip is prepared. Start download from: ' + \
+                    download_url,
+                    tag = 'BGTImport', level = Qgis.Info)
+                #next lines not working. The returned string cannot be
+                #saved as a valid zip
+                #fetcher.finished.connect(fetcher_finished)
+                #fetcher.fetchContent(QUrl(download_url))
+                if task:
+                    download_request = QgsBlockingNetworkRequest()
+                    download_request.downloadProgress.connect(
+                                            show_download_progress)
+                    err = download_request.get(
+                                QNetworkRequest(QUrl(download_url)))
+                    if err == QgsBlockingNetworkRequest.ErrorCode.NoError:
+                        with open(file_name, 'wb') as f:
+                            f.write(download_request.reply().content())
+                            return file_name
+                    else:
+                        QgsMessageLog.logMessage(u'Download error: ' + \
+                        download_request.errorMessage(),
+                        tag = 'BGTImport', level = Qgis.Critical)
+                else:
+                    # for test purposes when not having a task
+                    loop = QEventLoop()
+                    dl = QgsFileDownloader(QUrl(download_url), file_name)
+                    dl.downloadExited.connect(loop.quit)
+                    dl.startDownload()
+                    loop.exec_()
+                    return file_name
+            else: 
+                QgsMessageLog.logMessage(u'Preparation of download failed: ' + \
+                        status_msg['status'],
+                        tag = 'BGTImport', level = Qgis.Critical)   
+        else:
+            QgsMessageLog.logMessage(u'API error: ' + \
+                request.errorMessage(),
                 tag = 'BGTImport', level = Qgis.Critical)
-        return False
-
+    else:
+        # to be implemented with the requests lib.
+        pass
 
 def import_to_geopackage(task, zip_file_name, geopackage):
     '''

@@ -8,7 +8,7 @@
 
 [general]
 name=BGT Import
-qgisMinimumVersion=2.99
+qgisMinimumVersion=3.6
 qgisMaximumVersion=3.99
 description=Import Basisregistratie Grootschalige Topografie (BGT) for QGIS3
 version=3.19
