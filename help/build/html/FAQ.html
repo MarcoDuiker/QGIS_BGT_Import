@@ -38,15 +38,6 @@
             
   <section id="faq">
 <h1>FAQ<a class="headerlink" href="#faq" title="Link to this heading">¶</a></h1>
-<section id="why-doesn-t-downloading-data-from-the-plugin-work-anymore">
-<h2>Why doesn’t downloading data from the plugin work anymore?<a class="headerlink" href="#why-doesn-t-downloading-data-from-the-plugin-work-anymore" title="Link to this heading">¶</a></h2>
-<p>The BGT download service has a new API which is not supported (yet).</p>
-</section>
-<section id="why-is-the-new-pdok-api-for-downloading-bgt-data-not-supported-yet">
-<h2>Why is the new PDOK API for downloading BGT data not supported yet?<a class="headerlink" href="#why-is-the-new-pdok-api-for-downloading-bgt-data-not-supported-yet" title="Link to this heading">¶</a></h2>
-<p>Kadaster was -in our opinion- very late in notifying that the beta-status download site would become the new production API.</p>
-<p>As this API works in a completely different way than the old API implementation of the new API is a lot more work than swapping a few URLS. We didn’t come around to this just yet. And yes, it might take a long time before we do.</p>
-</section>
 <section id="why-did-you-make-this-plugin">
 <h2>Why did you make this plugin?<a class="headerlink" href="#why-did-you-make-this-plugin" title="Link to this heading">¶</a></h2>
 <p>In my professional life I almost exclusively use Free an Open Source Software. I am very grateful that all those very nice products made by nice people are available to me free of charge and license hassles.</p>
@@ -57,15 +48,11 @@
 <h2>Why all those funnels next to the layer names in the table of contents?<a class="headerlink" href="#why-all-those-funnels-next-to-the-layer-names-in-the-table-of-contents" title="Link to this heading">¶</a></h2>
 <p>Those funnels indicate that there is a filter active on the layer. In this case all objects (features) which are expired (have a non-empty <code class="docutils literal notranslate"><span class="pre">eindRegistratie</span></code> ) are filtered out.</p>
 </section>
-<section id="why-does-the-progress-indicator-move-in-such-a-weird-way">
-<h2>Why does the progress indicator move in such a weird way?<a class="headerlink" href="#why-does-the-progress-indicator-move-in-such-a-weird-way" title="Link to this heading">¶</a></h2>
-<p>The BGT download website does not give any information on the size of the downloads. So in the best MS tradition the progress indicator jumps from ‘almost half way’ to ‘just started’ as often as needed to get the download in.</p>
-</section>
-<section id="why-is-the-second-tab-individual-files-still-in-the-plugin">
-<h2>Why is the second tab (“Individual Files”) still in the plugin?<a class="headerlink" href="#why-is-the-second-tab-individual-files-still-in-the-plugin" title="Link to this heading">¶</a></h2>
-<p>Actually, the stuff used to make the first tab work is made with the second tab. I might have missed something. So, there you have a way to check the import done form the first tab. If you find a mistake or something I missed, please <a class="reference external" href="https://github.com/MarcoDuiker/QGIS_BGT_Import/issues">report the issue</a>.</p>
+<section id="why-is-the-tab-import-individual-files-still-in-the-plugin">
+<h2>Why is the tab (“Import individual files”) still in the plugin?<a class="headerlink" href="#why-is-the-tab-import-individual-files-still-in-the-plugin" title="Link to this heading">¶</a></h2>
+<p>Actually, the stuff used to make the “Step 2: Convert” tab work is made with the “Import individual files” tab. I might have missed something. So, there you have a way to check the import done from the “Step 2: Convert” tab. If you find a mistake or something I missed, please <a class="reference external" href="https://github.com/MarcoDuiker/QGIS_BGT_Import/issues">report the issue</a>.</p>
 <p>Of course it is also handy if you need only one or two gml files from the BGT.</p>
-<p>Beware: As the <code class="docutils literal notranslate"><span class="pre">.gfs</span></code> files used by the plugin are getting tweaked more and more using this second tab might give you inferior result compared to the first tab. The second tab does not have support for non-linear geometries (“bogen”) and does not support “voorloopnullen” on eg. BAG id’s.</p>
+<p>Beware: As the <code class="docutils literal notranslate"><span class="pre">.gfs</span></code> files used by the plugin are getting tweaked more and more using this “Import individual files” tab might give you inferior result compared to the “Step 2: Convert” tab. The “Import individual files” tab does not have support for non-linear geometries (“bogen”) and does not support “voorloopnullen” on eg. BAG id’s.</p>
 </section>
 <section id="why-is-the-bgt-zip-containing-all-those-bloated-gml-files-smaller-than-the-geopackage-containing-the-same-data">
 <h2>Why is the BGT-zip containing all those bloated gml files smaller than the geopackage containing the same data?<a class="headerlink" href="#why-is-the-bgt-zip-containing-all-those-bloated-gml-files-smaller-than-the-geopackage-containing-the-same-data" title="Link to this heading">¶</a></h2>
@@ -102,12 +89,9 @@ But do remember, I don’t like the sweet beers that much (I already am a very s
     <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">FAQ</a><ul>
-<li><a class="reference internal" href="#why-doesn-t-downloading-data-from-the-plugin-work-anymore">Why doesn’t downloading data from the plugin work anymore?</a></li>
-<li><a class="reference internal" href="#why-is-the-new-pdok-api-for-downloading-bgt-data-not-supported-yet">Why is the new PDOK API for downloading BGT data not supported yet?</a></li>
 <li><a class="reference internal" href="#why-did-you-make-this-plugin">Why did you make this plugin?</a></li>
 <li><a class="reference internal" href="#why-all-those-funnels-next-to-the-layer-names-in-the-table-of-contents">Why all those funnels next to the layer names in the table of contents?</a></li>
-<li><a class="reference internal" href="#why-does-the-progress-indicator-move-in-such-a-weird-way">Why does the progress indicator move in such a weird way?</a></li>
-<li><a class="reference internal" href="#why-is-the-second-tab-individual-files-still-in-the-plugin">Why is the second tab (“Individual Files”) still in the plugin?</a></li>
+<li><a class="reference internal" href="#why-is-the-tab-import-individual-files-still-in-the-plugin">Why is the tab (“Import individual files”) still in the plugin?</a></li>
 <li><a class="reference internal" href="#why-is-the-bgt-zip-containing-all-those-bloated-gml-files-smaller-than-the-geopackage-containing-the-same-data">Why is the BGT-zip containing all those bloated gml files smaller than the geopackage containing the same data?</a></li>
 <li><a class="reference internal" href="#your-styling-sucks-can-i-apply-my-own-default-styling">Your styling sucks! Can I apply my own default styling?</a></li>
 <li><a class="reference internal" href="#i-like-to-run-a-bgt-download-and-import-automagically-on-a-regular-basis-can-your-plugin-help">I like to run a BGT download and import automagically on a regular basis. Can your plugin help?</a></li>

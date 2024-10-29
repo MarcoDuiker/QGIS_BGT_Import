@@ -42,11 +42,6 @@
             
   <section id="limitations">
 <h1>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">¶</a></h1>
-<section id="downloads">
-<h2>Downloads<a class="headerlink" href="#downloads" title="Link to this heading">¶</a></h2>
-<p>The BGT server from where the data is downloaded might be slow, down, or intermittently available. This means that downloads can fail or take very, very long. On larger downloads you are more likely to run into trouble.</p>
-<p>Kadaster has launched an <a class="reference external" href="https://download.pdok.io/lv/bgt/viewer/">alternative download site with beta status</a>, but a much better performance. It is recommended to download your BGT zip there and then import this zip using the plugin.</p>
-</section>
 <section id="pand-punt-huisnummers">
 <h2>Pand (punt) (Huisnummers)<a class="headerlink" href="#pand-punt-huisnummers" title="Link to this heading">¶</a></h2>
 <p>Sometimes the gml file of bgt_pand containes multiple labels with multiple rotations for a pand.</p>
@@ -56,8 +51,8 @@
 <h2>Openbareruimtelabel (punt)<a class="headerlink" href="#openbareruimtelabel-punt" title="Link to this heading">¶</a></h2>
 <p>In the gml file <code class="code docutils literal notranslate"><span class="pre">bgt_openbareruimtelabel.gml</span></code> some label objects have multiple positions, with multiple rotations to place the labels.</p>
 <p>The GDAL/OGR library which is used to read data into QGIS and which is used by this plugin as well does not support this.</p>
-<p>This problem is mitigated, ONLY WHEN YOU USE THE FIRST TAB (Complete Package), by duplicating the features in <code class="code docutils literal notranslate"><span class="pre">bgt_openbareruimtelabel.gml</span></code> so that the GDAL/OGR library can import this layer correctly. However, if you don’t have the Python package lxml available to QGIS, this can take a long time.</p>
-<p>If you use the second tab (individual files) or for some reason, the duplication of features fail, the import process will only import the last label position. So, each label object in the gml file will be available in the import, but only one label position defined in the label object is imported.</p>
+<p>This problem is mitigated, ONLY WHEN YOU USE Step 2: Convert TAB by duplicating the features in <code class="code docutils literal notranslate"><span class="pre">bgt_openbareruimtelabel.gml</span></code> so that the GDAL/OGR library can import this layer correctly. However, if you don’t have the Python package lxml available to QGIS, this can take a long time.</p>
+<p>If you use the tab “Import individual files” or for some reason, the duplication of features fail, the import process will only import the last label position. So, each label object in the gml file will be available in the import, but only one label position defined in the label object is imported.</p>
 <p>Missing label positions can be identified by looking at the ‘hoek’ field in the attribute table. This field is filled with values written like (2:30,45). This means to 2 rotations, one being 30 degrees, the other one being 45 degrees. You can find any number of rotations. Any number higher than 1 means that multiple label positions for that label object are available in the gml file. Only one is imported.</p>
 <p>The style which is applied by the plugin uses the correct rotation value for placing the one label imported for that object in the map.</p>
 </section>
@@ -74,7 +69,6 @@
     <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">Limitations</a><ul>
-<li><a class="reference internal" href="#downloads">Downloads</a></li>
 <li><a class="reference internal" href="#pand-punt-huisnummers">Pand (punt) (Huisnummers)</a></li>
 <li><a class="reference internal" href="#openbareruimtelabel-punt">Openbareruimtelabel (punt)</a></li>
 </ul>

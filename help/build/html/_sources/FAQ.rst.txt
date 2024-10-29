@@ -1,18 +1,6 @@
 FAQ
 ***
 
-Why doesn't downloading data from the plugin work anymore?
-==========================================================
-
-The BGT download service has a new API which is not supported (yet).
-
-Why is the new PDOK API for downloading BGT data not supported yet?
-===================================================================
-
-Kadaster was -in our opinion- very late in notifying that the beta-status download site would become the new production API.
-
-As this API works in a completely different way than the old API implementation of the new API is a lot more work than swapping a few URLS. We didn't come around to this just yet. And yes, it might take a long time before we do.
-
 
 Why did you make this plugin?
 =============================
@@ -29,20 +17,15 @@ Why all those funnels next to the layer names in the table of contents?
 Those funnels indicate that there is a filter active on the layer. In this case all objects (features) which are expired (have a non-empty ``eindRegistratie`` ) are filtered out.
 
 
-Why does the progress indicator move in such a weird way?
-=========================================================
 
-The BGT download website does not give any information on the size of the downloads. So in the best MS tradition the progress indicator jumps from 'almost half way' to 'just started' as often as needed to get the download in.
-
-
-Why is the second tab ("Individual Files") still in the plugin?
+Why is the tab ("Import individual files") still in the plugin?
 ===============================================================
 
-Actually, the stuff used to make the first tab work is made with the second tab. I might have missed something. So, there you have a way to check the import done form the first tab. If you find a mistake or something I missed, please `report the issue <https://github.com/MarcoDuiker/QGIS_BGT_Import/issues>`_.
+Actually, the stuff used to make the "Step 2: Convert" tab work is made with the "Import individual files" tab. I might have missed something. So, there you have a way to check the import done from the "Step 2: Convert" tab. If you find a mistake or something I missed, please `report the issue <https://github.com/MarcoDuiker/QGIS_BGT_Import/issues>`_.
 
 Of course it is also handy if you need only one or two gml files from the BGT.
 
-Beware: As the ``.gfs`` files used by the plugin are getting tweaked more and more using this second tab might give you inferior result compared to the first tab. The second tab does not have support for non-linear geometries ("bogen") and does not support "voorloopnullen" on eg. BAG id's.
+Beware: As the ``.gfs`` files used by the plugin are getting tweaked more and more using this "Import individual files" tab might give you inferior result compared to the "Step 2: Convert" tab. The "Import individual files" tab does not have support for non-linear geometries ("bogen") and does not support "voorloopnullen" on eg. BAG id's.
 
 
 
