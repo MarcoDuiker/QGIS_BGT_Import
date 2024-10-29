@@ -361,14 +361,14 @@ class BGTImport(object):
         """
         
         zip_file_name = self.dlg.save_zip_cmb.filePath()
-        # if not os.access(zip_file_name, os.W_OK):
-            # self.iface.messageBar().pushMessage("Error",
-                # self.tr(u'Selected file not writeable.'), level = Qgis.Critical)    
-            # return
-        # os.remove(zip_file_name)    
+        if not os.access(zip_file_name, os.W_OK):
+            self.iface.messageBar().pushMessage("Error",
+                self.tr(u'Selected file not writeable.'), level = Qgis.Critical)    
+            return
+        os.remove(zip_file_name)    
         
         if self.dlg.download_layer_rbt.isChecked():
-            # select tiles intersecting a layer
+            # select BGT by intersecting with a layer
             select_layer = self.dlg.download_layer_cmb.currentLayer()
             if select_layer.selectedFeatureCount() \
             and self.dlg.selected_features_cbx.isChecked():
@@ -393,7 +393,6 @@ class BGTImport(object):
             'BGTImport: download zip', 
             bgt_utils.download_zip, 
             geofilter = wkt_extent, 
-            #featuretypes = bgt_utils.get_featuretypes(),
             featuretypes = self.dlg.featuretypes_cbx.checkedItems(),
             file_name = zip_file_name)
 
@@ -407,10 +406,16 @@ class BGTImport(object):
         """
         
         geopackage = self.dlg.save_to_gpkg_cmb.filePath()
-
-        if not os.access(geopackage, os.W_OK):
+        is os.path.exists(geopackage):
+            if not os.access(geopackage, os.W_OK):
             self.iface.messageBar().pushMessage("Error",
-                self.tr(u'Selected file not writeable.'), level = Qgis.Critical)    
+                self.tr(u'Selected file not writeable.'), 
+                level = Qgis.Critical)    
+            return
+        elif not os.access(os.path.dirname(geopackage), os.W_OK):
+            self.iface.messageBar().pushMessage("Error",
+                self.tr(u'Selected folder not writeable.'), 
+                level = Qgis.Critical)    
             return
 
         zip_file_name = self.dlg.open_zip_cmb.filePath()

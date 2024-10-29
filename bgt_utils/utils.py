@@ -183,6 +183,8 @@ def get_featuretypes():
 def download_zip(task, file_name, geofilter, featuretypes = get_featuretypes()):
     '''
     Downloads the tiles from the BGT server and saves the zip as file_name.
+    Must be called from within QGIS.
+    Alternatively the download can be done via the BGT download viewer.
     
     Required parameters:
     
@@ -202,7 +204,8 @@ def download_zip(task, file_name, geofilter, featuretypes = get_featuretypes()):
     `file_name`         the file name as which the downloaded zip was saved.
     '''
     
-    
+    if not QGIS_NETWORKING:
+        raise NotImplementedError("Download can only be done from with QGIS.")
     
     API_url = "https://api.pdok.nl"
     prepare_download_url = API_url + "/lv/bgt/download/v1_0/full/custom"
@@ -210,109 +213,91 @@ def download_zip(task, file_name, geofilter, featuretypes = get_featuretypes()):
                     "featuretypes":     featuretypes,
                     "geofilter":        geofilter }
                     
-    fetcher = QgsNetworkContentFetcher()
-    def fetcher_finished():
-        with open(file_name,'wb') as f:
-            # this string cannot be converted to a proper zip file
-            f.write(fetcher.contentAsString())
-
     def show_download_progress():
         progress = round(bytesReceived/ bytesTotal)
         if progress < 100:
             task.setProgress(progress)
         
-        
-    #task = None   
-    #if True:             
+    progress = 0
     if task:
-        progress = 0
-        if task:
-            task.setProgress(progress)
-        
-        QgsMessageLog.logMessage(u'Start preparing BGT-zip',
+        task.setProgress(progress)
+    
+    QgsMessageLog.logMessage(u'Start preparing BGT-zip',
+        tag = 'BGTImport', level = Qgis.Info)
+    
+    request = QgsBlockingNetworkRequest()
+    req = QNetworkRequest(QUrl(prepare_download_url))
+    req.setHeader(  QNetworkRequest.KnownHeaders.ContentTypeHeader, 
+                    'application/json')
+    err = request.post(req, bytes(json.dumps(post_params), 'utf-8'))
+    if err == QgsBlockingNetworkRequest.ErrorCode.NoError:
+        resp = request.reply()
+        QgsMessageLog.logMessage(u'API response: ' + str(
+            resp.content(), encoding='utf-8'),
             tag = 'BGTImport', level = Qgis.Info)
+        json_resp = json.loads(resp.content().data())
         
-        request = QgsBlockingNetworkRequest()
-        req = QNetworkRequest(QUrl(prepare_download_url))
-        req.setHeader(  QNetworkRequest.KnownHeaders.ContentTypeHeader, 
-                        'application/json')
-        err = request.post(req, bytes(json.dumps(post_params), 'utf-8'))
-        if err == QgsBlockingNetworkRequest.ErrorCode.NoError:
-            resp = request.reply()
-            QgsMessageLog.logMessage(u'API response: ' + str(
-                resp.content(), encoding='utf-8'),
-                tag = 'BGTImport', level = Qgis.Info)
-            json_resp = json.loads(resp.content().data())
+        status_request = QgsBlockingNetworkRequest()
+        status_req = QNetworkRequest(QUrl(API_url + 
+            json_resp["_links"]["status"]["href"]))
             
-            status_request = QgsBlockingNetworkRequest()
-            status_req = QNetworkRequest(QUrl(API_url + 
-                json_resp["_links"]["status"]["href"]))
-                
-            status = "PENDING"
-            while status == "RUNNING" \
-            or    status == "PENDING":
-                sleep(1)
-                err = status_request.get(status_req, forceRefresh = True)
-                if err == QgsBlockingNetworkRequest.ErrorCode.NoError:
-                    status_msg = json.loads(
-                                    status_request.reply().content().data())
-                    status = status_msg['status']
-                    QgsMessageLog.logMessage(u'API-message: ' + \
-                        str(status_msg),
-                        tag = 'BGTImport', level = Qgis.Info)
-                    if task:
-                        task.setProgress(status_msg['progress'])
-                else:
-                    QgsMessageLog.logMessage(u'API error: ' + \
-                        status_request.errorMessage(),
-                        tag = 'BGTImport', level = Qgis.Critical)
-                        
-                    return
-                    
-            if status_msg['status'] == "COMPLETED":
-                download_url = API_url + \
-                               status_msg["_links"]["download"]["href"]
-                QgsMessageLog.logMessage(
-                    u'BGT-zip is prepared. Start download from: ' + \
-                    download_url,
-                    tag = 'BGTImport', level = Qgis.Info)
-                #next lines not working. The returned string cannot be
-                #saved as a valid zip
-                #fetcher.finished.connect(fetcher_finished)
-                #fetcher.fetchContent(QUrl(download_url))
+        status = "PENDING"
+        while status == "RUNNING" \
+        or    status == "PENDING":
+            sleep(1)
+            err = status_request.get(status_req, forceRefresh = True)
+            if err == QgsBlockingNetworkRequest.ErrorCode.NoError:
+                status_msg = json.loads(
+                                status_request.reply().content().data())
+                status = status_msg['status']
+                # QgsMessageLog.logMessage(u'API-message: ' + \
+                    # str(status_msg),
+                    # tag = 'BGTImport', level = Qgis.Info)
                 if task:
-                    download_request = QgsBlockingNetworkRequest()
-                    download_request.downloadProgress.connect(
-                                            show_download_progress)
-                    err = download_request.get(
-                                QNetworkRequest(QUrl(download_url)))
-                    if err == QgsBlockingNetworkRequest.ErrorCode.NoError:
-                        with open(file_name, 'wb') as f:
-                            f.write(download_request.reply().content())
-                            return file_name
-                    else:
-                        QgsMessageLog.logMessage(u'Download error: ' + \
-                        download_request.errorMessage(),
-                        tag = 'BGTImport', level = Qgis.Critical)
+                    task.setProgress(status_msg['progress'])
+            else:
+                QgsMessageLog.logMessage(u'API error: ' + \
+                    status_request.errorMessage(),
+                    tag = 'BGTImport', level = Qgis.Critical)
+                return
+                
+        if status_msg['status'] == "COMPLETED":
+            download_url = API_url + \
+                           status_msg["_links"]["download"]["href"]
+            QgsMessageLog.logMessage(
+                u'BGT-zip is prepared. Starting download from: ' + \
+                download_url,
+                tag = 'BGTImport', level = Qgis.Info)
+            if task:
+                download_request = QgsBlockingNetworkRequest()
+                download_request.downloadProgress.connect(
+                                        show_download_progress)
+                err = download_request.get(
+                            QNetworkRequest(QUrl(download_url)))
+                if err == QgsBlockingNetworkRequest.ErrorCode.NoError:
+                    with open(file_name, 'wb') as f:
+                        f.write(download_request.reply().content())
+                        return file_name
                 else:
-                    # for test purposes when not having a task
-                    loop = QEventLoop()
-                    dl = QgsFileDownloader(QUrl(download_url), file_name)
-                    dl.downloadExited.connect(loop.quit)
-                    dl.startDownload()
-                    loop.exec_()
-                    return file_name
-            else: 
-                QgsMessageLog.logMessage(u'Preparation of download failed: ' + \
-                        status_msg['status'],
-                        tag = 'BGTImport', level = Qgis.Critical)   
-        else:
-            QgsMessageLog.logMessage(u'API error: ' + \
-                request.errorMessage(),
-                tag = 'BGTImport', level = Qgis.Critical)
+                    QgsMessageLog.logMessage(u'Download error: ' + \
+                    download_request.errorMessage(),
+                    tag = 'BGTImport', level = Qgis.Critical)
+            else:
+                # for test purposes when not having a task
+                loop = QEventLoop()
+                dl = QgsFileDownloader(QUrl(download_url), file_name)
+                dl.downloadExited.connect(loop.quit)
+                dl.startDownload()
+                loop.exec_()
+                return file_name
+        else: 
+            QgsMessageLog.logMessage(u'Preparation of download failed: ' + \
+                    status_msg['status'],
+                    tag = 'BGTImport', level = Qgis.Critical)   
     else:
-        # to be implemented with the requests lib.
-        pass
+        QgsMessageLog.logMessage(u'API error: ' + \
+            request.errorMessage(),
+            tag = 'BGTImport', level = Qgis.Critical)
 
 def import_to_geopackage(task, zip_file_name, geopackage):
     '''
@@ -355,7 +340,6 @@ def import_to_geopackage(task, zip_file_name, geopackage):
         if os.path.exists(geopackage):
             os.remove(geopackage)
         gp = ogr.GetDriverByName('GPKG').CreateDataSource(geopackage)
-        #gp =  ogr.GetDriverByName('GPKG').Open( geopackage, update = 1 )
         with tempfile.TemporaryDirectory() as tmp_folder:
             with zipfile.ZipFile(zip_file_name, "r") as f:
                 f.extractall(tmp_folder)
@@ -394,15 +378,15 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                                         QgsMessageLog.logMessage(u'Succesfully opened: ' \
                                             + str(base_name) + str(postfix) , 
                                             tag = 'BGTImport', level = Qgis.Info)
+                                    geom_col_name = input_layer.GetGeometryColumn()
+                                    if not geom_col_name:
+                                        geom_col_name = "_ogr_geometry_"
                                     if postfix == '_V':
-                                        #input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiSurface' and geom IS NOT NULL")
-                                        input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiSurface'")
+                                        input_layer.SetAttributeFilter('''OGR_GEOMETRY='MultiSurface' and "%s" IS NOT NULL''' % geom_col_name)
                                     elif postfix == '_L':
-                                        #input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiCurve'  and geom IS NOT NULL")
-                                        input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiCurve'")
+                                        input_layer.SetAttributeFilter('''OGR_GEOMETRY='MultiCurve' and "%s" IS NOT NULL''' % geom_col_name)
                                     elif postfix == '_P':
-                                        #input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiPoint'  and geom IS NOT NULL")
-                                        input_layer.SetAttributeFilter("OGR_GEOMETRY='MultiPoint'")
+                                        input_layer.SetAttributeFilter('''OGR_GEOMETRY='MultiPoint' and "%s" IS NOT NULL''' % geom_col_name)
                                     if input_layer.GetFeatureCount():
                                         new_layer = gp.CopyLayer(input_layer, 
                                             base_name.replace('.gml', postfix))
