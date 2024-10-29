@@ -406,11 +406,11 @@ class BGTImport(object):
         """
         
         geopackage = self.dlg.save_to_gpkg_cmb.filePath()
-        is os.path.exists(geopackage):
+        if os.path.exists(geopackage):
             if not os.access(geopackage, os.W_OK):
-            self.iface.messageBar().pushMessage("Error",
-                self.tr(u'Selected file not writeable.'), 
-                level = Qgis.Critical)    
+                self.iface.messageBar().pushMessage("Error",
+                    self.tr(u'Selected file not writeable.'), 
+                    level = Qgis.Critical)    
             return
         elif not os.access(os.path.dirname(geopackage), os.W_OK):
             self.iface.messageBar().pushMessage("Error",
