@@ -58,7 +58,6 @@ import uuid
 import webbrowser
 from xml.dom.pulldom import parse
 
-from .network import networkaccessmanager
 from .bgt_utils import utils as bgt_utils
 
 ogr.UseExceptions() 
@@ -120,9 +119,7 @@ class BGTImport(object):
         self.toolbar = self.iface.addToolBar(u'BGTImport')
         self.toolbar.setObjectName(u'BGTImport')
         
-        self.nam = networkaccessmanager.NetworkAccessManager()
         self.project = QgsProject.instance()
-        
         self.tsk_mngr = QgsApplication.taskManager()
 
         # Create the dialog (after translation) and keep reference
