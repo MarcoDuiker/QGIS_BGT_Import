@@ -45,10 +45,7 @@
           <number>1</number>
          </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;BGT-Zip can be &lt;/p&gt;&lt;p&gt;- downloaded from this tab (currently disabled) or&lt;/p&gt;&lt;p&gt;- downloaded from the &lt;a href=&quot;https://app.pdok.nl/lv/bgt/download-viewer/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;download viewer - BGT&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The downloaded area will be all BGT tiles intersecting the requested area.&lt;/p&gt;
-&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;BGT-Zip can be &lt;/p&gt;&lt;p&gt;- downloaded from this tab or;&lt;/p&gt;&lt;p&gt;- downloaded from the &lt;a href=&quot;https://app.pdok.nl/lv/bgt/download-viewer/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;download viewer - BGT&lt;/span&gt;&lt;/a&gt;. &lt;/p&gt;&lt;p&gt;The downloaded area will be all BGT tiles intersecting the requested area.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
