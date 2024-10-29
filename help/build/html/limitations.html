@@ -1,32 +1,23 @@
+<!DOCTYPE html>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="./">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>Limitations &#8212; BGT Import 3.8 documentation</title>
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '3.8',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=514cf933" />
+    
+    <script src="_static/documentation_options.js?v=329d941c"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="FAQ" href="FAQ.html" />
     <link rel="prev" title="Introduction" href="introduction.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -39,7 +30,8 @@
         <li class="right" >
           <a href="introduction.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Limitations</a></li> 
       </ul>
     </div>  
 
@@ -48,37 +40,39 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="limitations">
-<h1>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="downloads">
-<h2>Downloads<a class="headerlink" href="#downloads" title="Permalink to this headline">¶</a></h2>
+  <section id="limitations">
+<h1>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">¶</a></h1>
+<section id="downloads">
+<h2>Downloads<a class="headerlink" href="#downloads" title="Link to this heading">¶</a></h2>
 <p>The BGT server from where the data is downloaded might be slow, down, or intermittently available. This means that downloads can fail or take very, very long. On larger downloads you are more likely to run into trouble.</p>
 <p>Kadaster has launched an <a class="reference external" href="https://download.pdok.io/lv/bgt/viewer/">alternative download site with beta status</a>, but a much better performance. It is recommended to download your BGT zip there and then import this zip using the plugin.</p>
-</div>
-<div class="section" id="pand-punt-huisnummers">
-<h2>Pand (punt) (Huisnummers)<a class="headerlink" href="#pand-punt-huisnummers" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="pand-punt-huisnummers">
+<h2>Pand (punt) (Huisnummers)<a class="headerlink" href="#pand-punt-huisnummers" title="Link to this heading">¶</a></h2>
 <p>Sometimes the gml file of bgt_pand containes multiple labels with multiple rotations for a pand.</p>
 <p>Only the first label and the first rotation is used.</p>
-</div>
-<div class="section" id="openbareruimtelabel-punt">
-<h2>Openbareruimtelabel (punt)<a class="headerlink" href="#openbareruimtelabel-punt" title="Permalink to this headline">¶</a></h2>
-<p>In the gml file <code class="code docutils literal"><span class="pre">bgt_openbareruimtelabel.gml</span></code> some label objects have multiple positions, with multiple rotations to place the labels.</p>
+</section>
+<section id="openbareruimtelabel-punt">
+<h2>Openbareruimtelabel (punt)<a class="headerlink" href="#openbareruimtelabel-punt" title="Link to this heading">¶</a></h2>
+<p>In the gml file <code class="code docutils literal notranslate"><span class="pre">bgt_openbareruimtelabel.gml</span></code> some label objects have multiple positions, with multiple rotations to place the labels.</p>
 <p>The GDAL/OGR library which is used to read data into QGIS and which is used by this plugin as well does not support this.</p>
-<p>This problem is mitigated, ONLY WHEN YOU USE THE FIRST TAB (Complete Package), by duplicating the features in <code class="code docutils literal"><span class="pre">bgt_openbareruimtelabel.gml</span></code> so that the GDAL/OGR library can import this layer correctly. However, if you don’t have the Python package lxml available to QGIS, this can take a long time.</p>
+<p>This problem is mitigated, ONLY WHEN YOU USE THE FIRST TAB (Complete Package), by duplicating the features in <code class="code docutils literal notranslate"><span class="pre">bgt_openbareruimtelabel.gml</span></code> so that the GDAL/OGR library can import this layer correctly. However, if you don’t have the Python package lxml available to QGIS, this can take a long time.</p>
 <p>If you use the second tab (individual files) or for some reason, the duplication of features fail, the import process will only import the last label position. So, each label object in the gml file will be available in the import, but only one label position defined in the label object is imported.</p>
 <p>Missing label positions can be identified by looking at the ‘hoek’ field in the attribute table. This field is filled with values written like (2:30,45). This means to 2 rotations, one being 30 degrees, the other one being 45 degrees. You can find any number of rotations. Any number higher than 1 means that multiple label positions for that label object are available in the gml file. Only one is imported.</p>
 <p>The style which is applied by the plugin uses the correct rotation value for placing the one label imported for that object in the map.</p>
-</div>
-</div>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Limitations</a><ul>
 <li><a class="reference internal" href="#downloads">Downloads</a></li>
 <li><a class="reference internal" href="#pand-punt-huisnummers">Pand (punt) (Huisnummers)</a></li>
@@ -87,12 +81,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="introduction.html"
-                        title="previous chapter">Introduction</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="FAQ.html"
-                        title="next chapter">FAQ</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="introduction.html"
+                          title="previous chapter">Introduction</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="FAQ.html"
+                          title="next chapter">FAQ</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -101,15 +100,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -126,12 +125,13 @@
         <li class="right" >
           <a href="introduction.html" title="Introduction"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Limitations</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2018, Marco Duiker (MD-kwadraat).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+    &#169; Copyright 2018, Marco Duiker (MD-kwadraat).
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

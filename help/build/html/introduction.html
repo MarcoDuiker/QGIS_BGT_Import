@@ -1,32 +1,23 @@
+<!DOCTYPE html>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="./">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>Introduction &#8212; BGT Import 3.8 documentation</title>
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '3.8',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=514cf933" />
+    
+    <script src="_static/documentation_options.js?v=329d941c"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Limitations" href="limitations.html" />
     <link rel="prev" title="Welcome to the BGT Import plugin documentation" href="index.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -39,7 +30,8 @@
         <li class="right" >
           <a href="index.html" title="Welcome to the BGT Import plugin documentation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Introduction</a></li> 
       </ul>
     </div>  
 
@@ -48,63 +40,78 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="about">
-<h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h1>
+<section id="about">
+<h2>About<a class="headerlink" href="#about" title="Link to this heading">¶</a></h2>
 <p>This plug-in is developed by Marco Duiker from <a class="reference external" href="http://www.md-kwadraat.nl/">MD-kwadraat</a> .</p>
 <p>The plug-in provides a way to directly import Dutch Basisregistratie Grootschalige Topografie (BGT) data into QGIS, avoiding the (silent !) errors which occur using the standard QGIS import utilities. The phenomenon of the silent errors is explained on <a class="reference external" href="http://www.qgis.nl/2017/07/16/de-qgis-bgt-plugin/">QGIS.nl (in Dutch)</a>.</p>
 <p>Furthermore the plugin downloads the BGT data from map extent or intersect layer. On importing the data a nice styling mimicking the official one is added on the go. When adding the layers to the project, expired objects are filtered out.</p>
-</div>
-<div class="section" id="how-does-the-plug-in-work">
-<h2>How does the plug-in work?<a class="headerlink" href="#how-does-the-plug-in-work" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="how-does-the-plug-in-work">
+<h2>How does the plug-in work?<a class="headerlink" href="#how-does-the-plug-in-work" title="Link to this heading">¶</a></h2>
 <p>You will find the plugin in the Vector menu. A menu bar with a button is added to the QGIS interface as well. If you cannot find it, you can activate it in the same manner as all other menu bars.</p>
-<div class="section" id="first-tab-complete-package">
-<h3>First Tab: Complete package<a class="headerlink" href="#first-tab-complete-package" title="Permalink to this headline">¶</a></h3>
-<p><strong>As PDOK has a new API which is not supported (yet) downloading straight from the plugin is not possible anymore.</strong></p>
+<p>Using the menu item BGT Import or pressing the BGT Import button on the toolbar will open a window with serveral tabs. The function of these tabs are explained below:</p>
+<section id="step-1-download">
+<h3>Step 1: Download<a class="headerlink" href="#step-1-download" title="Link to this heading">¶</a></h3>
+<p>On this tab a zip file containing BGT data can be downloaded from PDOK. The area can be selected by the map extent or a layer. Furthermore a selection of featuretypes can be made.</p>
 <p>Alternatively you can use zip files which you can download from the <a class="reference external" href="https://app.pdok.nl/lv/bgt/download-viewer/">BGT download site</a>.</p>
-<p>Then based on a set of predefined import rules, the data is imported to a geopackage. If necessary objects are split to polygon, line and point layers. Then all layers are added to your project in a layer group. Filtering is applied to remove all objects which are expired (have a non-empty <code class="docutils literal"><span class="pre">eindRegistratie</span></code> ). Furthermore, styling is applied to mimic the official BGT styling where possible.</p>
-<p>The zip file which was downloaded is stored next to the geopackage for reference. Furthermore the layergroup is saved as a QGIS layer file for future use in other QGIS projects.</p>
-<p>Importing actions from this tab is done as a background task. The progress indicator in the status bar will show progress. During download this progress indicator will run to about 30% and the start at about 5% again. This is normal behavior. As long as the percentages are changing your download is running as it should. If you download large areas, be prepared to wait (a long time). And if you get bored you can always abort the download via the progress indicator.</p>
-</div>
-<div class="section" id="second-tab-individual-files">
-<h3>Second Tab: Individual files<a class="headerlink" href="#second-tab-individual-files" title="Permalink to this headline">¶</a></h3>
-<p>On this tab you can select one or more BGT gml files to import. The plug-in scans the file and will determine the import rules on the go. These import rules are saved to a <code class="docutils literal"><span class="pre">.gfs</span></code> file.</p>
-<p>As a <code class="docutils literal"><span class="pre">.gfs</span></code> file needs to have the same name as the <code class="docutils literal"><span class="pre">.gml</span></code> file (except for the extension of course) the gml file will be copied or symlinked. The name of the copy will contain a <code class="docutils literal"><span class="pre">_V</span></code>, <code class="docutils literal"><span class="pre">_L</span></code> or <code class="docutils literal"><span class="pre">_P</span></code> extension to denote either polygons (_V), lines (_L) or points (_P).</p>
+<p>Downloading will take place in the background. When the download is done, a notification will be given and the file name of the downloaded zip will be inserted on the tab “Step 2: Convert”.</p>
+</section>
+<section id="step-2-convert">
+<h3>Step 2: Convert<a class="headerlink" href="#step-2-convert" title="Link to this heading">¶</a></h3>
+<p>On this tab a zip file containing BGT data can be converted to a geopackage based on a set predefined import rules. If necessary objects are split to polygon, line and point layers.</p>
+<p>If not there, the zip file used for creating this geopackage is stored next to the geopackage for reference.</p>
+<p>Converting will take place in the background. When the converting is done, a notification will be given and the file name of the created geopackage will be inserted on the tab “Step 3: Add to project”.</p>
+</section>
+<section id="step-3-add-to-project">
+<h3>Step 3: Add to project<a class="headerlink" href="#step-3-add-to-project" title="Link to this heading">¶</a></h3>
+<p>On this tab all layers in a geopackage containg BGT data are added to your project in a layer group.</p>
+<p>Filtering is applied to remove all objects which are expired (have a non-empty <code class="docutils literal notranslate"><span class="pre">eindRegistratie</span></code> ). Furthermore, layer order and styling is applied to mimic the official BGT styling where possible.</p>
+<p>It is possible to have the layergroup saved as a QGIS layer file for future use in other QGIS projects.</p>
+</section>
+<section id="import-individual-files">
+<h3>Import individual files<a class="headerlink" href="#import-individual-files" title="Link to this heading">¶</a></h3>
+<p>On this tab you can select one or more BGT gml files to import. The plug-in scans the file and will determine the import rules on the go. These import rules are saved to a <code class="docutils literal notranslate"><span class="pre">.gfs</span></code> file.</p>
+<p>As a <code class="docutils literal notranslate"><span class="pre">.gfs</span></code> file needs to have the same name as the <code class="docutils literal notranslate"><span class="pre">.gml</span></code> file (except for the extension of course) the gml file will be copied or symlinked. The name of the copy will contain a <code class="docutils literal notranslate"><span class="pre">_V</span></code>, <code class="docutils literal notranslate"><span class="pre">_L</span></code> or <code class="docutils literal notranslate"><span class="pre">_P</span></code> extension to denote either polygons (_V), lines (_L) or points (_P).</p>
 <p>Once these files are generated, QGIS will read the gml files properly on opening the file with one of the _V, _L or _P extensions. No need to use the BGT import plug-in for that.</p>
 <p>Scanning BGT files and determining the import rules can be a time consuming process especially on platforms with low io speed. Please be patient, as this operation is not running as a background task.</p>
-<div class="section" id="warning">
-<h4>Warning<a class="headerlink" href="#warning" title="Permalink to this headline">¶</a></h4>
-<p>As the <code class="docutils literal"><span class="pre">.gfs</span></code> files used by the plugin are getting tweaked more and more using this second tab might give you inferior result compared to the first tab. The second tab does not have support for non-linear geometries (“bogen”) and does not support “voorloopnullen” on eg. BAG id’s.</p>
-</div>
-</div>
-</div>
-<div class="section" id="usage-tips">
-<h2>Usage Tips<a class="headerlink" href="#usage-tips" title="Permalink to this headline">¶</a></h2>
-<p>If you import data using the second tab of this plugin (‘Individual files’), you can still apply a nice style. The styles you can find in the <code class="docutils literal"><span class="pre">qml</span></code> folder in the plugin folder.</p>
-<p>If you don’t like the default styles this plugin applies, you can override these on a per layer basis by adding files to the <code class="docutils literal"><span class="pre">user_qml</span></code> folder in the plugin folder. Naming convention will be obvious once you look at the files in the <code class="docutils literal"><span class="pre">qml</span></code> folder in the plugin folder.</p>
-</div>
-<div class="section" id="troubleshooting">
-<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<section id="warning">
+<h4>Warning<a class="headerlink" href="#warning" title="Link to this heading">¶</a></h4>
+<p>As the <code class="docutils literal notranslate"><span class="pre">.gfs</span></code> files used by the plugin are getting tweaked more and more using this second tab might give you inferior result compared to the first tab. The conversion on this tab does not have support for non-linear geometries (“bogen”) and does not support “voorloopnullen” on eg. BAG id’s.</p>
+</section>
+</section>
+</section>
+<section id="usage-tips">
+<h2>Usage Tips<a class="headerlink" href="#usage-tips" title="Link to this heading">¶</a></h2>
+<p>If you import data using the last tab of this plugin (‘Import individual files’), you can still apply a nice style. The styles you can find in the <code class="docutils literal notranslate"><span class="pre">qml</span></code> folder in the plugin folder.</p>
+<p>If you don’t like the default styles this plugin applies, you can override these on a per layer basis by adding files to the <code class="docutils literal notranslate"><span class="pre">user_qml</span></code> folder in the plugin folder. Naming convention will be obvious once you look at the files in the <code class="docutils literal notranslate"><span class="pre">qml</span></code> folder in the plugin folder.</p>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">¶</a></h2>
 <p>The BGT is a complex dataset to import into a GIS package. Things can go wrong. See the limitations in this help and the <a class="reference external" href="https://github.com/MarcoDuiker/QGIS_BGT_Import/issues">issues list</a>. if you think something went wrong.</p>
-<p>If you need to investigate an import which seems of, first use the second tab of this plugin (‘Individual files’) WITHOUT SETTING A MAXIMUM NUMBER OF GEOMETRIES TO INSPECT to import this file without the predefined import rules. If the file then imports well, please report the issue on the <a class="reference external" href="https://github.com/MarcoDuiker/QGIS_BGT_Import/issues">issues list</a>, and make the <code class="docutils literal"><span class="pre">.gml</span></code> file available.</p>
-<p>If the import still seems to be wrong then check if the import is really wrong, are that there is a mistake in the data. Most of the time you can find out by inspecting an object in the <code class="docutils literal"><span class="pre">.gml</span></code> file, and the imported version of this object. If you then find out that the import is wrong, please report the issue on the <a class="reference external" href="https://github.com/MarcoDuiker/QGIS_BGT_Import/issues">issues list</a>, and make the <code class="docutils literal"><span class="pre">.gml</span></code> file available.</p>
-</div>
-</div>
+<p>If you need to investigate an import which seems of, first use the last tab of this plugin (‘Import individual files’) WITHOUT SETTING A MAXIMUM NUMBER OF GEOMETRIES TO INSPECT to import this file without the predefined import rules. If the file then imports well, please report the issue on the <a class="reference external" href="https://github.com/MarcoDuiker/QGIS_BGT_Import/issues">issues list</a>, and make the <code class="docutils literal notranslate"><span class="pre">.gml</span></code> file available.</p>
+<p>If the import still seems to be wrong then check if the import is really wrong, are that there is a mistake in the data. Most of the time you can find out by inspecting an object in the <code class="docutils literal notranslate"><span class="pre">.gml</span></code> file, and the imported version of this object. If you then find out that the import is wrong, please report the issue on the <a class="reference external" href="https://github.com/MarcoDuiker/QGIS_BGT_Import/issues">issues list</a>, and make the <code class="docutils literal notranslate"><span class="pre">.gml</span></code> file available.</p>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Introduction</a><ul>
 <li><a class="reference internal" href="#about">About</a></li>
 <li><a class="reference internal" href="#how-does-the-plug-in-work">How does the plug-in work?</a><ul>
-<li><a class="reference internal" href="#first-tab-complete-package">First Tab: Complete package</a></li>
-<li><a class="reference internal" href="#second-tab-individual-files">Second Tab: Individual files</a><ul>
+<li><a class="reference internal" href="#step-1-download">Step 1: Download</a></li>
+<li><a class="reference internal" href="#step-2-convert">Step 2: Convert</a></li>
+<li><a class="reference internal" href="#step-3-add-to-project">Step 3: Add to project</a></li>
+<li><a class="reference internal" href="#import-individual-files">Import individual files</a><ul>
 <li><a class="reference internal" href="#warning">Warning</a></li>
 </ul>
 </li>
@@ -116,12 +123,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to the BGT Import plugin documentation</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="limitations.html"
-                        title="next chapter">Limitations</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">Welcome to the BGT Import plugin documentation</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="limitations.html"
+                          title="next chapter">Limitations</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -130,15 +142,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -155,12 +167,13 @@
         <li class="right" >
           <a href="index.html" title="Welcome to the BGT Import plugin documentation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Introduction</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2018, Marco Duiker (MD-kwadraat).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+    &#169; Copyright 2018, Marco Duiker (MD-kwadraat).
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>
