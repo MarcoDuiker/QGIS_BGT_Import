@@ -213,7 +213,7 @@ def download_zip(task, file_name, geofilter, featuretypes = get_featuretypes()):
                     "featuretypes":     featuretypes,
                     "geofilter":        geofilter }
                     
-    def show_download_progress():
+    def show_download_progress(bytesReceived, bytesTotal):
         progress = round(bytesReceived/ bytesTotal)
         if progress < 100:
             task.setProgress(progress)
@@ -250,9 +250,6 @@ def download_zip(task, file_name, geofilter, featuretypes = get_featuretypes()):
                 status_msg = json.loads(
                                 status_request.reply().content().data())
                 status = status_msg['status']
-                # QgsMessageLog.logMessage(u'API-message: ' + \
-                    # str(status_msg),
-                    # tag = 'BGTImport', level = Qgis.Info)
                 if task:
                     task.setProgress(status_msg['progress'])
             else:

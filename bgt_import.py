@@ -358,11 +358,17 @@ class BGTImport(object):
         """
         
         zip_file_name = self.dlg.save_zip_cmb.filePath()
-        if not os.access(zip_file_name, os.W_OK):
+        if os.path.exists(zip_file_name):
+            if not os.access(zip_file_name, os.W_OK):
+                self.iface.messageBar().pushMessage("Error",
+                    self.tr(u'Selected file not writeable.'), level = Qgis.Critical)    
+                return
+            os.remove(zip_file_name)
+        elif not os.access(os.path.dirname(zip_file_name), os.W_OK):
             self.iface.messageBar().pushMessage("Error",
-                self.tr(u'Selected file not writeable.'), level = Qgis.Critical)    
+                self.tr(u'Selected folder not writeable.'), 
+                level = Qgis.Critical)    
             return
-        os.remove(zip_file_name)    
         
         if self.dlg.download_layer_rbt.isChecked():
             # select BGT by intersecting with a layer
@@ -381,10 +387,6 @@ class BGTImport(object):
         
         QgsMessageLog.logMessage( u'Download area: ' + wkt_extent, 
                                   tag = 'BGTImport', level = Qgis.Info)
-
-        bgt_utils.download_zip( task = None, 
-                                geofilter = wkt_extent, 
-                                file_name = zip_file_name)
                                
         download_task = QgsTask.fromFunction(
             'BGTImport: download zip', 
@@ -408,7 +410,8 @@ class BGTImport(object):
                 self.iface.messageBar().pushMessage("Error",
                     self.tr(u'Selected file not writeable.'), 
                     level = Qgis.Critical)    
-            return
+                return
+            os.remove(geopackage)
         elif not os.access(os.path.dirname(geopackage), os.W_OK):
             self.iface.messageBar().pushMessage("Error",
                 self.tr(u'Selected folder not writeable.'), 
