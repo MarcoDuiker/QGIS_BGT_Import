@@ -387,12 +387,14 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                                     if input_layer.GetFeatureCount():
                                         new_layer = gp.CopyLayer(input_layer, 
                                             base_name.replace('.gml', postfix))
-                                        del new_layer
+                                        #del new_layer
                                         if task:
                                           QgsMessageLog.logMessage(u'Succesfully copied into gpkg: ' \
                                               + str(base_name) + str(postfix) , 
                                               tag = 'BGTImport', level = Qgis.Info)
-                                    del input_layer, ds
+                                    #del input_layer, ds
+                                    input_layer = None
+                                    ds = None
                                 except Exception as v:
                                     if task:
                                         QgsMessageLog.logMessage(u'Error importing: ' \
@@ -407,7 +409,9 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                     progress = progress + increment
                     if task:
                         task.setProgress(progress)
-        del gp # dereference is needed to close and save the file
+        sleep(1)    # just to be sure
+        #del gp     # dereference is needed to close and save the file
+        gp = None   # dereference is needed to close and save the file
         if task:
             task.setProgress(100)
             QgsMessageLog.logMessage(u'Done importing BGT-zip: ' + str(zip_file_name), 
