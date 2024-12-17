@@ -370,6 +370,7 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                             if copy_ok:
                                 try:
                                     ds = ogr.GetDriverByName('gml').Open(os.path.join(tmp_folder, base_name))
+                                    # with ogr.GetDriverByName('gml').Open(os.path.join(tmp_folder, base_name)) as ds:  # available from gdal 3.8)
                                     input_layer = ds.GetLayer()
                                     if task:
                                         QgsMessageLog.logMessage(u'Succesfully opened: ' \
@@ -387,7 +388,8 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                                     if input_layer.GetFeatureCount():
                                         new_layer = gp.CopyLayer(input_layer, 
                                             base_name.replace('.gml', postfix))
-                                        #del new_layer
+                                        new_layer.SyncToDisk()
+                                        new_layer = None
                                         if task:
                                           QgsMessageLog.logMessage(u'Succesfully copied into gpkg: ' \
                                               + str(base_name) + str(postfix) , 
