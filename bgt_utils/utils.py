@@ -296,7 +296,7 @@ def download_zip(task, file_name, geofilter, featuretypes = get_featuretypes()):
             request.errorMessage(),
             tag = 'BGTImport', level = Qgis.Critical)
 
-def import_to_geopackage(task, zip_file_name, geopackage):
+def import_to_geopackage(task, zip_file_name, geopackage, progress_bar = None):
     '''
     Imports the gml files from BGT zip into one geopackage.
     
@@ -310,7 +310,10 @@ def import_to_geopackage(task, zip_file_name, geopackage):
     - `tiles`           an iterable containing BGT tile numbers.
     - `zip_file_name`   the file name of the BGT zip file.
     - `geopackage`      file name of the geopackage to import to.
-    
+    - `progress_bar`    an object instance having a setValue method 
+                        accepting values between 0 and 100 to indicate 
+                        progress.
+                        A QProgressBar() as available in QGIS will do.
     Returns:
     
     - `geopackage`      the file name of the geopackage.
@@ -322,6 +325,9 @@ def import_to_geopackage(task, zip_file_name, geopackage):
         QgsMessageLog.logMessage(u'Start importing BGT-zip: ' + str(zip_file_name),
             tag = 'BGTImport', level = Qgis.Info)
         task.setProgress(progress)
+    if progress_bar:
+        progress_bar.setValue(progress)
+            
     gdal.UseExceptions()
     gfs_folder = os.path.join(os.path.dirname(__file__), 'gfs')
     
@@ -411,6 +417,8 @@ def import_to_geopackage(task, zip_file_name, geopackage):
                     progress = progress + increment
                     if task:
                         task.setProgress(progress)
+                    if progress_bar:
+                        progress_bar.setValue(progress)
         sleep(1)    # just to be sure
         #del gp     # dereference is needed to close and save the file
         gp = None   # dereference is needed to close and save the file
@@ -418,6 +426,8 @@ def import_to_geopackage(task, zip_file_name, geopackage):
             task.setProgress(100)
             QgsMessageLog.logMessage(u'Done importing BGT-zip: ' + str(zip_file_name), 
                 tag = 'BGTImport', level = Qgis.Info)
+        if progress_bar:
+            progress_bar.setValue(progress)
         return geopackage
     except Exception as v:
         if task:

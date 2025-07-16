@@ -30,7 +30,7 @@ from qgis.PyQt import QtCore
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication,\
     QUrl, Qt
 from qgis.PyQt.QtWidgets import QAction, QFileDialog, QProgressBar, QApplication, \
-    QMessageBox
+    QMessageBox, qApp
 from qgis.PyQt.QtGui import QIcon, QDesktopServices
 from qgis.core import Qgis, QgsTask, QgsNetworkContentFetcherTask, QgsTaskManager,\
     QgsMessageLog, QgsProject, QgsApplication, QgsVectorLayer, QgsLayerDefinition,\
@@ -51,6 +51,7 @@ from functools import partial
 import glob
 from osgeo import ogr
 import os
+import platform
 import shutil
 import tempfile
 import time
@@ -423,18 +424,47 @@ class BGTImport(object):
             self.iface.messageBar().pushMessage("Error",
             self.tr(u'No zip file selected.'), level = Qgis.Critical)    
             return
-            
-        import_task = QgsTask.fromFunction(
-            'BGTImport: convert .zip to .gpkg', 
-            bgt_utils.import_to_geopackage, 
-            zip_file_name = zip_file_name,
-            geopackage = geopackage)
         
-        self.iface.messageBar().pushMessage("Info",
-            self.tr(u'Started converting ...'))
-         
-        import_task.taskCompleted.connect(self.import_finished)
-        self.tsk_mngr.addTask(import_task)
+        if not platform.system() == 'Windows':
+            import_task = QgsTask.fromFunction(
+                'BGTImport: convert .zip to .gpkg', 
+                bgt_utils.import_to_geopackage, 
+                zip_file_name = zip_file_name,
+                geopackage = geopackage)
+            
+            self.iface.messageBar().pushMessage("Info",
+                self.tr(u'Started converting ...'))
+             
+            import_task.taskCompleted.connect(self.import_finished)
+            self.tsk_mngr.addTask(import_task)
+        else:
+            
+            # set up some user communication
+            QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+
+            self.iface.messageBar().pushMessage("Info",
+                self.tr(u'Start') + ' ' + self.tr(u'Importing BGT zip file ...'))
+            progressMessageBar = self.iface.messageBar().createMessage( \
+            self.tr(u'Importing BGT gml files ...'))
+            bar = QProgressBar()
+            bar.setRange(0,0)
+            bar.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(bar)
+            self.iface.messageBar().pushWidget(progressMessageBar, Qgis.Info)
+            qApp.processEvents()
+            
+            bgt_utils.import_to_geopackage(zip_file_name = zip_file_name,
+                geopackage = geopackage, task = None, progress_bar = None)
+                
+            progressMessageBar.setText(self.tr(u"Importing BGT gml files done!"))
+            bar.setRange(0,100)
+            bar.setValue(100)
+                
+            while QApplication.overrideCursor(): 
+                QApplication.restoreOverrideCursor()
+            progressMessageBar.setText(self.tr(u"Importing BGT zip file done!"))
+            
+            self.import_finished()
 
 
     def import_individual_files(self):
@@ -562,8 +592,9 @@ class BGTImport(object):
                                     #    def add_styling(self, map_layer, layer):
                             finally:
                                 gml.Close()
+        while QApplication.overrideCursor(): 
+            QApplication.restoreOverrideCursor()
 
-        QApplication.restoreOverrideCursor()
 
         progressMessageBar.setText(self.tr(u"Importing BGT gml files done!"))
         bar.setRange(0,100)
