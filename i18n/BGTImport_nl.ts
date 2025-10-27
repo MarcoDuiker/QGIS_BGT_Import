@@ -4,97 +4,97 @@
 <context>
     <name>BGTImport</name>
     <message>
-        <location filename="../bgt_import.py" line="258"/>
+        <location filename="../bgt_import.py" line="256"/>
         <source>&amp;BGT Import</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="248"/>
+        <location filename="../bgt_import.py" line="246"/>
         <source>BGT Import</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="329"/>
+        <location filename="../bgt_import.py" line="327"/>
         <source>Select BGT gml file(s)</source>
         <translation>Selecteer BGT gml bestand(en)</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="492"/>
+        <location filename="../bgt_import.py" line="544"/>
         <source>Analyzing file </source>
         <translation>Analyseren bestand </translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="559"/>
+        <location filename="../bgt_import.py" line="611"/>
         <source> from </source>
         <translation> van </translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="504"/>
+        <location filename="../bgt_import.py" line="556"/>
         <source>Importing file </source>
         <translation>Importeren bestand </translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="524"/>
+        <location filename="../bgt_import.py" line="576"/>
         <source>Error in creating gml copies for import: </source>
         <translation>Fout bij aanmaken gml kopien voor import: </translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="542"/>
+        <location filename="../bgt_import.py" line="594"/>
         <source>Error in reading import definitions: </source>
         <translation>Fout bij het lezen van import definities: </translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="553"/>
+        <location filename="../bgt_import.py" line="605"/>
         <source>Error in writing import definitions: </source>
         <translation>Fout bij het wegschrijven van import definities: </translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="559"/>
+        <location filename="../bgt_import.py" line="611"/>
         <source>Adding file </source>
         <translation>Toevoegen bestand </translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="476"/>
+        <location filename="../bgt_import.py" line="528"/>
         <source>Importing BGT gml files ...</source>
         <translation>Importeren BGT gml bestanden ...</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="568"/>
+        <location filename="../bgt_import.py" line="621"/>
         <source>Importing BGT gml files done!</source>
         <translation>Importeren BGT gml bestanden voltooid!</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="474"/>
+        <location filename="../bgt_import.py" line="526"/>
         <source>Start</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="498"/>
+        <location filename="../bgt_import.py" line="550"/>
         <source>Could not find any of the requested geometries in: </source>
         <translation>Kon geen van de gevraagde geomtrieen vinden in: </translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="705"/>
+        <location filename="../bgt_import.py" line="758"/>
         <source>Downloading BGT tiles failed.</source>
         <translation>Downloaden BGT data mislukt.</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="719"/>
+        <location filename="../bgt_import.py" line="772"/>
         <source>See message log for more info.</source>
         <translation>Bekijk het berichtenlog voor meer informatie.</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="712"/>
+        <location filename="../bgt_import.py" line="765"/>
         <source>Importing BGT tiles failed.</source>
         <translation>Importeren BGT data mislukt.</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="719"/>
+        <location filename="../bgt_import.py" line="772"/>
         <source>Adding BGT tiles to project failed.</source>
         <translation>Toevoegen BGT data aan project mislukt.</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="726"/>
+        <location filename="../bgt_import.py" line="779"/>
         <source>Done importing BGT data.</source>
         <translation>Importeren BGT data voltooid.</translation>
     </message>
@@ -109,17 +109,17 @@
         <translation type="obsolete">Import BGT data gestart ...</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="621"/>
+        <location filename="../bgt_import.py" line="674"/>
         <source>No file selected to save the imports to.</source>
         <translation>Geen bestand geselecteerd om de import in op te slaan.</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="423"/>
+        <location filename="../bgt_import.py" line="424"/>
         <source>No zip file selected.</source>
         <translation>Geen zip bestand geselecteerd.</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="467"/>
+        <location filename="../bgt_import.py" line="519"/>
         <source>Select at least one file to import.</source>
         <translation>Selecteer tenminste een bestand om te importeren.</translation>
     </message>
@@ -129,7 +129,7 @@
         <translation type="obsolete">%s tegels geselecteerd om te downloaden. Dit kan (erg) lang duren. Doorgaan?</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="349"/>
+        <location filename="../bgt_import.py" line="347"/>
         <source>Done downloading BGT zip.</source>
         <translation>BGT zip downloaden voltooid.</translation>
     </message>
@@ -139,14 +139,29 @@
         <translation>Geselecteerd bestand is niet schrijfbaar.</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="416"/>
+        <location filename="../bgt_import.py" line="417"/>
         <source>Selected folder not writeable.</source>
         <translation>In de geselecteerde folder mag niet geschreven worden.</translation>
     </message>
     <message>
-        <location filename="../bgt_import.py" line="433"/>
+        <location filename="../bgt_import.py" line="435"/>
         <source>Started converting ...</source>
         <translation>Conversie gestart ...</translation>
+    </message>
+    <message>
+        <location filename="../bgt_import.py" line="471"/>
+        <source>Importing BGT zip file ...</source>
+        <translation>Importeren BGT zip-bestand ...</translation>
+    </message>
+    <message>
+        <location filename="../bgt_import.py" line="480"/>
+        <source>Problems converting BGT zip.</source>
+        <translation>Problemen met het converteren van het BGT zip-bestand.</translation>
+    </message>
+    <message>
+        <location filename="../bgt_import.py" line="487"/>
+        <source>Done converting BGT zip.</source>
+        <translation>Converteren BGT zip-bestand voltooid.</translation>
     </message>
 </context>
 <context>
