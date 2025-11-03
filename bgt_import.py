@@ -440,54 +440,63 @@ class BGTImport(object):
         else:
             
             # set up some user communication
-            # QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
-
-            # self.iface.messageBar().pushMessage("Info",
-                # self.tr(u'Start') + ' ' + self.tr(u'Importing BGT zip file ...'))
-            # progressMessageBar = self.iface.messageBar().createMessage( \
-            # self.tr(u'Importing BGT gml files ...'))
-            # bar = QProgressBar()
-            # bar.setRange(0,0)
-            # bar.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-            # progressMessageBar.layout().addWidget(bar)
-            # self.iface.messageBar().pushWidget(progressMessageBar, Qgis.Info)
-            # qApp.processEvents()
-            
-            # bgt_utils.import_to_geopackage(zip_file_name = zip_file_name,
-                # geopackage = geopackage, task = None, progress_bar = None)
-                
-            # progressMessageBar.setText(self.tr(u"Importing BGT gml files done!"))
-            # bar.setRange(0,100)
-            # bar.setValue(100)
-                
-            # while QApplication.overrideCursor(): 
-                # QApplication.restoreOverrideCursor()
-            # progressMessageBar.setText(self.tr(u"Importing BGT zip file done!"))
-            
-            # self.import_finished()
-            
-            
             QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+
             self.iface.messageBar().pushMessage("Info",
                 self.tr(u'Start') + ' ' + self.tr(u'Importing BGT zip file ...'))
+            progressMessageBar = self.iface.messageBar().createMessage( \
+            self.tr(u'Importing BGT gml files ...'))
+            bar = QProgressBar()
+            bar.setRange(0,0)
+            bar.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            progressMessageBar.layout().addWidget(bar)
+            self.iface.messageBar().pushWidget(progressMessageBar, Qgis.Info)
             qApp.processEvents()
+            
             try:
-                gpkg = bgt_utils.import_to_geopackage( task = None,
-                                                    zip_file_name = zip_file_name,
-                                                   geopackage = geopackage )
+                # no progress bar under windows, leads to crash
+                bgt_utils.import_to_geopackage(
+                    zip_file_name = zip_file_name,
+                    geopackage = geopackage, 
+                    task = None, 
+                    progress_bar = None)
             except:
                 qApp.processEvents()
                 self.iface.messageBar().pushMessage("Warning",
-                    self.tr(u'Problems converting BGT zip.'))
+                            self.tr(u'Problems converting BGT zip.'))
             finally:
                 while QApplication.overrideCursor(): 
-                    QApplication.restoreOverrideCursor() 
-           
+                    QApplication.restoreOverrideCursor()
+            
             qApp.processEvents()
-            self.iface.messageBar().pushMessage("Info",
-                    self.tr(u'Done converting BGT zip.'))
-                    
+            bar.setRange(0,100)
+            bar.setValue(100)
+            progressMessageBar.setText(self.tr(u"Importing BGT zip file done!"))
+            qApp.processEvents()
             self.import_finished()
+            
+            
+            # QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+            # self.iface.messageBar().pushMessage("Info",
+                # self.tr(u'Start') + ' ' + self.tr(u'Importing BGT zip file ...'))
+            # qApp.processEvents()
+            # try:
+                # gpkg = bgt_utils.import_to_geopackage( task = None,
+                                                    # zip_file_name = zip_file_name,
+                                                   # geopackage = geopackage )
+            # except:
+                # qApp.processEvents()
+                # self.iface.messageBar().pushMessage("Warning",
+                    # self.tr(u'Problems converting BGT zip.'))
+            # finally:
+                # while QApplication.overrideCursor(): 
+                    # QApplication.restoreOverrideCursor() 
+           
+            # qApp.processEvents()
+            # self.iface.messageBar().pushMessage("Info",
+                    # self.tr(u'Done converting BGT zip.'))
+                    
+            # self.import_finished()
 
     def import_individual_files(self):
         """

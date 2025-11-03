@@ -1,8 +1,12 @@
 <GMLFeatureClassList>
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOverigeConstructie</Name><ElementPath>geometrie2dOverigeConstructie</ElementPath><Type>MultiCurve</Type></GeomPropertyDefn>
-    <SRSName>EPSG:28992</SRSName>
+    
     <Name>Kunstwerkdeel</Name>
     <ElementPath>Kunstwerkdeel</ElementPath>
+	<GeometryName>geometrie2dOverigeConstructie</GeometryName>
+	<GeometryElementPath>geometrie2dOverigeConstructie</GeometryElementPath>
+	<GeometryType>MultiCurve</GeometryType>
+	<SRSName>EPSG:28992</SRSName>
     <PropertyDefn>
       <Name>creationDate</Name>
       <ElementPath>creationDate</ElementPath>

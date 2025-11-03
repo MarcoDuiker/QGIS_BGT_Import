@@ -2,6 +2,8 @@
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dBak</Name><ElementPath>geometrie2dBak</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
     <Name>Bak</Name>
     <ElementPath>Bak</ElementPath>
+	<GeometryName>geometrie2dBak</GeometryName>
+	<GeometryElementPath>geometrie2dBak</GeometryElementPath>
     <GeometryType>1</GeometryType>
     <SRSName>EPSG:28992</SRSName>
     <PropertyDefn>

@@ -2,6 +2,8 @@
   <GMLFeatureClass><GeomPropertyDefn><Name>kruinlijnOndersteunendWegdeel</Name><ElementPath>kruinlijnOndersteunendWegdeel</ElementPath><Type>MultiCurve</Type></GeomPropertyDefn>
     <Name>AuxiliaryTrafficArea</Name>
     <ElementPath>AuxiliaryTrafficArea</ElementPath>
+	<GeometryName>kruinlijnOndersteunendWegdeel</GeometryName>
+	<GeometryElementPath>kruinlijnOndersteunendWegdeel</GeometryElementPath>
     <GeometryType>-2147483648</GeometryType>
     <SRSName>EPSG:28992</SRSName>
     <PropertyDefn>

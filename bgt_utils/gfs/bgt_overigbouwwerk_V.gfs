@@ -1,8 +1,12 @@
 <GMLFeatureClassList>
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOverigeConstructie</Name><ElementPath>geometrie2dOverigeConstructie</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
-    <SRSName>EPSG:28992</SRSName>
+    
     <Name>OverigBouwwerk</Name>
     <ElementPath>OverigBouwwerk</ElementPath>
+	<GeometryName>geometrie2dOverigeConstructie</GeometryName>
+	<GeometryElementPath>geometrie2dOverigeConstructie</GeometryElementPath>
+	<GeometryType>MultiSurface</GeometryType>
+	<SRSName>EPSG:28992</SRSName>
     <PropertyDefn>
       <Name>creationDate</Name>
       <ElementPath>creationDate</ElementPath>

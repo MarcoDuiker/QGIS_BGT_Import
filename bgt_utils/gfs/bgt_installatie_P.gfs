@@ -2,6 +2,8 @@
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dInstallatie</Name><ElementPath>geometrie2dInstallatie</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
     <Name>Installatie</Name>
     <ElementPath>Installatie</ElementPath>
+	<GeometryName>geometrie2dInstallatie</GeometryName>
+	<GeometryElementPath>geometrie2dInstallatie</GeometryElementPath>
     <GeometryType>1</GeometryType>
     <SRSName>EPSG:28992</SRSName>
     <PropertyDefn>

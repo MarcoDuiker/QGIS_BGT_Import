@@ -369,7 +369,7 @@ def import_to_geopackage(task, zip_file_name, geopackage, progress_bar = None):
                         if os.path.exists(os.path.join(gfs_folder, gfs_file_name)):
                             if task:
                                 QgsMessageLog.logMessage(u'Importing from BGT-zip: ' \
-                                    + u'...' + str(base_name) + str(postfix),
+                                    + u'...' + str(base_name).replace('.gml', '%s.gml '% str(postfix)),
                                     tag = 'BGTImport', level = Qgis.Info)
                             copy_ok = shutil.copyfile(os.path.join(gfs_folder, gfs_file_name),
                                 os.path.join(tmp_folder, base_name.replace('.gml','.gfs')))
@@ -380,7 +380,7 @@ def import_to_geopackage(task, zip_file_name, geopackage, progress_bar = None):
                                     input_layer = ds.GetLayer()
                                     if task:
                                         QgsMessageLog.logMessage(u'Succesfully opened: ' \
-                                            + str(base_name) + str(postfix) , 
+                                            + str(base_name).replace('.gml', '%s.gml '% str(postfix)) , 
                                             tag = 'BGTImport', level = Qgis.Info)
                                     geom_col_name = input_layer.GetGeometryColumn()
                                     if not geom_col_name:

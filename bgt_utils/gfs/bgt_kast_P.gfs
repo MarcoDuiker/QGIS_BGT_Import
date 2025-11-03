@@ -2,6 +2,8 @@
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dKast</Name><ElementPath>geometrie2dKast</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
     <Name>Kast</Name>
     <ElementPath>Kast</ElementPath>
+	<GeometryName>geometrie2dKast</GeometryName>
+	<GeometryElementPath>geometrie2dKast</GeometryElementPath>
     <GeometryType>1</GeometryType>
     <SRSName>EPSG:28992</SRSName>
     <PropertyDefn>

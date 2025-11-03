@@ -11,7 +11,7 @@ name=BGT Import
 qgisMinimumVersion=3.6
 qgisMaximumVersion=3.99
 description=Import Basisregistratie Grootschalige Topografie (BGT) for QGIS3
-version=3.23
+version=3.24
 author=Marco Duiker - MD-kwadraat
 email=md@md-kwadraat.nl
 
@@ -24,7 +24,7 @@ repository=https://github.com/MarcoDuiker/QGIS_BGT_Import/
 # aint any
 
 # Uncomment the following line and add your changelog:
-changelog=Removed progress reporing under windows.
+changelog=Removed progress reporting under windows. Fixed gfs file compatibility for gdal version > 3.8.
 
 # Tags are comma separated with spaces allowed
 tags=BGT, import, gml

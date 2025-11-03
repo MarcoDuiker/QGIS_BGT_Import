@@ -2,6 +2,8 @@
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dSpoor</Name><ElementPath>geometrie2dSpoor</ElementPath><Type>MultiCurve</Type></GeomPropertyDefn>
     <Name>Railway</Name>
     <ElementPath>Railway</ElementPath>
+	<GeometryName>geometrie2dSpoor</GeometryName>
+	<GeometryElementPath>geometrie2dSpoor</GeometryElementPath>
     <GeometryType>2</GeometryType>
     <SRSName>EPSG:28992</SRSName>
     <PropertyDefn>

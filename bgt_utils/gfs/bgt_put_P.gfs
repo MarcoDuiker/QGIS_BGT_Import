@@ -2,6 +2,8 @@
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dPut</Name><ElementPath>geometrie2dPut</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
     <Name>Put</Name>
     <ElementPath>Put</ElementPath>
+	<GeometryName>geometrie2dPut</GeometryName>
+	<GeometryElementPath>geometrie2dPut</GeometryElementPath>
     <GeometryType>1</GeometryType>
     <SRSName>EPSG:28992</SRSName>
     <PropertyDefn>

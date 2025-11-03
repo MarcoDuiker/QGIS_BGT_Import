@@ -2,7 +2,10 @@
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dVegetatieObject</Name><ElementPath>geometrie2dVegetatieObject</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
     <Name>SolitaryVegetationObject</Name>
     <ElementPath>SolitaryVegetationObject</ElementPath>
-    <SRSName>EPSG:28992</SRSName>
+    <GeometryName>geometrie2dVegetatieObject</GeometryName>
+	<GeometryElementPath>geometrie2dVegetatieObject</GeometryElementPath>
+	<GeometryType>MultiSurface</GeometryType>
+	<SRSName>EPSG:28992</SRSName>
     <PropertyDefn>
       <Name>creationDate</Name>
       <ElementPath>creationDate</ElementPath>

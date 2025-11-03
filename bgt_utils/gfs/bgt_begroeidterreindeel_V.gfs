@@ -1,7 +1,10 @@
 <GMLFeatureClassList>
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dBegroeidTerreindeel</Name><ElementPath>geometrie2dBegroeidTerreindeel</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
-    <Name>PlantCover</Name>
+    
+	<Name>PlantCover</Name>
     <ElementPath>PlantCover</ElementPath>
+	<GeometryName>geometrie2dBegroeidTerreindeel</GeometryName>
+    <GeometryElementPath>geometrie2dBegroeidTerreindeel</GeometryElementPath>
     <GeometryType>-2147483648</GeometryType>
     <SRSName>EPSG:28992</SRSName>
     <PropertyDefn>

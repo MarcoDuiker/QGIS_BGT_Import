@@ -2,7 +2,10 @@
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOverigeConstructie</Name><ElementPath>geometrie2dOverigeConstructie</ElementPath><Type>MultiCurve</Type></GeomPropertyDefn>
     <Name>Scheiding</Name>
     <ElementPath>Scheiding</ElementPath>
-    <SRSName>EPSG:28992</SRSName>
+    <GeometryName>geometrie2dOverigeConstructie</GeometryName>
+	<GeometryElementPath>geometrie2dOverigeConstructie</GeometryElementPath>
+	<GeometryType>MultiCurve</GeometryType>
+	<SRSName>EPSG:28992</SRSName>
     <PropertyDefn>
       <Name>creationDate</Name>
       <ElementPath>creationDate</ElementPath>

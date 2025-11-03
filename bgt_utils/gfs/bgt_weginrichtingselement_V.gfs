@@ -2,7 +2,10 @@
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dWeginrichtingselement</Name><ElementPath>geometrie2dWeginrichtingselement</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
     <Name>Weginrichtingselement</Name>
     <ElementPath>Weginrichtingselement</ElementPath>
-    <SRSName>EPSG:28992</SRSName>
+    <GeometryName>geometrie2dWeginrichtingselement</GeometryName>
+	<GeometryElementPath>geometrie2dWeginrichtingselement</GeometryElementPath>
+	<GeometryType>MultiSurface</GeometryType>
+	<SRSName>EPSG:28992</SRSName>
     <PropertyDefn>
       <Name>creationDate</Name>
       <ElementPath>creationDate</ElementPath>

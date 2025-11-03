@@ -2,6 +2,8 @@
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dOverbruggingsdeel</Name><ElementPath>geometrie2dOverbruggingsdeel</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
     <Name>BridgeConstructionElement</Name>
     <ElementPath>BridgeConstructionElement</ElementPath>
+	<GeometryName>geometrie2dOverbruggingsdeel</GeometryName>
+	<GeometryElementPath>geometrie2dOverbruggingsdeel</GeometryElementPath>
     <GeometryType>3</GeometryType>
     <SRSName>EPSG:28992</SRSName>
     <PropertyDefn>

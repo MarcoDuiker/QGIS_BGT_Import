@@ -2,6 +2,8 @@
   <GMLFeatureClass><GeomPropertyDefn><Name>kruinlijnWegdeel</Name><ElementPath>kruinlijnWegdeel</ElementPath><Type>MultiCurve</Type></GeomPropertyDefn>
     <Name>TrafficArea</Name>
     <ElementPath>TrafficArea</ElementPath>
+	<GeometryName>kruinlijnWegdeel</GeometryName>
+	<GeometryElementPath>kruinlijnWegdeel</GeometryElementPath>
     <GeometryType>3</GeometryType>
     <SRSName>EPSG:28992</SRSName>
     <PropertyDefn>

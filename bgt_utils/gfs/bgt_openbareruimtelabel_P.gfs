@@ -1,9 +1,12 @@
 <GMLFeatureClassList>
   <GMLFeatureClass><GeomPropertyDefn><Name>openbareRuimteNaam</Name><ElementPath>openbareRuimteNaam|Label|positie|Labelpositie|plaatsingspunt</ElementPath><Type>MultiPoint</Type></GeomPropertyDefn>
-    <SRSName>EPSG:28992</SRSName>
+    
     <Name>OpenbareRuimteLabel</Name>
     <ElementPath>OpenbareRuimteLabel</ElementPath>
+	<GeometryName>openbareRuimteNaam</GeometryName>
+	<GeometryElementPath>openbareRuimteNaam|Label|positie|Labelpositie|plaatsingspunt</GeometryElementPath>
     <GeometryType>1</GeometryType>
+	<SRSName>EPSG:28992</SRSName>
     <PropertyDefn>
       <Name>creationDate</Name>
       <ElementPath>creationDate</ElementPath>
