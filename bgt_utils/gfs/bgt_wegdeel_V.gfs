@@ -2,10 +2,18 @@
   <GMLFeatureClass><GeomPropertyDefn><Name>geometrie2dWegdeel</Name><ElementPath>geometrie2dWegdeel</ElementPath><Type>MultiSurface</Type></GeomPropertyDefn>
     <Name>TrafficArea</Name>
     <ElementPath>TrafficArea</ElementPath>
-	<GeometryTypeName>geometrie2dWegdeel</GeometryTypeName>
-	<GeometryTypeElementPath>geometrie2dWegdeel</GeometryTypeElementPath>
-    <GeometryType>3</GeometryType>
+	<GeometryName>geometrie2dWegdeel</GeometryName>
+    <GeometryElementPath>geometrie2dWegdeel</GeometryElementPath>
+					   
+    <GeometryType>10</GeometryType>
     <SRSName>EPSG:28992</SRSName>
+						 
+									   
+										  
+										  
+										   
+										   
+						  
     <PropertyDefn>
       <Name>creationDate</Name>
       <ElementPath>creationDate</ElementPath>
@@ -13,6 +21,12 @@
       <Width>10</Width>
     </PropertyDefn>
     <PropertyDefn>
+								  
+												
+						 
+					   
+				   
+				  
       <Name>LV-publicatiedatum</Name>
       <ElementPath>LV-publicatiedatum</ElementPath>
       <Type>String</Type>
@@ -27,9 +41,16 @@
       <Name>inOnderzoek</Name>
       <ElementPath>inOnderzoek</ElementPath>
       <Type>String</Type>
+								
       <Width>5</Width>
     </PropertyDefn>
     <PropertyDefn>
+								  
+												
+						 
+					   
+				   
+				  
       <Name>tijdstipRegistratie</Name>
       <ElementPath>tijdstipRegistratie</ElementPath>
       <Type>String</Type>
@@ -78,9 +99,15 @@
       <Width>19</Width>
     </PropertyDefn>
     <PropertyDefn>
+								   
+												 
+						  
+				   
+				  
       <Name>wegdeelOpTalud</Name>
       <ElementPath>wegdeelOpTalud</ElementPath>
       <Type>String</Type>
+								
       <Width>5</Width>
     </PropertyDefn>
     <PropertyDefn>
