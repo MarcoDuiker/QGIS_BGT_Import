@@ -1,5 +1,5 @@
 '''
-Uitility functions for working with the BGT.
+Utility functions for working with the BGT.
 '''
 
 import argparse
@@ -22,6 +22,8 @@ from osgeo import ogr
 from osgeo import osr
 
 import xml.etree.ElementTree as ET
+
+ogr.UseExceptions() 
 
 try:
     QGIS_NETWORKING = True
@@ -295,8 +297,222 @@ def download_zip(task, file_name, geofilter, featuretypes = get_featuretypes()):
         QgsMessageLog.logMessage(u'API error: ' + \
             request.errorMessage(),
             tag = 'BGTImport', level = Qgis.Critical)
+            
+def get_postgis_driver(connection_string):
+    '''
+    Returns a postgis driver from the given coonection string
+    
+    a connection string has the well known format like:
+    "PG: host=%s dbname=%s user=%s password=%s schema=%s"
+    '''
 
+    return ogr.Open(connection_string)
+    
+def get_geopackage_driver(geopackage):
+    '''
+    Returns a geopackage driver from the given geopackage file path.
+    '''
+    
+    if os.path.exists(geopackage):
+            os.remove(geopackage)
+    return ogr.GetDriverByName('GPKG').CreateDataSource(geopackage)
+    
 def import_to_geopackage(task, zip_file_name, geopackage, progress_bar = None):
+    '''
+    Imports the gml files from BGT zip into one geopackage.
+    
+    The import uses prepared gfs files to read all available geometry types
+    completely, and to apply the right coordinate reference system.
+    
+    Required parameters:
+    
+    - `task`            a QgsTask provided by QgsTaskManager. 
+                        `None` will do fine when no taskmanager is used.
+    - `tiles`           an iterable containing BGT tile numbers.
+    - `zip_file_name`   the file name of the BGT zip file.
+    - `geopackage`      file name of the geopackage to import to.
+    - `progress_bar`    an object instance having a setValue method 
+                        accepting values between 0 and 100 to indicate 
+                        progress.
+                        A QProgressBar() as available in QGIS will do.
+    Returns:
+    
+    - `geopackage`      the file name of the geopackage.
+    '''
+    
+    try:
+        # have a copy of the zip file available next to the geopackage
+        # so we can check the gml files if needed
+        if not os.path.exists(geopackage.replace('.gpkg','.zip')):
+            shutil.copy(zip_file_name, geopackage.replace('.gpkg','.zip'))
+    except:
+        pass
+    
+    driver = get_geopackage_driver(geopackage)
+    import_to_driver(task, zip_file_name, driver, progress_bar = None)
+    
+    return geopackage
+    
+def import_to_postgis(task, zip_file_name, connection_string, progress_bar = None):
+    '''
+    Imports the gml files from BGT zip into a postgis schmema.
+    
+    The import uses prepared gfs files to read all available geometry types
+    completely, and to apply the right coordinate reference system.
+    
+    Required parameters:
+    
+    - `task`            a QgsTask provided by QgsTaskManager. 
+                        `None` will do fine when no taskmanager is used.
+    - `tiles`           an iterable containing BGT tile numbers.
+    - `zip_file_name`   the file name of the BGT zip file.
+    - `geopackage`      file name of the geopackage to import to.
+    - `progress_bar`    an object instance having a setValue method 
+                        accepting values between 0 and 100 to indicate 
+                        progress.
+                        A QProgressBar() as available in QGIS will do.
+    Returns:
+    
+    - `True`            when no exceptions
+    - `False`           on exceptions
+    '''
+    
+    driver = get_geopackage_driver(connection_string)
+    return import_to_driver(task, zip_file_name, driver, progress_bar = None)
+    
+def import_to_driver(task, zip_file_name, driver, progress_bar = None):
+    '''
+    Imports the gml files from BGT zip into an ogr driver.
+    
+    The import uses prepared gfs files to read all available geometry types
+    completely, and to apply the right coordinate reference system.
+    
+    The driver will be closed at the end of the import.
+    
+    Required parameters:
+    
+    - `task`            a QgsTask provided by QgsTaskManager. 
+                        `None` will do fine when no taskmanager is used.
+    - `tiles`           an iterable containing BGT tile numbers.
+    - `zip_file_name`   the file name of the BGT zip file.
+    - `driver`          an open ogr driver
+    - `progress_bar`    an object instance having a setValue method 
+                        accepting values between 0 and 100 to indicate 
+                        progress.
+                        A QProgressBar() as available in QGIS will do.
+    Returns:
+    
+    - `True`            when no exceptions
+    - `False`           on exceptions
+    '''
+
+
+    progress = 10
+    if task:
+        QgsMessageLog.logMessage(u'Start importing BGT-zip: ' + str(zip_file_name),
+            tag = 'BGTImport', level = Qgis.Info)
+        task.setProgress(progress)
+    if progress_bar:
+        progress_bar.setValue(progress)
+            
+    gdal.UseExceptions()
+    gfs_folder = os.path.join(os.path.dirname(__file__), 'gfs')
+    
+    try:
+        with tempfile.TemporaryDirectory() as tmp_folder:
+            with zipfile.ZipFile(zip_file_name, "r") as f:
+                f.extractall(tmp_folder)
+                increment = 80 / len(f.infolist()) 
+                for info in f.infolist(): 
+                    base_name = os.path.basename(info.filename)
+
+                    # temporary fix for: https://github.com/MarcoDuiker/QGIS_BGT_Import/issues/19
+                    add_srs_dimension(task, base_name, tmp_folder)
+
+                    if task:
+                        QgsMessageLog.logMessage(u'Importing from BGT-zip: ' \
+                            + str(base_name), tag = 'BGTImport', level = Qgis.Info)
+                    if base_name == 'bgt_openbareruimtelabel.gml':
+                        if task:
+                            QgsMessageLog.logMessage(u'Start processing OpenbareRuimteLabel.', 
+                            tag = 'BGTImport', level = Qgis.Info)
+                        if 'lxml' in globals():
+                            _process_ORL(task, base_name, tmp_folder)
+                        else:
+                            _process_ORL_ugly(task, base_name, tmp_folder)
+                    for postfix in ['_V','_L','_P']:
+                        gfs_file_name = base_name.replace('.gml', postfix + '.gfs')
+                        if os.path.exists(os.path.join(gfs_folder, gfs_file_name)):
+                            if task:
+                                QgsMessageLog.logMessage(u'Importing from BGT-zip: ' \
+                                    + u'...' + str(base_name).replace('.gml', '%s.gml '% str(postfix)),
+                                    tag = 'BGTImport', level = Qgis.Info)
+                            copy_ok = shutil.copyfile(os.path.join(gfs_folder, gfs_file_name),
+                                os.path.join(tmp_folder, base_name.replace('.gml','.gfs')))
+                            if copy_ok:
+                                try:
+                                    ds = ogr.GetDriverByName('gml').Open(os.path.join(tmp_folder, base_name))
+                                    # with ogr.GetDriverByName('gml').Open(os.path.join(tmp_folder, base_name)) as ds:  # available from gdal 3.8)
+                                    input_layer = ds.GetLayer()
+                                    if task:
+                                        QgsMessageLog.logMessage(u'Succesfully opened: ' \
+                                            + str(base_name).replace('.gml', '%s.gml '% str(postfix)) , 
+                                            tag = 'BGTImport', level = Qgis.Info)
+                                    geom_col_name = input_layer.GetGeometryColumn()
+                                    if not geom_col_name:
+                                        geom_col_name = "_ogr_geometry_"
+                                    if postfix == '_V':
+                                        input_layer.SetAttributeFilter('''OGR_GEOMETRY='MultiSurface' and "%s" IS NOT NULL''' % geom_col_name)
+                                    elif postfix == '_L':
+                                        input_layer.SetAttributeFilter('''OGR_GEOMETRY='MultiCurve' and "%s" IS NOT NULL''' % geom_col_name)
+                                    elif postfix == '_P':
+                                        input_layer.SetAttributeFilter('''OGR_GEOMETRY='MultiPoint' and "%s" IS NOT NULL''' % geom_col_name)
+                                    if input_layer.GetFeatureCount():
+                                        new_layer = driver.CopyLayer(input_layer, 
+                                            base_name.replace('.gml', postfix))
+                                        new_layer.SyncToDisk()
+                                        new_layer = None
+                                        if task:
+                                          QgsMessageLog.logMessage(u'Succesfully copied: ' \
+                                              + str(base_name) + str(postfix) , 
+                                              tag = 'BGTImport', level = Qgis.Info)
+                                    #del input_layer, ds
+                                    input_layer = None
+                                    ds = None
+                                except Exception as v:
+                                    if task:
+                                        QgsMessageLog.logMessage(u'Error importing: ' \
+                                            + str(base_name) + str(postfix) + " " + str(v), 
+                                            tag = 'BGTImport', level = Qgis.Warning)
+                            else:
+                                if task:
+                                  QgsMessageLog.logMessage(u'Failed to copy: ' \
+                                      + str(os.path.join(gfs_folder, gfs_file_name)) + "to" \
+                                      + str(os.path.join(tmp_folder, base_name.replace('.gml','.gfs'))),
+                                      tag = 'BGTImport', level = Qgis.Warning)
+                    progress = progress + increment
+                    if task:
+                        task.setProgress(progress)
+                    if progress_bar:
+                        progress_bar.setValue(progress)
+            sleep(1)    # just to be sure
+            #del gp     # dereference is needed to close and save the file
+            driver = None   # dereference is needed to close and save the file
+        if task:
+            task.setProgress(100)
+            QgsMessageLog.logMessage(u'Done importing BGT-zip: ' + str(zip_file_name), 
+                tag = 'BGTImport', level = Qgis.Info)
+        if progress_bar:
+            progress_bar.setValue(progress)
+        return True
+    except Exception as v:
+        if task:
+            QgsMessageLog.logMessage(u'Error importing BGT-zip: ' + str(v), 
+                tag = 'BGTImport', level = Qgis.Critical)
+        return False
+    
+
+def import_to_geopackage_old(task, zip_file_name, geopackage, progress_bar = None):
     '''
     Imports the gml files from BGT zip into one geopackage.
     
