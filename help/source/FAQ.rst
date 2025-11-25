@@ -59,7 +59,7 @@ The ``example.py`` script in the ``bgt_utils`` folder in the plugin folder show 
 I like to import the BGT into PostGIS without using QGIS. Can your plugin help?
 ===============================================================================
 
-Yes, there is a command line tool available in the ``bgt_utils`` folder in the [plugin folder](https://github.com/MarcoDuiker/QGIS_BGT_Import/tree/master/bgt_utils). All you need to do is to type something like ``BGT2PostGIS.py -d bgt -s testschema ./example.zip``.
+Yes, there is a command line tool available in the ``bgt_utils`` folder in the `plugin folder <https://github.com/MarcoDuiker/QGIS_BGT_Import/tree/master/bgt_utils>`_. All you need to do is to type something like ``BGT2PostGIS.py -d bgt -s testschema ./example.zip``.
 
 It is not necessary to download the entire plugin for this to work. You'll only need the ``bgt_utils`` folder, available on: https://github.com/MarcoDuiker/QGIS_BGT_Import/tree/master/bgt_utils
 
