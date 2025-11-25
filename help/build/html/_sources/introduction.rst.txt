@@ -71,6 +71,8 @@ If you import data using the last tab of this plugin ('Import individual files')
 
 If you don't like the default styles this plugin applies, you can override these on a per layer basis by adding files to the ``user_qml`` folder in the plugin folder. Naming convention will be obvious once you look at the files in the ``qml`` folder in the plugin folder.
 
+The ``utils.py`` script in the ``bgt_utils`` folder in the plugin folder (also available on: https://raw.githubusercontent.com/MarcoDuiker/QGIS_BGT_Import/refs/heads/master/bgt_utils/utils.py) can be used to automate downloading and/ or converting the BGT. This script can also be used to import the BGT to PostGIS. An example script ``example.py`` is available in the same folder. See the FAQ for more information. 
+
 
 Troubleshooting
 ================

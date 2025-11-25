@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>FAQ &#8212; BGT Import 3.20 documentation</title>
+    <title>FAQ &#8212; BGT Import 3.25 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/classic.css?v=514cf933" />
     
-    <script src="_static/documentation_options.js?v=360ea7ac"></script>
+    <script src="_static/documentation_options.js?v=6e073912"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="limitations.html" title="Limitations"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.20 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.25 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">FAQ</a></li> 
       </ul>
     </div>  
@@ -69,6 +69,12 @@
 <section id="i-like-to-run-a-bgt-download-and-import-automagically-on-a-regular-basis-can-your-plugin-help">
 <h2>I like to run a BGT download and import automagically on a regular basis. Can your plugin help?<a class="headerlink" href="#i-like-to-run-a-bgt-download-and-import-automagically-on-a-regular-basis-can-your-plugin-help" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">utils.py</span></code> script in the <code class="docutils literal notranslate"><span class="pre">bgt_utils</span></code> folder in the plugin folder contains some functions which will help you.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">example.py</span></code> script in the <code class="docutils literal notranslate"><span class="pre">bgt_utils</span></code> folder in the plugin folder show how to use these functions.</p>
+</section>
+<section id="i-like-to-import-the-bgt-into-postgis-without-using-qgis-can-your-plugin-help">
+<h2>I like to import the BGT into PostGIS without using QGIS. Can your plugin help?<a class="headerlink" href="#i-like-to-import-the-bgt-into-postgis-without-using-qgis-can-your-plugin-help" title="Link to this heading">¶</a></h2>
+<p>Yes, there is a command line tool available in the <code class="docutils literal notranslate"><span class="pre">bgt_utils</span></code> folder in the [plugin folder](<a class="reference external" href="https://github.com/MarcoDuiker/QGIS_BGT_Import/tree/master/bgt_utils">https://github.com/MarcoDuiker/QGIS_BGT_Import/tree/master/bgt_utils</a>). All you need to do is to type something like <code class="docutils literal notranslate"><span class="pre">BGT2PostGIS.py</span> <span class="pre">-d</span> <span class="pre">bgt</span> <span class="pre">-s</span> <span class="pre">testschema</span> <span class="pre">./example.zip</span></code>.</p>
+<p>It is not necessary to download the entire plugin for this to work. You’ll only need the <code class="docutils literal notranslate"><span class="pre">bgt_utils</span></code> folder, available on: <a class="reference external" href="https://github.com/MarcoDuiker/QGIS_BGT_Import/tree/master/bgt_utils">https://github.com/MarcoDuiker/QGIS_BGT_Import/tree/master/bgt_utils</a></p>
 </section>
 <section id="i-like-this-plugin-can-i-buy-you-a-beer">
 <h2>I like this plugin. Can I buy you a beer?<a class="headerlink" href="#i-like-this-plugin-can-i-buy-you-a-beer" title="Link to this heading">¶</a></h2>
@@ -95,6 +101,7 @@ But do remember, I don’t like the sweet beers that much (I already am a very s
 <li><a class="reference internal" href="#why-is-the-bgt-zip-containing-all-those-bloated-gml-files-smaller-than-the-geopackage-containing-the-same-data">Why is the BGT-zip containing all those bloated gml files smaller than the geopackage containing the same data?</a></li>
 <li><a class="reference internal" href="#your-styling-sucks-can-i-apply-my-own-default-styling">Your styling sucks! Can I apply my own default styling?</a></li>
 <li><a class="reference internal" href="#i-like-to-run-a-bgt-download-and-import-automagically-on-a-regular-basis-can-your-plugin-help">I like to run a BGT download and import automagically on a regular basis. Can your plugin help?</a></li>
+<li><a class="reference internal" href="#i-like-to-import-the-bgt-into-postgis-without-using-qgis-can-your-plugin-help">I like to import the BGT into PostGIS without using QGIS. Can your plugin help?</a></li>
 <li><a class="reference internal" href="#i-like-this-plugin-can-i-buy-you-a-beer">I like this plugin. Can I buy you a beer?</a></li>
 </ul>
 </li>
@@ -136,7 +143,7 @@ But do remember, I don’t like the sweet beers that much (I already am a very s
         <li class="right" >
           <a href="limitations.html" title="Limitations"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.20 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">BGT Import 3.25 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">FAQ</a></li> 
       </ul>
     </div>
